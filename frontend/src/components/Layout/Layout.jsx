@@ -5,26 +5,35 @@ import Navbar from "../Navbar/Navbar";
 import FilterSidebar from "../FilterSidebar/FilterSidebar";
 import "./Layout.css";
 
+// ─────────────────────────────────────────────
+// Layout — the "manager" component.
+// Holds all shared state and passes it down
+// to Navbar, FilterSidebar, and the page content.
+// ─────────────────────────────────────────────
+
 function Layout() {
-  // Check which page the user is on — filters only apply to the Home page
+
+  // ── Page detection ──────────────────────────
+  // Filters only apply to the Home page ("/")
   const location = useLocation();
   const isHomePage = location.pathname === "/";
 
-  // Search state (already existed)
-  const [searchText, setSearchText] = useState("");
 
-  // Sidebar toggle state — controls whether the sidebar is visible
+  // ── State ────────────────────────────────────
+
+  const [searchText, setSearchText]       = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Filter options — the full lists fetched from the backend
-  const [genres, setGenres] = useState([]);
-  const [studios, setStudios] = useState([]);
+  const [genres, setGenres]   = useState([]);   // full list from backend
+  const [studios, setStudios] = useState([]);   // full list from backend
 
-  // Selected filters — which checkboxes the user has checked
-  const [selectedGenres, setSelectedGenres] = useState([]);
-  const [selectedStudios, setSelectedStudios] = useState([]);
+  const [selectedGenres, setSelectedGenres]   = useState([]);  // checked items
+  const [selectedStudios, setSelectedStudios] = useState([]);  // checked items
 
-  // Fetch the available genres and studios when the app first loads
+
+  // ── Data fetching ────────────────────────────
+  // Load genres and studios once when the app first mounts
+
   useEffect(() => {
     axios.get("http://localhost:8000/genres")
       .then((response) => setGenres(response.data))
@@ -35,7 +44,13 @@ function Layout() {
       .catch((error) => console.error("Failed to fetch studios:", error));
   }, []);
 
-  // Toggle a genre: if it's already selected, remove it. Otherwise, add it.
+
+  // ── Filter handlers ──────────────────────────
+
+  /**
+   * Toggle a genre on/off.
+   * If already selected → remove it. If not → add it.
+   */
   function handleToggleGenre(genre) {
     setSelectedGenres((prev) =>
       prev.includes(genre)
@@ -44,7 +59,7 @@ function Layout() {
     );
   }
 
-  // Toggle a studio: same logic as genres
+  /** Same logic as handleToggleGenre, but for studios. */
   function handleToggleStudio(studio) {
     setSelectedStudios((prev) =>
       prev.includes(studio)
@@ -53,17 +68,21 @@ function Layout() {
     );
   }
 
+
+  // ── Render ───────────────────────────────────
+
   return (
     <div className="layout">
+
       <Navbar
         searchText={searchText}
         setSearchText={setSearchText}
         onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
-        showFilterToggle={isHomePage}
+        showFilterToggle={isHomePage} 
       />
-
-      {/* Flex container: sidebar on the left, main content on the right */}
+      {/* Sidebar + main content side by side */}
       <div className="layout__body">
+
         <FilterSidebar
           isOpen={isHomePage && isSidebarOpen}
           genres={genres}
@@ -75,9 +94,10 @@ function Layout() {
         />
 
         <main className="main-content">
-          {/* Pass search text and selected filters to whatever page is rendered */}
+          {/* Pass search + filters to whatever page is currently rendered */}
           <Outlet context={{ searchText, selectedGenres, selectedStudios }} />
         </main>
+
       </div>
     </div>
   );
