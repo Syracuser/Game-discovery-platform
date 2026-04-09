@@ -1,0 +1,30 @@
+/* Sidebar is hidden by default — shifted off-screen to the left */
+.filter-sidebar {
+  width: 240px;
+  min-width: 240px;
+  background-color: #1a1a2e;
+  padding: 1.25rem;
+  height: calc(100vh - 60px);
+  position: sticky;
+  top: 60px;
+  overflow-y: auto;
+  /* Start off-screen, then slide in when --open is added */
+  margin-left: -240px;
+  transition: margin-left 0.3s ease;
+  /* Prevent any interaction when hidden */
+  pointer-events: none;
+}
+
+/* When open, slide the sidebar into view */
+.filter-sidebar--open {
+  margin-left: 0;
+  pointer-events: auto;
+}
+
+.filter-sidebar__title {
+  color: #ffffff;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #2a2a3e;
+}

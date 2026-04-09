@@ -1,0 +1,81 @@
+/* The navbar container — uses flexbox to arrange items in a row */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 2rem;
+  background-color: #1a1a2e;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* Groups the toggle button and logo together on the left */
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Hamburger button that opens/closes the filter sidebar */
+.navbar-filter-toggle {
+  background: none;
+  border: none;
+  color: #e0e0e0;
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+}
+
+.navbar-filter-toggle:hover {
+  color: #e94560;
+}
+
+/* Keep the button in the layout for consistent spacing, but make it invisible */
+.navbar-filter-toggle--hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* App name / logo — styled as a clickable link */
+.navbar-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #e94560;
+  text-decoration: none;
+}
+
+/* Search bar in the middle */
+.navbar-search {
+  width: 350px;
+  padding: 0.5rem 1rem;
+  border: 1px solid #333;
+  border-radius: 20px;
+  background-color: #16213e;
+  color: #e0e0e0;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+/* Subtle highlight when the search bar is focused/clicked */
+.navbar-search:focus {
+  border-color: #e94560;
+}
+
+/* Container for the nav links on the right */
+.navbar-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+/* Individual nav links */
+.navbar-link {
+  color: #e0e0e0;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+/* Hover effect on nav links */
+.navbar-link:hover {
+  color: #e94560;
+}

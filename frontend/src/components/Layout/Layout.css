@@ -1,0 +1,11 @@
+/* Flex container that places sidebar and main content side by side */
+.layout__body {
+  display: flex;
+}
+
+/* Main content area — takes up all remaining space after the sidebar */
+.main-content {
+  padding: 2rem;
+  flex: 1;
+  min-width: 0;
+}

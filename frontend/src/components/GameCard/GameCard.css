@@ -1,0 +1,39 @@
+.game-card {
+  background-color: #202024;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.game-card:hover {
+  transform: translateY(-4px);
+}
+
+.game-card__image {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+}
+
+.game-card__info {
+  padding: 12px 14px;
+}
+
+.game-card__studio {
+  font-size: 0.75rem;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.game-card__title {
+  font-size: 1rem;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.game-card__price {
+  font-size: 0.9rem;
+  color: #e0e0e0;
+}

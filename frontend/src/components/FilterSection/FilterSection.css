@@ -1,0 +1,64 @@
+.filter-section {
+  border-bottom: 1px solid #2a2a3e;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+/* The clickable header that toggles expand/collapse */
+.filter-section__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0.5rem 0;
+  background: none;
+  border: none;
+  color: #e0e0e0;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.filter-section__header:hover {
+  color: #e94560;
+}
+
+/* Arrow indicator — points right when closed, rotates down when open */
+.filter-section__arrow {
+  font-size: 0.9rem;
+  transition: transform 0.2s ease;
+}
+
+.filter-section__arrow--open {
+  transform: rotate(90deg);
+}
+
+/* The list of checkboxes */
+.filter-section__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding-top: 0.4rem;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+/* Each checkbox + label row */
+.filter-section__option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #ccc;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.filter-section__option:hover {
+  color: #e0e0e0;
+}
+
+/* Style the checkbox to match the red accent theme */
+.filter-section__option input[type="checkbox"] {
+  accent-color: #e94560;
+  cursor: pointer;
+}
