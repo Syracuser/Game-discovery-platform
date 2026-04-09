@@ -1,12 +1,17 @@
+/* Navbar height defined once here — used in sticky positioning and height calculation */
+:root {
+  --navbar-height: 60px;
+}
+
 /* Sidebar is hidden by default — shifted off-screen to the left */
 .filter-sidebar {
   width: 240px;
   min-width: 240px;
   background-color: #1a1a2e;
   padding: 1.25rem;
-  height: calc(100vh - 60px);
+  height: calc(100vh - var(--navbar-height));
   position: sticky;
-  top: 60px;
+  top: var(--navbar-height);
   overflow-y: auto;
   /* Start off-screen, then slide in when --open is added */
   margin-left: -240px;
