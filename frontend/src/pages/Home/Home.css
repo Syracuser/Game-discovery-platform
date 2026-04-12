@@ -7,10 +7,17 @@
   margin-bottom: 20px;
 }
 
-/* Responsive grid — auto-fills cards that are at least 280px wide */
+/*
+  Fixed 4-column layout.
+  repeat(4, 1fr) always creates exactly 4 equal columns — the browser
+  never recounts them. When the sidebar opens and the container narrows,
+  the cards simply get a bit narrower while staying in their 4 columns.
+  Using auto-fill would recount columns on every pixel change, which is
+  what caused the column-drop during the sidebar animation.
+*/
 .home__games-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
 }
 

@@ -1,11 +1,12 @@
-/* Flex container that places sidebar and main content side by side */
+/* Flex row — sidebar and main content sit side by side.
+   The sidebar animates its own width, so main-content grows/shrinks smoothly. */
 .layout__body {
   display: flex;
 }
 
-/* Main content area — takes up all remaining space after the sidebar */
+/* flex: 1 takes all remaining space; min-width: 0 prevents grid overflow */
 .main-content {
-  padding: 2rem;
   flex: 1;
   min-width: 0;
+  padding: 2rem;
 }

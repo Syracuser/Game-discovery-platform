@@ -3,27 +3,44 @@
   --navbar-height: 60px;
 }
 
-/* Sidebar is hidden by default — shifted off-screen to the left */
+/*
+  The sidebar animates its WIDTH from 0 → 240px.
+  overflow: hidden clips the inner content while it's mid-animation.
+  flex-shrink: 0 prevents flexbox from compressing the sidebar further.
+
+  Why width instead of margin-left?
+  The old margin-left: -240px trick kept the sidebar occupying 240px of
+  flex space even when hidden, then snapped the layout at the last frame.
+  Animating width gives a smooth, continuous push from the very first frame
+  with no snap at the end.
+*/
 .filter-sidebar {
-  width: 240px;
-  min-width: 240px;
+  flex-shrink: 0;
+  width: 0;               /* collapsed by default */
+  overflow: hidden;       /* hides content while animating */
   background-color: #1a1a2e;
-  padding: 1.25rem;
   height: calc(100vh - var(--navbar-height));
   position: sticky;
   top: var(--navbar-height);
-  overflow-y: auto;
-  /* Start off-screen, then slide in when --open is added */
-  margin-left: -240px;
-  transition: margin-left 0.3s ease;
-  /* Prevent any interaction when hidden */
+  transition: width 0.3s ease;
   pointer-events: none;
 }
 
-/* When open, slide the sidebar into view */
+/* When open, expand to full sidebar width */
 .filter-sidebar--open {
-  margin-left: 0;
+  width: 240px;
   pointer-events: auto;
+}
+
+/*
+  Inner wrapper has a fixed 240px width so the content inside never
+  compresses — only the outer shell (filter-sidebar) shrinks/grows.
+*/
+.filter-sidebar__inner {
+  width: 240px;
+  padding: 1.25rem;
+  height: 100%;
+  overflow-y: auto;
 }
 
 .filter-sidebar__title {

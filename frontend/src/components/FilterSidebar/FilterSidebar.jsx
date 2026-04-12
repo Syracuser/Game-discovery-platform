@@ -14,21 +14,25 @@ function FilterSidebar({
 }) {
   return (
     <aside className={`filter-sidebar ${isOpen ? "filter-sidebar--open" : ""}`}>
-      <h2 className="filter-sidebar__title">Filters</h2>
+      {/* Inner wrapper keeps content at a fixed 240px so it doesn't
+          compress while the outer shell animates its width */}
+      <div className="filter-sidebar__inner">
+        <h2 className="filter-sidebar__title">Filters</h2>
 
-      <FilterSection
-        title="Genre"
-        options={genres}
-        selectedOptions={selectedGenres}
-        onToggleOption={onToggleGenre}
-      />
+        <FilterSection
+          title="Genre"
+          options={genres}
+          selectedOptions={selectedGenres}
+          onToggleOption={onToggleGenre}
+        />
 
-      <FilterSection
-        title="Studio"
-        options={studios}
-        selectedOptions={selectedStudios}
-        onToggleOption={onToggleStudio}
-      />
+        <FilterSection
+          title="Studio"
+          options={studios}
+          selectedOptions={selectedStudios}
+          onToggleOption={onToggleStudio}
+        />
+      </div>
     </aside>
   );
 }
