@@ -17,22 +17,72 @@
   gap: 1rem;
 }
 
-/* Hamburger button that opens/closes the filter sidebar */
-.navbar-filter-toggle {
-  background: none;
-  border: none;
-  color: #e0e0e0;
-  font-size: 1.4rem;
+/* Hamburger toggle — opens/closes the filter sidebar */
+.navbar-burger {
+  position: relative;
+  width: 22px;
+  height: 16px;
+  background: transparent;
   cursor: pointer;
-  padding: 0.2rem 0.4rem;
+  display: block;
+  flex-shrink: 0;
 }
 
-.navbar-filter-toggle:hover {
-  color: #e94560;
+/* Hide the native checkbox — the spans replace it visually */
+.navbar-burger input {
+  display: none;
 }
 
-/* Keep the button in the layout for consistent spacing, but make it invisible */
-.navbar-filter-toggle--hidden {
+.navbar-burger span {
+  display: block;
+  position: absolute;
+  height: 2px;
+  width: 100%;
+  background: #e0e0e0;
+  border-radius: 9px;
+  opacity: 1;
+  left: 0;
+  transform: rotate(0deg);
+  transition: transform 0.25s ease-in-out, width 0.25s ease-in-out, opacity 0.25s ease-in-out, top 0.25s ease-in-out, left 0.25s ease-in-out;
+}
+
+.navbar-burger span:nth-of-type(1) {
+  top: 0px;
+  transform-origin: center center;
+}
+
+.navbar-burger span:nth-of-type(2) {
+  top: 50%;
+  transform: translateY(-50%);
+  transform-origin: center center;
+}
+
+.navbar-burger span:nth-of-type(3) {
+  top: 100%;
+  transform-origin: center center;
+  transform: translateY(-100%);
+}
+
+/* Checked state — both bars move to the center then rotate into a symmetrical X */
+.navbar-burger input:checked ~ span:nth-of-type(1) {
+  top: 0;
+  left: 0;
+  transform: translateY(7px) rotate(45deg);
+}
+
+.navbar-burger input:checked ~ span:nth-of-type(2) {
+  width: 0%;
+  opacity: 0;
+}
+
+.navbar-burger input:checked ~ span:nth-of-type(3) {
+  top: 0;
+  left: 0;
+  transform: translateY(7px) rotate(-45deg);
+}
+
+/* Keep it in the layout for consistent spacing, but make it invisible */
+.navbar-burger--hidden {
   visibility: hidden;
   pointer-events: none;
 }
@@ -45,21 +95,47 @@
   text-decoration: none;
 }
 
+/* Search bar wrapper — needed to position the icon inside the input */
+.navbar-search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Magnifying glass icon */
+.navbar-search-icon {
+  position: absolute;
+  left: 0.75rem;
+  width: 1rem;
+  height: 1rem;
+  color: #888;
+  pointer-events: none; /* clicks pass through to the input */
+  transition: color 0.2s ease;
+}
+
+/* Icon turns red when the input is focused */
+.navbar-search-wrapper:focus-within .navbar-search-icon {
+  color: #e94560;
+}
+
 /* Search bar in the middle */
 .navbar-search {
-  width: 350px;
-  padding: 0.5rem 1rem;
+  width: 300px;
+  padding: 0.5rem 1rem 0.5rem 2.25rem; /* left padding makes room for the icon */
   border: 1px solid #333;
   border-radius: 20px;
   background-color: #16213e;
   color: #e0e0e0;
   font-size: 0.95rem;
   outline: none;
+  transition: width 0.3s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Subtle highlight when the search bar is focused/clicked */
+/* Expands slightly and glows red when focused */
 .navbar-search:focus {
+  width: 380px;
   border-color: #e94560;
+  box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.15);
 }
 
 /* Container for the nav links on the right */

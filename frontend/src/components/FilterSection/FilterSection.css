@@ -33,7 +33,18 @@
   transform: rotate(90deg);
 }
 
-/* The list of checkboxes */
+/* Outer wrapper — handles the open/close animation only */
+.filter-section__body-wrapper {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease;
+}
+
+.filter-section__body-wrapper--open {
+  max-height: 250px;
+}
+
+/* Inner body — handles scrolling only */
 .filter-section__body {
   display: flex;
   flex-direction: column;
@@ -57,8 +68,64 @@
   color: #e0e0e0;
 }
 
-/* Style the checkbox to match the red accent theme */
-.filter-section__option input[type="checkbox"] {
-  accent-color: #e94560;
+/* ── Custom checkbox (uiverse.io by sssynk) ─────────────────────────────── */
+
+/* The span wrapper that positions the hidden input + visible checkmark */
+.filter-section__checkbox {
+  display: block;
+  position: relative;
   cursor: pointer;
+  font-size: 12px; /* sets the em base for checkmark sizing — keep small to match native checkbox */
+  user-select: none;
+  border-radius: 5px;
+  flex-shrink: 0; /* don't let flexbox squish the checkbox */
+}
+
+/* Hide the native checkbox — the custom checkmark replaces it visually */
+.filter-section__checkbox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* The visible box */
+.filter-section__checkmark {
+  position: relative;
+  height: 1.3em;
+  width: 1.3em;
+  background-color: #ccc;
+  border-radius: 5px;
+}
+
+/* Unchecked */
+.filter-section__checkbox input ~ .filter-section__checkmark {
+  transition: all 0.2s;
+}
+
+/* Checked — purple-to-pink gradient fill */
+.filter-section__checkbox input:checked ~ .filter-section__checkmark {
+  background-color: #e94560;
+  transition: all 0.2s;
+}
+
+/* The checkmark tick — hidden by default */
+.filter-section__checkmark::after {
+  content: "";
+  position: absolute;
+  opacity: 0;
+  left: 0.45em;
+  top: 0.25em;
+  width: 0.25em;
+  height: 0.5em;
+  border: solid white;
+  border-width: 0 0.15em 0.15em 0;
+  transform: rotate(45deg);
+  transition: all 0.2s;
+}
+
+/* Show the tick when checked */
+.filter-section__checkbox input:checked ~ .filter-section__checkmark::after {
+  opacity: 1;
 }

@@ -77,8 +77,9 @@ function Layout() {
       <Navbar
         searchText={searchText}
         setSearchText={setSearchText}
+        isSidebarOpen={isSidebarOpen}
         onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
-        showFilterToggle={isHomePage} 
+        showFilterToggle={isHomePage}
       />
       {/* Sidebar + main content side by side */}
       <div className="layout__body">
