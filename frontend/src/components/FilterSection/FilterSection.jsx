@@ -8,6 +8,9 @@ function FilterSection({ title, options, selectedOptions, onToggleOption }) {
   // Controls whether this section is expanded or collapsed (starts open)
   const [isOpen, setIsOpen] = useState(true);
 
+  const arrowClass     = `filter-section__arrow ${isOpen ? "filter-section__arrow--open" : ""}`;
+  const wrapperClass   = `filter-section__body-wrapper ${isOpen ? "filter-section__body-wrapper--open" : ""}`;
+
   return (
     <div className="filter-section">
 
@@ -17,13 +20,11 @@ function FilterSection({ title, options, selectedOptions, onToggleOption }) {
         onClick={() => setIsOpen(!isOpen)}
       >
         <span className="filter-section__title">{title}</span>
-        <span className={`filter-section__arrow ${isOpen ? "filter-section__arrow--open" : ""}`}>
-          ▸
-        </span>
+        <span className={arrowClass}>▸</span>
       </button>
 
       {/* Outer wrapper — animates the open/close (max-height transition) */}
-      <div className={`filter-section__body-wrapper ${isOpen ? "filter-section__body-wrapper--open" : ""}`}>
+      <div className={wrapperClass}>
 
         {/* Inner body — handles scrolling when content overflows */}
         <div className="filter-section__body">
