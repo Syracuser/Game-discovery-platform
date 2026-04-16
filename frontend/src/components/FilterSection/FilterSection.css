@@ -41,17 +41,15 @@
 }
 
 .filter-section__body-wrapper--open {
-  max-height: 250px;
+  max-height: 260px; /* slightly more than body's 250px to account for padding-top */
 }
 
-/* Inner body — handles scrolling only */
+/* Inner body — layout styles only; scrolling is handled by ScrollArea */
 .filter-section__body {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
   padding-top: 0.4rem;
-  max-height: 250px;
-  overflow-y: auto;
 }
 
 /* Each checkbox + label row */

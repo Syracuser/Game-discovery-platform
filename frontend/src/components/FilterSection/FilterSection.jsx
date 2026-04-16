@@ -1,4 +1,5 @@
 import { useState } from "react";
+import ScrollArea from "../ScrollArea/ScrollArea";
 import "./FilterSection.css";
 
 // A reusable accordion section that shows a title and a list of checkboxes.
@@ -26,8 +27,9 @@ function FilterSection({ title, options, selectedOptions, onToggleOption }) {
       {/* Outer wrapper — animates the open/close (max-height transition) */}
       <div className={wrapperClass}>
 
-        {/* Inner body — handles scrolling when content overflows */}
-        <div className="filter-section__body">
+        {/* ScrollArea replaces the native scrollbar with a custom one.
+            contentClassName passes the layout styles to the inner scrollable div. */}
+        <ScrollArea maxHeight="250px" contentClassName="filter-section__body">
           {options.map((option) => (
             <label key={option} className="filter-section__option">
 
@@ -44,7 +46,7 @@ function FilterSection({ title, options, selectedOptions, onToggleOption }) {
               <span>{option}</span>
             </label>
           ))}
-        </div>
+        </ScrollArea>
 
       </div>
 
