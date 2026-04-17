@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useEffect, useLayoutEffect, useState, useCallback } from "react";
 import "./ScrollArea.css";
 
 /**
@@ -17,95 +17,135 @@ import "./ScrollArea.css";
 function ScrollArea({ children, maxHeight, height, className = "", contentClassName = "" }) {
 
   const contentRef = useRef(null);
-  const [thumb, setThumb]           = useState({ height: 20, top: 0 });
+  const thumbRef   = useRef(null);   // direct DOM ref — thumb position never goes through React state
+  const isDragging = useRef(false);  // prevents scroll event from fighting the drag handler
+
   const [isScrollable, setIsScrollable] = useState(false);
 
 
-  // ── Recalculate thumb size + position ──────────────────────────────────────
-  // Called on scroll, on mount, and whenever children change size.
+  // ── Thumb position ─────────────────────────────────────────────────────────
+  // Directly mutates the thumb's DOM style.
+  // This is intentionally bypassing React state so that every scroll event and
+  // every drag frame updates the thumb instantly with zero re-render overhead.
+
+  const updateThumb = useCallback(() => {
+    const el    = contentRef.current;
+    const thumb = thumbRef.current;
+    if (!el || !thumb) return;
+
+    const { scrollHeight, clientHeight, scrollTop } = el;
+
+    // Height: what fraction of the total content is visible right now?
+    const thumbHeight  = Math.max((clientHeight / scrollHeight) * clientHeight, 20);
+
+    // Top: how far along the scrollable range are we?
+    const maxScrollTop = scrollHeight - clientHeight;
+    const maxThumbTop  = clientHeight - thumbHeight;
+    const thumbTop     = maxScrollTop > 0 ? (scrollTop / maxScrollTop) * maxThumbTop : 0;
+
+    thumb.style.height    = `${thumbHeight}px`;
+    thumb.style.transform = `translateY(${thumbTop}px)`;
+  }, []);
+
+
+  // ── Show/hide the scrollbar ────────────────────────────────────────────────
+  // +2 tolerance absorbs subpixel rounding differences so the bar doesn't
+  // appear when content and container are the same "real" height.
 
   const recalculate = useCallback(() => {
     const el = contentRef.current;
     if (!el) return;
 
-    const { scrollHeight, clientHeight, scrollTop } = el;
-    const scrollable = scrollHeight > clientHeight;
+    const scrollable = el.scrollHeight > el.clientHeight + 2;
     setIsScrollable(scrollable);
-    if (!scrollable) return;
-
-    // Thumb height is proportional to how much of the content is visible.
-    // e.g. visible = 250px, total = 500px → thumb = 50% of track height.
-    const thumbHeight = Math.max((clientHeight / scrollHeight) * clientHeight, 20);
-
-    // Thumb position maps scroll progress to the available track space.
-    const maxScrollTop = scrollHeight - clientHeight;
-    const maxThumbTop  = clientHeight - thumbHeight;
-    const thumbTop = maxScrollTop > 0 ? (scrollTop / maxScrollTop) * maxThumbTop : 0;
-
-    setThumb({ height: thumbHeight, top: thumbTop });
-  }, []);
+    if (scrollable) updateThumb();
+  }, [updateThumb]);
 
 
-  // ── Sync with scroll + content size changes ────────────────────────────────
+  // ── After thumb first renders, position it immediately ────────────────────
+  // useLayoutEffect runs synchronously after the DOM is updated but BEFORE
+  // the browser paints — so the thumb is in the right spot on the first frame.
+
+  useLayoutEffect(() => {
+    if (isScrollable) updateThumb();
+  }, [isScrollable, updateThumb]);
+
+
+  // ── Wire up scroll + resize listeners ────────────────────────────────────
 
   useEffect(() => {
     const el = contentRef.current;
     if (!el) return;
 
-    recalculate();
-    el.addEventListener("scroll", recalculate);
+    const onScroll = () => {
+      // Skip during drag — the drag handler calls updateThumb directly
+      if (!isDragging.current) updateThumb();
+    };
 
-    // Watch the content div AND every direct child.
-    // Why children? When the content div has a fixed height (e.g. height: 100%),
-    // its own size never changes — but its children can grow/shrink (e.g. filter
-    // sections expanding). Without watching children, recalculate would never
-    // fire after a child collapses and the track would stay visible incorrectly.
+    el.addEventListener("scroll", onScroll);
+
+    // Watch the content element AND each direct child.
+    // Direct children must be watched because when they collapse (e.g. a
+    // filter section closing), the content div's own size may not change
+    // (it has a fixed height), but the scrollable range has shrunk.
     const observer = new ResizeObserver(recalculate);
     observer.observe(el);
     Array.from(el.children).forEach(child => observer.observe(child));
 
+    // Delay the first recalculate by one animation frame.
+    // Without this, it runs before the browser has resolved "height: 100%"
+    // on the content div, which causes a false positive (shows bar when not needed).
+    const frameId = requestAnimationFrame(recalculate);
+
     return () => {
-      el.removeEventListener("scroll", recalculate);
+      cancelAnimationFrame(frameId);
+      el.removeEventListener("scroll", onScroll);
       observer.disconnect();
     };
-  }, [recalculate]);
+  }, [recalculate, updateThumb]);
 
 
-  // ── Thumb dragging ─────────────────────────────────────────────────────────
-  // On mousedown on the thumb we record where the drag started, then on
-  // mousemove (attached to document so the drag works outside the element)
-  // we convert the pixel distance moved into a scroll distance.
+  // ── Thumb drag ─────────────────────────────────────────────────────────────
+  // On mousedown: capture the starting scroll position and mouse Y.
+  // On mousemove: convert the pixel delta into a scroll delta using the
+  //               same thumb-to-track ratio as recalculate uses.
+  // On mouseup: clean up.
 
   const handleThumbMouseDown = useCallback((e) => {
-    e.preventDefault(); // prevent text selection while dragging
-
+    e.preventDefault();
     const el = contentRef.current;
     if (!el) return;
 
-    const startY          = e.clientY;
-    const startScrollTop  = el.scrollTop;
+    isDragging.current = true;
+    document.body.style.cursor     = "grabbing";
+    document.body.style.userSelect = "none";
+
+    const startY         = e.clientY;
+    const startScrollTop = el.scrollTop;
     const { scrollHeight, clientHeight } = el;
 
     const thumbHeight  = Math.max((clientHeight / scrollHeight) * clientHeight, 20);
     const maxScrollTop = scrollHeight - clientHeight;
     const maxThumbTop  = clientHeight - thumbHeight;
 
-    const onMouseMove = (e) => {
+    const onMouseMove = (moveEvent) => {
       if (maxThumbTop === 0) return;
-      const deltaY      = e.clientY - startY;
-      // Convert thumb pixels moved → scroll pixels moved using the same ratio
-      const scrollDelta = (deltaY / maxThumbTop) * maxScrollTop;
+      const scrollDelta = ((moveEvent.clientY - startY) / maxThumbTop) * maxScrollTop;
       el.scrollTop = Math.max(0, Math.min(maxScrollTop, startScrollTop + scrollDelta));
+      updateThumb(); // update thumb directly — no React state, no flicker
     };
 
     const onMouseUp = () => {
+      isDragging.current = false;
+      document.body.style.cursor     = "";
+      document.body.style.userSelect = "";
       document.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("mouseup", onMouseUp);
+      document.removeEventListener("mouseup",   onMouseUp);
     };
 
     document.addEventListener("mousemove", onMouseMove);
-    document.addEventListener("mouseup", onMouseUp);
-  }, []);
+    document.addEventListener("mouseup",   onMouseUp);
+  }, [updateThumb]);
 
 
   // ── Styles ─────────────────────────────────────────────────────────────────
@@ -113,8 +153,6 @@ function ScrollArea({ children, maxHeight, height, className = "", contentClassN
   const wrapperStyle = {};
   if (maxHeight) wrapperStyle.maxHeight = maxHeight;
   if (height)    wrapperStyle.height    = height;
-
-  const contentStyle = { ...wrapperStyle };
 
 
   // ── Render ─────────────────────────────────────────────────────────────────
@@ -124,7 +162,7 @@ function ScrollArea({ children, maxHeight, height, className = "", contentClassN
 
       <div
         className={`scroll-area__content ${contentClassName}`}
-        style={contentStyle}
+        style={{ ...wrapperStyle }}
         ref={contentRef}
       >
         {children}
@@ -134,10 +172,7 @@ function ScrollArea({ children, maxHeight, height, className = "", contentClassN
         <div className="scroll-area__track">
           <div
             className="scroll-area__thumb"
-            style={{
-              height: `${thumb.height}px`,
-              transform: `translateY(${thumb.top}px)`,
-            }}
+            ref={thumbRef}
             onMouseDown={handleThumbMouseDown}
           />
         </div>

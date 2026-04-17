@@ -43,6 +43,21 @@
   /* overflow handled by ScrollArea inside */
 }
 
+/*
+  The sidebar's scrollbar track needs to sit at the right edge of the sidebar
+  panel itself, not inside the content padding — otherwise it overlaps the
+  filter-section scrollbars which are also near the right of the content area.
+
+  .filter-sidebar__inner has padding: 1.25rem (≈ 20px).
+  The scroll-area inside is 20px from the sidebar's right edge.
+  right: -18px pushes the track 18px past the scroll-area's right boundary,
+  landing it 2px from the sidebar's right edge. Still inside .filter-sidebar's
+  overflow: hidden, so it remains visible and clipped correctly.
+*/
+.scroll-area--sidebar > .scroll-area__track {
+  right: -18px;
+}
+
 .filter-sidebar__title {
   color: #ffffff;
   font-size: 1.1rem;

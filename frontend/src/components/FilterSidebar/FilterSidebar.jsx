@@ -21,7 +21,7 @@ function FilterSidebar({
 
         {/* ScrollArea replaces the native sidebar scrollbar with a custom one.
             height="100%" makes it fill the full sidebar height. */}
-        <ScrollArea height="100%">
+        <ScrollArea height="100%" className="scroll-area--sidebar">
           <h2 className="filter-sidebar__title">Filters</h2>
 
           <FilterSection
