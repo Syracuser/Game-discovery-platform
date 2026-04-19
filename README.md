@@ -117,7 +117,7 @@ The home page includes:
 ### 🎮 8. Game Details Page
 Each game page includes:
 - Full game information
-- Studio and rating
+- Studio, genres and rating
 - “Why you might like this” insights
 - Similar games section
 - Add to wishlist option
