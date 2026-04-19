@@ -1,13 +1,14 @@
 """
 add_games.py
 
-A one-time script to seed the database with new games.
+A database seeding script — adds games to the database via the /games endpoint.
+Safe to run multiple times: already-existing games are skipped automatically.
+
 Run it from inside the backend folder while the FastAPI server is running:
 
     python add_games.py
 
-It sends a POST request for each game to the /games endpoint.
-If a game with the same name already exists, it skips it to avoid duplicates.
+Useful for fresh project setup or adding new games to the list.
 """
 
 import urllib.request

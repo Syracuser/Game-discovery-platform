@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database.connection import database
 from routes.games import router as games_router
+from routes.recommend import router as recommend_router
 
 
 @asynccontextmanager
@@ -32,6 +33,7 @@ app.add_middleware(
 
 # Connect game routes to the app
 app.include_router(games_router)
+app.include_router(recommend_router)
 
 
 """
