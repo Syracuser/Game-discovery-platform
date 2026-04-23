@@ -14,7 +14,7 @@ function Home() {
 
   // ── Context (from Layout) ────────────────────
   // These come from the Outlet — passed down by Layout
-  const { searchText, selectedGenres, selectedStudios } = useOutletContext();
+  const { searchText, selectedGenres, selectedTags, selectedStudios } = useOutletContext();
 
 
   // ── State ────────────────────────────────────
@@ -67,6 +67,11 @@ function Home() {
       // No genres selected = show all. Otherwise game must match ALL selected genres.
       selectedGenres.length === 0 ||
       selectedGenres.every((g) => game.genres.includes(g))
+    )
+    .filter((game) =>
+      // No tags selected = show all. Otherwise game must have ALL selected tags.
+      selectedTags.length === 0 ||
+      selectedTags.every((t) => game.tags.includes(t))
     )
     .filter((game) =>
       // No studios selected = show all. Otherwise game's studio must be selected.

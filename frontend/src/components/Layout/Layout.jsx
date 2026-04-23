@@ -25,9 +25,11 @@ function Layout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const [genres, setGenres]   = useState([]);   // full list from backend
+  const [tags, setTags]       = useState([]);   // full list from backend
   const [studios, setStudios] = useState([]);   // full list from backend
 
   const [selectedGenres, setSelectedGenres]   = useState([]);  // checked items
+  const [selectedTags, setSelectedTags]       = useState([]);  // checked items
   const [selectedStudios, setSelectedStudios] = useState([]);  // checked items
 
 
@@ -38,6 +40,10 @@ function Layout() {
     axios.get("http://localhost:8000/genres")
       .then((response) => setGenres(response.data))
       .catch((error) => console.error("Failed to fetch genres:", error));
+
+    axios.get("http://localhost:8000/tags")
+      .then((response) => setTags(response.data))
+      .catch((error) => console.error("Failed to fetch tags:", error));
 
     axios.get("http://localhost:8000/studios")
       .then((response) => setStudios(response.data))
@@ -56,6 +62,15 @@ function Layout() {
       prev.includes(genre)
         ? prev.filter((g) => g !== genre)
         : [...prev, genre]
+    );
+  }
+
+  /** Same logic as handleToggleGenre, but for tags. */
+  function handleToggleTag(tag) {
+    setSelectedTags((prev) =>
+      prev.includes(tag)
+        ? prev.filter((t) => t !== tag)
+        : [...prev, tag]
     );
   }
 
@@ -87,16 +102,19 @@ function Layout() {
         <FilterSidebar
           isOpen={isHomePage && isSidebarOpen}
           genres={genres}
+          tags={tags}
           studios={studios}
           selectedGenres={selectedGenres}
+          selectedTags={selectedTags}
           selectedStudios={selectedStudios}
           onToggleGenre={handleToggleGenre}
+          onToggleTag={handleToggleTag}
           onToggleStudio={handleToggleStudio}
         />
 
         <main className="main-content">
           {/* Pass search + filters to whatever page is currently rendered */}
-          <Outlet context={{ searchText, selectedGenres, selectedStudios }} />
+          <Outlet context={{ searchText, selectedGenres, selectedTags, selectedStudios }} />
         </main>
 
       </div>

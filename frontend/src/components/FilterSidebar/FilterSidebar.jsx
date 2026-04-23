@@ -2,15 +2,18 @@ import FilterSection from "../FilterSection/FilterSection";
 import ScrollArea from "../ScrollArea/ScrollArea";
 import "./FilterSidebar.css";
 
-// The sidebar that contains all filter sections (Genre and Studio).
+// The sidebar that contains all filter sections (Genre, Tags, and Studio).
 // It slides in/out based on the "isOpen" prop.
 function FilterSidebar({
   isOpen,
   genres,
+  tags,
   studios,
   selectedGenres,
+  selectedTags,
   selectedStudios,
   onToggleGenre,
+  onToggleTag,
   onToggleStudio,
 }) {
   return (
@@ -29,6 +32,13 @@ function FilterSidebar({
             options={genres}
             selectedOptions={selectedGenres}
             onToggleOption={onToggleGenre}
+          />
+
+          <FilterSection
+            title="Tags"
+            options={tags}
+            selectedOptions={selectedTags}
+            onToggleOption={onToggleTag}
           />
 
           <FilterSection
