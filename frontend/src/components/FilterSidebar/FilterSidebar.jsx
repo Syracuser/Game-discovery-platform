@@ -42,7 +42,7 @@ function FilterSidebar({
           />
 
           <FilterSection
-            title="Studio"
+            title="Studios"
             options={studios}
             selectedOptions={selectedStudios}
             onToggleOption={onToggleStudio}
