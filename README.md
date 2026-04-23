@@ -219,13 +219,23 @@ frontend/
 - Connect the ML model to the backend
 - Serve predictions through the API
 
-### Phase 5 — Core Features (Full-Stack)
-- Similar games — backend endpoint + frontend UI
+### Phase 5 — Game Details Page
+- Build the `GameDetails.jsx` page
+- Display full game info: description, genres, and tags
+- Connect the page to the backend end-to-end (E2E)
+
+### Phase 6 — Recommendations Page
+- Build the Recommendations page
+- Let the user select preferences (genres, tags, etc.) as input
+- Send the input to the ML model via the API
+- Display a ranked list of recommended games (highest to lowest score)
+
+### Phase 7 — Additional + Core Features (Full-Stack) 
+- Similar games section in the 'Game Details' page
 - Wishlist system — backend endpoint + frontend UI
-- Recommendations page — frontend connected to ML API
 - Recommendation explanations — "Why you might like this" insights
 
-### Phase 6 — UI Improvements
+### Phase 8 — UI Improvements
 - Add Home page sections
 - Improve layout and usability
 
