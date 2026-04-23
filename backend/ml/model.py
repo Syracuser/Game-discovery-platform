@@ -162,15 +162,22 @@ if __name__ == "__main__":
         },
     ]
 
+    # Three real games to score — chosen to be very different so we can see clear contrast in predictions
     games_to_score = [
         {"name": "Titanfall 2",  "genres": ["Action", "FPS", "Multiplayer"], "tags": ["fast-paced", "mechs", "parkour", "shooter"]},
         {"name": "Hollow Knight", "genres": ["Action", "Metroidvania", "Indie"], "tags": ["atmospheric", "exploration", "difficult", "insects"]},
         {"name": "Sekiro",        "genres": ["Action", "Soulslike"],              "tags": ["hard", "samurai", "japan", "stealth"]},
     ]
 
+    # For each test user, score every game and print the predicted match percentage
     for user in test_cases:
         print(f"\n{user['label']} ({user['genres']}):")
         for game in games_to_score:
-            vec  = build_feature_vector(user["genres"], user["tags"], game["genres"], game["tags"])
-            prob = model.predict_proba([vec])[0][1]  # probability that liked=1
+            # Build the overlap vector between this user's preferences and this game's traits
+            vec = build_feature_vector(user["genres"], user["tags"], game["genres"], game["tags"])
+
+            # predict_proba returns [[prob_dislike, prob_like]] — [0][1] grabs the "like" probability
+            prob = model.predict_proba([vec])[0][1]
+
+            # :<20 left-aligns the game name in a 20-character-wide column so results line up neatly
             print(f"  {game['name']:<20} {prob:.0%} match")
