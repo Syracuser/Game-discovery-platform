@@ -8,11 +8,11 @@ from services.recommender import get_recommendations
 
 router = APIRouter()
 
-
 # Defines the shape of the request body the client must send
 class UserPreferences(BaseModel):
     genres: list[str]
     tags: list[str]
+
 
 # Processing the user's preferences through the recommend_games function and returns ranked results
 @router.post("/recommend")

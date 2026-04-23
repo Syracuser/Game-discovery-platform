@@ -24,7 +24,7 @@ async def get_game(game_id: str):
     # Check if the ID is a valid MongoDB ObjectId format
     if not ObjectId.is_valid(game_id):
         raise HTTPException(status_code=400, detail="Invalid game ID format")
-
+    
     game = await games_collection.find_one({"_id": ObjectId(game_id)})
     
     # Check if a game exists with the ID provided
@@ -43,19 +43,6 @@ async def add_game(game: GameModel):
     return {"message": "Game added successfully", "id": str(result.inserted_id)}
 
 
-@router.get("/genres")
-async def get_all_genres():
-    """Return a sorted list of every unique genre across all games."""
-    genres = await games_collection.distinct("genres")
-    return sorted(genres)
-
-
-@router.get("/studios")
-async def get_all_studios():
-    """Return a sorted list of every unique studio across all games."""
-    studios = await games_collection.distinct("studio")
-    return sorted(studios)
-
 
 """
 Game Routes
@@ -64,8 +51,6 @@ Handles all API endpoints related to games:
 - GET /games — retrieve all games
 - GET /games/{id} — retrieve a single game by its ID
 - POST /games — add a new game to the database
-- GET /genres — retrieve all unique genres
-- GET /studios — retrieve all unique studios
 
 Uses APIRouter instead of putting routes directly on the app.
 This keeps our code organized — game routes live here,
