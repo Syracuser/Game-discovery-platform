@@ -28,7 +28,7 @@ function FilterSidebar({
           <h2 className="filter-sidebar__title">Filters</h2>
 
           <FilterSection
-            title="Genre"
+            title="Genres"
             options={genres}
             selectedOptions={selectedGenres}
             onToggleOption={onToggleGenre}
