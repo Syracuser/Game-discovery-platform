@@ -9,7 +9,7 @@ router = APIRouter()
 @router.get("/games")
 async def get_all_games():
     """Fetch every game from the database and return them as a list."""
-    games = await games_collection.find().to_list()
+    games = await games_collection.find().to_list(None)
 
     # MongoDB stores IDs as ObjectId objects, but JSON can't handle those,
     # so we convert each game's "_id" to a regular string

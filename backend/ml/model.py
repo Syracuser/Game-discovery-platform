@@ -17,7 +17,13 @@ from sklearn.metrics import accuracy_score
 
 # These lists are manually derived from the games currently in the database.
 # The order matters — it defines positions in the feature vector.
-# If you add new games with new genres or tags, update these lists and retrain the model.
+#
+# ⚠️  IMPORTANT: If you add new games with new genres or tags, you must:
+#   1. Add the new genre/tag to the correct list below
+#   2. Retrain the model by running: python ml/model.py
+#
+# If these lists fall out of sync with the database, unknown genres/tags will be
+# silently ignored by the recommender and recommendations will be less accurate.
 ALL_GENRES = [
     "Action", "FPS", "Multiplayer", "Indie", "Soulslike",
     "Open World", "Adventure", "Hack and Slash", "Roguelike",
