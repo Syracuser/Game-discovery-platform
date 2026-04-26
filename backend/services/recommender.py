@@ -2,13 +2,30 @@
 # Scores every game in the database against the user's preferences
 # and returns them sorted by match probability (best match first).
 
+from fastapi import HTTPException
 from database.connection import games_collection
 from ml.model import build_feature_vector, load_model
 
+# Load once when the module is first imported (at server startup).
+# Reused for every request — no repeated disk I/O.
+# If the model file doesn't exist yet, _model is set to None and
+# each request will return a clear 503 error instead of crashing.
+
+try:
+    _model = load_model()
+except FileNotFoundError:
+    _model = None
+
 
 async def get_recommendations(user_genres: list[str], user_tags: list[str]) -> list[dict]:
-    
-    model = load_model()
+
+    if _model is None:
+        raise HTTPException(
+            status_code=503,
+            detail="Recommendation service unavailable — model not trained yet. Run ml/model.py first."
+        )
+
+    model = _model
 
     # Fetch all games from the database
     games = await games_collection.find().to_list()
