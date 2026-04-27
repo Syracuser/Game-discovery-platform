@@ -23,6 +23,26 @@
   color: #e94560;
 }
 
+.filter-section__header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter-section__clear {
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: #e94560;
+  border: 1px solid #e94560;
+  border-radius: 4px;
+  padding: 1px 6px;
+}
+
+.filter-section__clear:hover {
+  background-color: #e94560;
+  color: #fff;
+}
+
 /* Arrow indicator — points right when closed, rotates down when open */
 .filter-section__arrow {
   font-size: 0.9rem;

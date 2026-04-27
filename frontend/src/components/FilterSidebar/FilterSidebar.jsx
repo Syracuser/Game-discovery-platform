@@ -11,10 +11,11 @@ function FilterSidebar({
   studios,
   selectedGenres,
   selectedTags,
-  selectedStudios,
+  selectedStudio,
   onToggleGenre,
   onToggleTag,
-  onToggleStudio,
+  onSelectStudio,
+  onClearStudio,
 }) {
   return (
     <aside className={`filter-sidebar ${isOpen ? "filter-sidebar--open" : ""}`}>
@@ -44,8 +45,10 @@ function FilterSidebar({
           <FilterSection
             title="Studios"
             options={studios}
-            selectedOptions={selectedStudios}
-            onToggleOption={onToggleStudio}
+            selectedOptions={selectedStudio}
+            onToggleOption={onSelectStudio}
+            singleSelect={true}
+            onClearOption={onClearStudio}
           />
         </ScrollArea>
 

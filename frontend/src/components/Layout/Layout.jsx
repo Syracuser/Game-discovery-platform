@@ -31,7 +31,7 @@ function Layout() {
 
   const [selectedGenres, setSelectedGenres]   = useState([]);  // checked items
   const [selectedTags, setSelectedTags]       = useState([]);  // checked items
-  const [selectedStudios, setSelectedStudios] = useState([]);  // checked items
+  const [selectedStudio, setSelectedStudio]   = useState(""); // single selected studio
 
 
   // ── Data fetching ────────────────────────────
@@ -75,13 +75,14 @@ function Layout() {
     );
   }
 
-  /** Same logic as handleToggleGenre, but for studios. */
-  function handleToggleStudio(studio) {
-    setSelectedStudios((prev) =>
-      prev.includes(studio)
-        ? prev.filter((s) => s !== studio)
-        : [...prev, studio]
-    );
+  // Stores the studio the user picked inside selectedStudio.
+  function handleSelectStudio(studio) {
+    setSelectedStudio(studio);
+  }
+
+  // Removes the stored studio inside selectedStudio.
+  function handleClearStudio() {
+    setSelectedStudio("");
   }
 
 
@@ -107,15 +108,16 @@ function Layout() {
           studios={studios}
           selectedGenres={selectedGenres}
           selectedTags={selectedTags}
-          selectedStudios={selectedStudios}
+          selectedStudio={selectedStudio}
           onToggleGenre={handleToggleGenre}
           onToggleTag={handleToggleTag}
-          onToggleStudio={handleToggleStudio}
+          onSelectStudio={handleSelectStudio}
+          onClearStudio={handleClearStudio}
         />
 
         <main className="main-content">
           {/* Pass search + filters to whatever page is currently rendered */}
-          <Outlet context={{ searchText, selectedGenres, selectedTags, selectedStudios }} />
+          <Outlet context={{ searchText, selectedGenres, selectedTags, selectedStudio }} />
         </main>
 
       </div>
