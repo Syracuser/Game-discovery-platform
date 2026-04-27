@@ -6,6 +6,17 @@ from routes.games import router as games_router
 from routes.recommend import router as recommend_router
 from routes.options import router as options_router
 
+"""
+Lifespan controls what happens when the server starts and stops.
+
+Think of it like opening and closing a shop:
+- Opening (startup): turn on the lights, check everything works
+- Closing (shutdown): clean up, turn off the lights
+
+The 'yield' in the middle is where the server actually runs and
+handles requests. Everything before yield = startup logic,
+everything after yield = shutdown logic.
+"""
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -38,14 +49,4 @@ app.include_router(recommend_router)
 app.include_router(options_router)
 
 
-"""
-Lifespan controls what happens when the server starts and stops.
 
-Think of it like opening and closing a shop:
-- Opening (startup): turn on the lights, check everything works
-- Closing (shutdown): clean up, turn off the lights
-
-The 'yield' in the middle is where the server actually runs and
-handles requests. Everything before yield = startup logic,
-everything after yield = shutdown logic.
-"""

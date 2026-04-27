@@ -3,6 +3,20 @@ from bson import ObjectId
 from database.connection import games_collection
 from models.game_model import GameModel
 
+"""
+Game Routes
+
+Handles all API endpoints related to games:
+- GET /games — retrieve all games
+- GET /games/{id} — retrieve a single game by its ID
+- POST /games — add a new game to the database
+
+Uses APIRouter instead of putting routes directly on the app.
+This keeps our code organized — game routes live here,
+and later, wishlist routes can live in their own file.
+"""
+
+
 router = APIRouter()
 
 
@@ -44,15 +58,3 @@ async def add_game(game: GameModel):
 
 
 
-"""
-Game Routes
-
-Handles all API endpoints related to games:
-- GET /games — retrieve all games
-- GET /games/{id} — retrieve a single game by its ID
-- POST /games — add a new game to the database
-
-Uses APIRouter instead of putting routes directly on the app.
-This keeps our code organized — game routes live here,
-and later, wishlist routes can live in their own file.
-"""
