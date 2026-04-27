@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import axios from "axios";
+import API_URL from "../../api/config";
 import Navbar from "../Navbar/Navbar";
 import FilterSidebar from "../FilterSidebar/FilterSidebar";
 import "./Layout.css";
@@ -37,15 +38,15 @@ function Layout() {
   // Load genres and studios once when the app first mounts
 
   useEffect(() => {
-    axios.get("http://localhost:8000/genres")
+    axios.get(`${API_URL}/genres`)
       .then((response) => setGenres(response.data))
       .catch((error) => console.error("Failed to fetch genres:", error));
 
-    axios.get("http://localhost:8000/tags")
+    axios.get(`${API_URL}/tags`)
       .then((response) => setTags(response.data))
       .catch((error) => console.error("Failed to fetch tags:", error));
 
-    axios.get("http://localhost:8000/studios")
+    axios.get(`${API_URL}/studios`)
       .then((response) => setStudios(response.data))
       .catch((error) => console.error("Failed to fetch studios:", error));
   }, []);

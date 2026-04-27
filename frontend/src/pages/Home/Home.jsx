@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import axios from "axios";
+import API_URL from "../../api/config";
 import GameCard from "../../components/GameCard/GameCard";
 import "./Home.css";
 
@@ -27,7 +28,7 @@ function Home() {
   // ── Data fetching ────────────────────────────
 
   useEffect(() => {
-    axios.get("http://localhost:8000/games")
+    axios.get(`${API_URL}/games`)
       .then((response) => setGames(response.data))
       .catch((error) => {
         console.error("Failed to fetch games:", error);
@@ -60,7 +61,9 @@ function Home() {
   // Apply search, genre, and studio filters before rendering
 
   const filteredGames = games
+    
     .filter((game) =>
+      // Filters by search. If nothing searched, return all games.
       game.name.toLowerCase().includes(searchText.toLowerCase())
     )
     .filter((game) =>
