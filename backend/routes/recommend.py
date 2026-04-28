@@ -2,7 +2,7 @@
 # Exposes the POST /recommend endpoint.
 # Receives the user's preferred genres and tags, returns games ranked by match score.
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from services.recommender import get_recommendations
 
@@ -17,5 +17,8 @@ class UserPreferences(BaseModel):
 # Processing the user's preferences through the recommend_games function and returns ranked results
 @router.post("/recommend")
 async def recommend_games(preferences: UserPreferences):
-    results = await get_recommendations(preferences.genres, preferences.tags)
-    return results
+    try:
+        results = await get_recommendations(preferences.genres, preferences.tags)
+        return results
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Recommendation service failed: {str(e)}")
