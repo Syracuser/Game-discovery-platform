@@ -20,5 +20,6 @@ async def recommend_games(preferences: UserPreferences):
     try:
         results = await get_recommendations(preferences.genres, preferences.tags)
         return results
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Recommendation service failed: {str(e)}")

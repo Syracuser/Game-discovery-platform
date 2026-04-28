@@ -55,25 +55,21 @@ function Layout() {
   // ── Filter handlers ──────────────────────────
 
   /**
-   * Toggle a genre on/off.
-   * If already selected → remove it. If not → add it.
+   * 'Factory' that produces a toggle-handler function for a given state setter.
+   * Returns a function that adds a value if it's not selected, or removes it if it is.
    */
-  function handleToggleGenre(genre) {
-    setSelectedGenres((prev) =>
-      prev.includes(genre)
-        ? prev.filter((g) => g !== genre)
-        : [...prev, genre]
-    );
+  function makeToggler(setState) {
+    return (value) =>
+      setState((prev) =>
+        prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
+      );
   }
 
-  /** Same logic as handleToggleGenre, but for tags. */
-  function handleToggleTag(tag) {
-    setSelectedTags((prev) =>
-      prev.includes(tag)
-        ? prev.filter((t) => t !== tag)
-        : [...prev, tag]
-    );
-  }
+
+  const handleToggleGenre = makeToggler(setSelectedGenres);
+  const handleToggleTag   = makeToggler(setSelectedTags);
+
+
 
   // Stores the studio the user picked inside selectedStudio.
   function handleSelectStudio(studio) {
@@ -84,6 +80,8 @@ function Layout() {
   function handleClearStudio() {
     setSelectedStudio("");
   }
+
+
 
 
   // ── Render ───────────────────────────────────
