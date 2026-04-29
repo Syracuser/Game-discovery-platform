@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 from bson import ObjectId
 from database.connection import games_collection
 from models.game_model import GameModel
+from ml.model import ALL_GENRES, ALL_TAGS
 
 """
 Game Routes
@@ -52,9 +53,22 @@ async def get_game(game_id: str):
 @router.post("/games")
 async def add_game(game: GameModel):
     """Add a new game to the database."""
+    # Check if the genres of the game being added are not in the  ALL_GENRES and ALL_TAGS lists.
+    unknown_genres = [g for g in game.genres if g not in ALL_GENRES]
+    unknown_tags   = [t for t in game.tags   if t not in ALL_TAGS]
+
     result = await games_collection.insert_one(game.model_dump())
 
-    return {"message": "Game added successfully", "id": str(result.inserted_id)}
+    response = {"message": "Game added successfully", "id": str(result.inserted_id)}
+
+    if unknown_genres or unknown_tags:
+        response["warnings"] = {
+            "unknown_genres": unknown_genres,
+            "unknown_tags": unknown_tags,
+            "note": "These will be ignored by the ML model until you update ALL_GENRES/ALL_TAGS and retrain.",
+        }
+
+    return response
 
 
 
