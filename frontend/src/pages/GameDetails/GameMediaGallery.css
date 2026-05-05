@@ -1,0 +1,93 @@
+.game-media-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ── Main screenshot ────────────────────────────────── */
+
+.game-media-gallery__main {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #16213e;
+}
+
+.game-media-gallery__main-image {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── Arrow navigation ───────────────────────────────── */
+
+.game-media-gallery__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #e0e0e0;
+  font-size: 1.8rem;
+  line-height: 1;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.game-media-gallery__arrow:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.game-media-gallery__arrow--left  { left: 12px; }
+.game-media-gallery__arrow--right { right: 12px; }
+
+/* ── Thumbnail strip ────────────────────────────────── */
+
+.game-media-gallery__thumbnails {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+/* Hide scrollbar while keeping scroll behaviour */
+.game-media-gallery__thumbnails::-webkit-scrollbar { height: 4px; }
+.game-media-gallery__thumbnails::-webkit-scrollbar-track { background: transparent; }
+.game-media-gallery__thumbnails::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+}
+
+.game-media-gallery__thumb {
+  flex-shrink: 0;
+  width: 120px;
+  padding: 0;
+  background: none;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.game-media-gallery__thumb img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+}
+
+.game-media-gallery__thumb--active {
+  border-color: #e94560;
+}
+
+.game-media-gallery__thumb:hover:not(.game-media-gallery__thumb--active) {
+  border-color: rgba(255, 255, 255, 0.3);
+}

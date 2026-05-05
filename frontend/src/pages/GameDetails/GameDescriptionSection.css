@@ -1,0 +1,17 @@
+.game-description-section {
+  padding-top: 28px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.game-description-section__heading {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 12px;
+}
+
+.game-description-section__text {
+  font-size: 0.9rem;
+  color: #b0b0c0;
+  line-height: 1.7;
+}

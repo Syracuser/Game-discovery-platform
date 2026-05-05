@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, Link } from "react-router-dom";
 import axios from "axios";
 import API_URL from "../../api/config";
 import GameCard from "../../components/GameCard/GameCard";
@@ -90,7 +90,9 @@ function Home() {
       <h1 className="home__title">All Games</h1>
       <div className="home__games-grid">
         {filteredGames.map((game) => (
-          <GameCard key={game._id} game={game} />
+          <Link to={`/games/${game._id}`} key={game._id} className="home__game-link">
+            <GameCard game={game} />
+          </Link>
         ))}
       </div>
     </div>

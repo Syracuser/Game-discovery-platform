@@ -1,0 +1,146 @@
+.game-sidebar {
+  background-color: #1a1a2e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  overflow: hidden;
+  position: sticky;
+  top: 80px; /* clears the navbar height so it stays visible while scrolling */
+}
+
+/* ── Cover image ────────────────────────────────────── */
+
+.game-sidebar__cover {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── Description ────────────────────────────────────── */
+
+.game-sidebar__description {
+  font-size: 0.82rem;
+  color: #b0b0c0;
+  line-height: 1.6;
+  padding: 16px 16px 0;
+}
+
+/* ── Divider ────────────────────────────────────────── */
+
+.game-sidebar__divider {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin: 16px 0;
+}
+
+/* ── Genre & tag pill groups ────────────────────────── */
+
+.game-sidebar__pill-group {
+  padding: 0 16px;
+  margin-bottom: 14px;
+}
+
+.game-sidebar__pill-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.game-sidebar__pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.game-sidebar__pill {
+  font-size: 0.78rem;
+  color: #c0c0d0;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 4px 12px;
+}
+
+.game-sidebar__pill--more {
+  color: #888;
+  background-color: transparent;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ── Action buttons ─────────────────────────────────── */
+
+.game-sidebar__actions {
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.game-sidebar__action-btn {
+  width: 100%;
+  padding: 10px 16px;
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #e0e0e0;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.game-sidebar__action-btn:hover {
+  background-color: rgba(233, 69, 96, 0.12);
+  border-color: rgba(233, 69, 96, 0.35);
+}
+
+.game-sidebar__action-icon {
+  font-size: 1rem;
+}
+
+/* ── Metadata table ─────────────────────────────────── */
+
+.game-sidebar__metadata {
+  padding: 0 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.game-sidebar__meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.game-sidebar__meta-label {
+  font-size: 0.8rem;
+  color: #888;
+  flex-shrink: 0;
+}
+
+.game-sidebar__meta-value {
+  font-size: 0.8rem;
+  color: #e0e0e0;
+  text-align: right;
+}
+
+.game-sidebar__meta-value--rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.game-sidebar__stars {
+  color: #f5c518;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+}

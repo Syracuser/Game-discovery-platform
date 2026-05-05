@@ -8,7 +8,12 @@ class GameModel(BaseModel):
     rating: float
     studio: str
     price: float
-    image: str = ""  # URL to the game's cover image
+    image: str = ""
+    description: str = ""
+    screenshots: list[str] = []
+    publisher: str = ""
+    release_date: str = ""
+    system_requirements: dict = {}
 
 
 """
