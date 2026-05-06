@@ -59,7 +59,7 @@ function GameDetails() {
 
 
   // ── Breadcrumb ───────────────────────────────
-  // Use the first genre as the middle crumb (matches the mockup pattern)
+  // Use the first genre from the 'Genres' list as the middle crumb 
   const primaryGenre = game.genres[0] || "Games";
 
 
@@ -68,8 +68,11 @@ function GameDetails() {
   return (
     <div className="game-details">
 
-      {/* Page header — breadcrumb left, title centred */}
+      {/* ── Page header ─────────────────────────────
+          Breadcrumb sits at the left edge.
+          Title is centred across the full row.       */}
       <div className="game-details__header">
+
         <nav className="game-details__breadcrumb" aria-label="breadcrumb">
           <Link to="/" className="game-details__breadcrumb-link">Home</Link>
           <span className="game-details__breadcrumb-sep">›</span>
@@ -79,13 +82,17 @@ function GameDetails() {
           <span className="game-details__breadcrumb-sep">›</span>
           <span className="game-details__breadcrumb-current">{game.name}</span>
         </nav>
+
         <h1 className="game-details__title">{game.name}</h1>
+
       </div>
 
-      {/* Two-column body */}
+
+      {/* ── Two-column body ─────────────────────────
+          Left  — gallery, description, system requirements
+          Right — sidebar (cover, genres, tags, buttons, metadata) */}
       <div className="game-details__body">
 
-        {/* Left — gallery + description + system requirements */}
         <div className="game-details__left">
           <GameMediaGallery screenshots={game.screenshots} name={game.name} />
           <GameDescriptionSection description={game.description} />
@@ -98,6 +105,7 @@ function GameDetails() {
         </aside>
 
       </div>
+
     </div>
   );
 }

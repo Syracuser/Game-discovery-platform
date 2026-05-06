@@ -1,21 +1,29 @@
 import { useState } from "react";
 import "./GameMediaGallery.css";
 
-/*
-  GameMediaGallery
-
-  Displays the main large screenshot and a strip of clickable thumbnails below it.
-  Prev/Next arrow buttons let the user cycle through screenshots without touching
-  the thumbnail strip.
-
-  selectedIndex tracks which screenshot is currently shown.
-  All navigation (arrows + thumbnails) just updates that one number.
-*/
+// ─────────────────────────────────────────────
+// GameMediaGallery — the screenshot gallery.
+// Shows one large screenshot at a time, with
+// left/right arrows to cycle through them and
+// a thumbnail strip below to jump to any one directly.
+// ─────────────────────────────────────────────
 
 function GameMediaGallery({ screenshots, name }) {
+
+  // ── State ────────────────────────────────────
+  // Tracks the position of the screenshot currently on screen.
+  // 0 = first screenshot, 1 = second, and so on.
   const [selectedIndex, setSelectedIndex] = useState(0);
 
+
+  // ── Guard ────────────────────────────────────
+  // If no screenshots were provided, render nothing at all.
+
   if (!screenshots || screenshots.length === 0) return null;
+
+
+  // ── Navigation handlers ───────────────────────
+  // Both wrap around — prev on the first goes to the last, and vice versa.
 
   function handlePrev() {
     setSelectedIndex((prev) => (prev === 0 ? screenshots.length - 1 : prev - 1));
@@ -27,18 +35,22 @@ function GameMediaGallery({ screenshots, name }) {
     );
   }
 
+
+  // ── Render ───────────────────────────────────
+
   return (
     <div className="game-media-gallery">
 
-      {/* Main current large screenshot */}
+      {/* Main large screenshot — shows whichever screenshot selectedIndex points to */}
       <div className="game-media-gallery__main">
+
         <img
           className="game-media-gallery__main-image"
           src={screenshots[selectedIndex]}
           alt={`${name} screenshot ${selectedIndex + 1}`}
         />
 
-        {/* If there's more than one image/screenshot, render arrow buttons */}
+        {/* Only show arrows if there is more than one screenshot to cycle through */}
         {screenshots.length > 1 && (
           <>
             <button
@@ -58,9 +70,11 @@ function GameMediaGallery({ screenshots, name }) {
             </button>
           </>
         )}
+
       </div>
 
-      {/* Thumbnail strip */}
+      {/* Thumbnail strip — the row of small preview images below the main one.
+          Clicking a thumbnail jumps directly to that screenshot. */}
       {screenshots.length > 1 && (
         <div className="game-media-gallery__thumbnails">
           {screenshots.map((src, index) => (
