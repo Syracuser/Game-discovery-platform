@@ -13,7 +13,7 @@ function GameMediaGallery({ screenshots, name }) {
   // ── State ────────────────────────────────────
   // Tracks the position of the screenshot currently on screen.
   // 0 = first screenshot, 1 = second, and so on.
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [currentScreenshot, setCurrentScreenshot] = useState(0);
 
 
   // ── Guard ────────────────────────────────────
@@ -26,11 +26,11 @@ function GameMediaGallery({ screenshots, name }) {
   // Both wrap around — prev on the first goes to the last, and vice versa.
 
   function handlePrev() {
-    setSelectedIndex((prev) => (prev === 0 ? screenshots.length - 1 : prev - 1));
+    setCurrentScreenshot((prev) => (prev === 0 ? screenshots.length - 1 : prev - 1));
   }
 
   function handleNext() {
-    setSelectedIndex((prev) =>
+    setCurrentScreenshot((prev) =>
       prev === screenshots.length - 1 ? 0 : prev + 1
     );
   }
@@ -41,13 +41,13 @@ function GameMediaGallery({ screenshots, name }) {
   return (
     <div className="game-media-gallery">
 
-      {/* Main large screenshot — shows whichever screenshot selectedIndex points to */}
+      {/* Main large screenshot — shows whichever screenshot currentScreenshot points to */}
       <div className="game-media-gallery__main">
 
         <img
           className="game-media-gallery__main-image"
-          src={screenshots[selectedIndex]}
-          alt={`${name} screenshot ${selectedIndex + 1}`}
+          src={screenshots[currentScreenshot]}
+          alt={`${name} screenshot ${currentScreenshot + 1}`}
         />
 
         {/* Only show arrows if there is more than one screenshot to cycle through */}
@@ -76,20 +76,22 @@ function GameMediaGallery({ screenshots, name }) {
       {/* Thumbnail strip — the row of small preview images below the main one.
           Clicking a thumbnail jumps directly to that screenshot. */}
       {screenshots.length > 1 && (
+
         <div className="game-media-gallery__thumbnails">
           {screenshots.map((src, index) => (
             <button
               key={index}
               className={`game-media-gallery__thumb ${
-                index === selectedIndex ? "game-media-gallery__thumb--active" : ""
+                index === currentScreenshot ? "game-media-gallery__thumb--active" : ""
               }`}
-              onClick={() => setSelectedIndex(index)}
+              onClick={() => setCurrentScreenshot(index)}
               aria-label={`View screenshot ${index + 1}`}
             >
               <img src={src} alt={`${name} thumbnail ${index + 1}`} />
             </button>
           ))}
         </div>
+        
       )}
 
     </div>
