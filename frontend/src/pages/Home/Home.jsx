@@ -15,7 +15,11 @@ function Home() {
 
   // ── Context (from Layout) ────────────────────
   // These come from the Outlet — passed down by Layout
-  const { searchText, selectedGenres, selectedTags, selectedStudio } = useOutletContext();
+  const { searchText, selectedGenres, selectedTags, selectedStudio, filterOrder } = useOutletContext();
+
+  // The first filter the user checked (or null if no filters are active).
+  // Encoded into the game URL so GameDetails can show the correct breadcrumb.
+  const firstFilter = filterOrder[0] ?? null;
 
 
   // ── State ────────────────────────────────────
@@ -90,7 +94,11 @@ function Home() {
       <h1 className="home__title">All Games</h1>
       <div className="home__games-grid">
         {filteredGames.map((game) => (
-          <Link to={`/games/${game._id}`} key={game._id} className="home__game-link">
+          <Link
+            to={`/games/${game._id}${firstFilter ? `?filter=${firstFilter.type}:${firstFilter.value}` : ""}`}
+            key={game._id}
+            className="home__game-link"
+          >
             <GameCard game={game} />
           </Link>
         ))}

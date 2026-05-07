@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import API_URL from "../../api/config";
 import GameMediaGallery from "./GameMediaGallery";
@@ -15,8 +15,21 @@ import "./GameDetails.css";
 // then renders all sections.
 // ─────────────────────────────────────────────
 
+// Parses "genre:Action" or "tag:dark" from the ?filter query param.
+function parseFilterParam(param) {
+  const colonIdx = param.indexOf(":");
+  if (colonIdx === -1) return null;
+  return { type: param.slice(0, colonIdx), value: param.slice(colonIdx + 1) };
+}
+
+
 function GameDetails() {
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
+
+  // Read the ?filter=genre:Action query param (null if the user arrived without a filter)
+  const filterParam = searchParams.get("filter");
+  const firstFilter = filterParam ? parseFilterParam(filterParam) : null;
 
   const [game, setGame]       = useState(null);
   const [loading, setLoading] = useState(true);
@@ -58,9 +71,6 @@ function GameDetails() {
   }
 
 
-  // ── Breadcrumb ───────────────────────────────
-  // Use the first genre from the 'Genres' list as the middle crumb 
-  const primaryGenre = game.genres[0] || "Games";
 
 
   // ── Render ───────────────────────────────────
@@ -77,8 +87,21 @@ function GameDetails() {
           <Link to="/" className="game-details__breadcrumb-link">Home</Link>
           <span className="game-details__breadcrumb-sep">›</span>
           <Link to="/" className="game-details__breadcrumb-link">Games</Link>
-          <span className="game-details__breadcrumb-sep">›</span>
-          <span className="game-details__breadcrumb-current">{primaryGenre}</span>
+
+          {/* Only show the filter crumb if the user arrived via a filter */}
+          {firstFilter && (
+            <>
+              <span className="game-details__breadcrumb-sep">›</span>
+              <Link
+                to="/"
+                state={{ preselect: firstFilter }}
+                className="game-details__breadcrumb-link"
+              >
+                {firstFilter.value}
+              </Link>
+            </>
+          )}
+
           <span className="game-details__breadcrumb-sep">›</span>
           <span className="game-details__breadcrumb-current">{game.name}</span>
         </nav>

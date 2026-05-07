@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import API_URL from "../../api/config";
 import Navbar from "../Navbar/Navbar";
@@ -33,6 +33,11 @@ function Layout() {
   const [selectedTags, setSelectedTags]       = useState([]);  // checked items
   const [selectedStudio, setSelectedStudio]   = useState(""); // single selected studio
 
+  // Tracks the order filters were checked in, across genres and tags.
+  // Each entry is { type: 'genre'|'tag', value: string }.
+  // The first element is what appears in the GameDetails breadcrumb.
+  const [filterOrder, setFilterOrder] = useState([]);
+
 
   // ── Data fetching ────────────────────────────
   // Load genres and studios once when the app first mounts
@@ -52,22 +57,53 @@ function Layout() {
   }, []);
 
 
+  const navigate = useNavigate();
+
+  // ── Preselect handler ────────────────────────
+  // When the user clicks a filter crumb in the GameDetails breadcrumb,
+  // they're sent back to "/" with { preselect: { type, value } } in location.state.
+  // This effect reads that state, applies the filter, opens the sidebar,
+  // then clears the state so it doesn't re-apply on future renders.
+  useEffect(() => {
+    if (!isHomePage || !location.state?.preselect) return;
+
+    const { type, value } = location.state.preselect;
+    
+    if (type === "genre") setSelectedGenres([value]);
+    if (type === "tag")   setSelectedTags([value]);
+    
+    setFilterOrder([{ type, value }]);
+    setIsSidebarOpen(true);
+
+    navigate("/", { replace: true, state: null });
+
+  }, [location.state]);
+
+
   // ── Filter handlers ──────────────────────────
 
   /**
    * 'Factory' that produces a toggle-handler function for a given state setter.
+   * Also updates filterOrder so the first-checked filter can be passed to GameDetails.
    * Returns a function that adds a value if it's not selected, or removes it if it is.
    */
-  function makeToggler(setState) {
-    return (value) =>
+  function makeToggler(setState, type) {
+    return (value) => {
       setState((prev) =>
         prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
       );
+      setFilterOrder((prev) => {
+        const exists = prev.some((f) => f.type === type && f.value === value);
+        return exists
+          ? prev.filter((f) => !(f.type === type && f.value === value))
+          : [...prev, { type, value }];
+      });
+    };
   }
 
 
-  const handleToggleGenre = makeToggler(setSelectedGenres);
-  const handleToggleTag   = makeToggler(setSelectedTags);
+  const handleToggleGenre = makeToggler(setSelectedGenres, "genre");
+  const handleToggleTag   = makeToggler(setSelectedTags, "tag");
 
 
 
@@ -115,7 +151,7 @@ function Layout() {
 
         <main className="main-content">
           {/* Pass search + filters to whatever page is currently rendered */}
-          <Outlet context={{ searchText, selectedGenres, selectedTags, selectedStudio }} />
+          <Outlet context={{ searchText, selectedGenres, selectedTags, selectedStudio, filterOrder }} />
         </main>
 
       </div>
