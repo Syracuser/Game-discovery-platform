@@ -65,6 +65,7 @@ function Layout() {
   // This effect reads that state, applies the filter, opens the sidebar,
   // then clears the state so it doesn't re-apply on future renders.
   useEffect(() => {
+    
     if (!isHomePage || !location.state?.preselect) return;
 
     const { type, value } = location.state.preselect;
