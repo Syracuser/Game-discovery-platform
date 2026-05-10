@@ -8,24 +8,22 @@ from ml.model import build_feature_vector, load_model, ALL_GENRES, ALL_TAGS
 
 # Load once when the module is first imported (at server startup).
 # Reused for every request — no repeated disk I/O.
-# If the model file doesn't exist yet, _model is set to None and
+# If the model file doesn't exist yet, model is set to None and
 # each request will return a clear 503 error instead of crashing.
 
 try:
-    _model = load_model()
+    model = load_model()
 except FileNotFoundError:
-    _model = None
+    model = None
 
 
 async def get_recommendations(user_genres: list[str], user_tags: list[str]) -> list[dict]:
 
-    if _model is None:
+    if model is None:
         raise HTTPException(
             status_code=503,
             detail="Recommendation service unavailable — model not trained yet. Run ml/model.py first."
         )
-
-    model = _model
 
     # Filter out any genres or tags the model doesn't know about.
     # This can happen if new games were added to the database but not to ALL_GENRES/ALL_TAGS
