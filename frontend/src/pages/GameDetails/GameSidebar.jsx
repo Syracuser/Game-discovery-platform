@@ -97,6 +97,7 @@ function GameSidebar({ game }) {
         </div>
       )}
 
+
       <hr className="game-sidebar__divider" />
 
       {/* Action buttons */}
@@ -119,7 +120,9 @@ function GameSidebar({ game }) {
 
       </div>
 
+
       <hr className="game-sidebar__divider" />
+
 
       {/* Metadata table */}
       <div className="game-sidebar__metadata">
