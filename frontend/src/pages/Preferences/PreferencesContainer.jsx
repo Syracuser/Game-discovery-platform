@@ -51,10 +51,15 @@ function PreferencesContainer({
 
       {/* ── Header ───────────────────────────── */}
       <div className="pref-container__header">
-        <h2 className="pref-container__title">{containerTitle}</h2>
+        <div className="pref-container__title-group">
+          <h2 className="pref-container__title">{containerTitle}</h2>
+          {selectedItems.length > 0 && (
+            <span className="pref-container__count-badge">{selectedItems.length}</span>
+          )}
+        </div>
         {selectedItems.length > 0 && (
           <button className="pref-container__clear-all" onClick={onClearAll}>
-            Clear All
+            Clear all
           </button>
         )}
       </div>
@@ -74,11 +79,11 @@ function PreferencesContainer({
         />
       </div>
 
-      {/* ── Selected Section ─────────────────── */}
+      {/* ── Your Picks section ───────────────── */}
       {/* Always visible when something is selected, regardless of search. */}
       {selectedItems.length > 0 && (
-        <div className="pref-container__selected-section">
-          <span className="pref-container__section-label">Selected</span>
+        <div className="pref-container__picks-box">
+          <span className="pref-container__picks-label">Your Picks</span>
           <div className="pref-container__chips">
             {selectedItems.map((item) => (
               <button
@@ -123,11 +128,18 @@ function PreferencesContainer({
         </div>
       </div>
 
-      {/* ── Expand / Collapse Button ─────────── */}
+      {/* ── Footer: availability counter + View more/less ── */}
       {hasMore && (
-        <button className="pref-container__expand-btn" onClick={onToggleExpand}>
-          {expanded ? "View Less ▲" : "View More ▼"}
-        </button>
+        <div className="pref-container__footer">
+          {!expanded && (
+            <span className="pref-container__available-count">
+              +{Math.max(0, totalUnselected - defaultCount)} more available
+            </span>
+          )}
+          <button className="pref-container__view-more" onClick={onToggleExpand}>
+            {expanded ? "View less ▲" : "View more ▼"}
+          </button>
+        </div>
       )}
 
     </div>

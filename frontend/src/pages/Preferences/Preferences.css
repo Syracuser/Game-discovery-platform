@@ -1,12 +1,13 @@
 /* ── Page wrapper ────────────────────────────────────────── */
 
 .preferences-page {
-  min-height: calc(100vh - 60px); /* leave room for the navbar */
+  min-height: calc(100vh - 60px);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 3rem 2rem 4rem;
-  gap: 2.5rem;
+  padding: 4rem 2rem 5rem;
+  gap: 3rem;
+  background: radial-gradient(ellipse at 50% 100%, rgba(233, 69, 96, 0.08) 0%, transparent 70%), #0f0f1a;
 }
 
 /* ── Loading state ───────────────────────────────────────── */
@@ -43,34 +44,35 @@
 
 .preferences-page__heading {
   text-align: center;
-  max-width: 600px;
+  max-width: 640px;
 }
 
 .preferences-page__title {
-  font-size: 1.8rem;
-  font-weight: 700;
+  font-size: 2.4rem;
+  font-weight: 800;
   color: #ffffff;
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.75rem;
+  line-height: 1.2;
+}
+
+.preferences-page__title-accent {
+  color: #e94560;
 }
 
 .preferences-page__subtitle {
-  font-size: 0.9rem;
-  color: #888;
-  line-height: 1.6;
+  font-size: 0.95rem;
+  color: #9a9ab0;
+  line-height: 1.65;
   margin: 0;
-}
-
-.preferences-page__subtitle strong {
-  color: #e0e0e0;
 }
 
 /* ── Side-by-side containers ─────────────────────────────── */
 
 .preferences-page__containers {
   display: flex;
-  gap: 2rem;
+  gap: 2.5rem;
   align-items: flex-start;
-  flex-wrap: wrap;    /* stacks on small screens */
+  flex-wrap: wrap;
   justify-content: center;
 }
 
@@ -80,25 +82,36 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.6rem;
+  gap: 1rem;
+}
+
+.preferences-page__summary {
+  font-size: 0.85rem;
+  color: #888;
+  margin: 0;
+}
+
+.preferences-page__summary strong {
+  color: #e0e0e0;
 }
 
 .preferences-page__submit-btn {
-  padding: 0.75rem 2.5rem;
+  padding: 0.85rem 3.5rem;
   font-size: 1rem;
   font-weight: 600;
-  border-radius: 8px;
+  border-radius: 10px;
   border: none;
   cursor: pointer;
   background-color: #e94560;
   color: #fff;
+  letter-spacing: 0.02em;
   transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
 }
 
 .preferences-page__submit-btn:hover:not(:disabled) {
   background-color: #c73550;
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(233, 69, 96, 0.35);
+  box-shadow: 0 8px 28px rgba(233, 69, 96, 0.55);
 }
 
 .preferences-page__submit-btn:active:not(:disabled) {
@@ -108,10 +121,4 @@
 .preferences-page__submit-btn--disabled {
   opacity: 0.4;
   cursor: not-allowed;
-}
-
-.preferences-page__submit-hint {
-  font-size: 0.78rem;
-  color: #555;
-  margin: 0;
 }

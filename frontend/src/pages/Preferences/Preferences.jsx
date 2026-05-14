@@ -108,16 +108,20 @@ function Preferences() {
   }
 
   const hasSelections = selectedGenres.length > 0 || selectedTags.length > 0;
+  const totalSelected = selectedGenres.length + selectedTags.length;
 
   return (
     <div className="preferences-page">
 
       {/* ── Page heading ───────────────────── */}
       <div className="preferences-page__heading">
-        <h1 className="preferences-page__title">Your Preferences</h1>
+        <h1 className="preferences-page__title">
+          Tell us what you're{" "}
+          <span className="preferences-page__title-accent">into.</span>
+        </h1>
         <p className="preferences-page__subtitle">
-          Pick the genres and tags that interest you most, then hit{" "}
-          <strong>Submit Preferences</strong> to get personalised game recommendations.
+          Pick a few genres and tags so we can rank games you'll actually want to play.
+          The more you pick, the sharper the recommendations.
         </p>
       </div>
 
@@ -152,20 +156,21 @@ function Preferences() {
 
       </div>
 
-      {/* ── Submit button ──────────────────── */}
+      {/* ── Selection summary + submit ─────── */}
       <div className="preferences-page__submit-wrapper">
+        <p className="preferences-page__summary">
+          <strong>{totalSelected}</strong> preferences selected
+          {" · "}
+          <strong>{selectedGenres.length}</strong> genres,{" "}
+          <strong>{selectedTags.length}</strong> tags
+        </p>
         <button
           className={`preferences-page__submit-btn ${!hasSelections ? "preferences-page__submit-btn--disabled" : ""}`}
           onClick={handleSubmit}
           disabled={!hasSelections || submitting}
         >
-          {submitting ? "Finding recommendations..." : "Submit Preferences"}
+          {submitting ? "Finding recommendations..." : "Submit preferences →"}
         </button>
-        {!hasSelections && (
-          <p className="preferences-page__submit-hint">
-            Select at least one genre or tag to continue.
-          </p>
-        )}
       </div>
 
     </div>
