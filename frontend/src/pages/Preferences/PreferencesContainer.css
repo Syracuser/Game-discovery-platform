@@ -1,15 +1,21 @@
 /* ── Container box ───────────────────────────────────────── */
 
 .pref-container {
-  background-color: #1a1a2e;
-  border: 1px solid #252540;
-  border-radius: 16px;
-  padding: 1.75rem;
-  width: 560px;
+  background: linear-gradient(180deg, #1c1c33 0%, #1a1a2e 100%);
+  border: 1px solid #2a2a3e;
+  border-radius: 14px;
+  padding: 22px 22px 18px;
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  gap: 0;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.03) inset,
+    0 20px 40px -24px rgba(0, 0, 0, 0.6);
+  transition: border-color .2s ease;
+}
+
+.pref-container:focus-within {
+  border-color: rgba(233, 69, 96, 0.4);
 }
 
 /* ── Header ──────────────────────────────────────────────── */
@@ -18,45 +24,58 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 14px;
 }
 
 .pref-container__title-group {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  align-items: baseline;
+  gap: 10px;
 }
 
 .pref-container__title {
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-size: 1.15rem;
+  font-weight: 600;
   color: #ffffff;
+  letter-spacing: 0.2px;
   margin: 0;
 }
 
-/* Red circular count badge — shows how many items are selected */
+/* Count badge — translucent accent style */
 .pref-container__count-badge {
-  background-color: #e94560;
-  color: #fff;
+  font-size: 0.78rem;
+  color: #e94560;
+  background: rgba(233, 69, 96, 0.15);
+  border: 1px solid rgba(233, 69, 96, 0.4);
+  padding: 2px 8px;
   border-radius: 999px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  min-width: 20px;
-  height: 20px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 5px;
+  min-width: 22px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  animation: countPop .3s cubic-bezier(.34, 1.56, .64, 1);
+}
+
+@keyframes countPop {
+  0%   { transform: scale(0.6); opacity: 0; }
+  100% { transform: scale(1);   opacity: 1; }
 }
 
 .pref-container__clear-all {
-  font-size: 0.72rem;
+  font-size: 0.75rem;
+  font-weight: 500;
   color: #e94560;
   border: 1px solid #e94560;
-  border-radius: 4px;
-  padding: 3px 9px;
+  border-radius: 6px;
+  padding: 4px 10px;
   background: none;
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease;
+  animation: clearIn .25s ease;
+}
+
+@keyframes clearIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .pref-container__clear-all:hover {
@@ -68,64 +87,100 @@
 
 .pref-container__search-wrapper {
   position: relative;
+  margin-bottom: 14px;
 }
 
 .pref-container__search-icon {
   position: absolute;
-  left: 0.7rem;
+  left: 12px;
   top: 50%;
   transform: translateY(-50%);
-  width: 14px;
-  height: 14px;
-  color: #555;
+  width: 16px;
+  height: 16px;
+  color: #888;
   pointer-events: none;
   transition: color 0.15s ease;
 }
 
 .pref-container__search-wrapper:focus-within .pref-container__search-icon {
-  color: #7a7aaa;
+  color: #e94560;
 }
 
 .pref-container__search {
   width: 100%;
-  background-color: #12122a;
-  border: 1px solid #2a2a4a;
+  height: 38px;
+  background-color: #16213e;
+  border: 1px solid #333;
   border-radius: 10px;
-  padding: 0.6rem 0.75rem 0.6rem 2.25rem;
+  padding: 0 36px 0 38px;
   color: #e0e0e0;
-  font-size: 0.85rem;
+  font-size: 0.92rem;
   outline: none;
   box-sizing: border-box;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .pref-container__search:focus {
-  border-color: #4a4a8a;
-  box-shadow: 0 0 0 2px rgba(74, 74, 138, 0.25);
+  border-color: #e94560;
+  box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.15);
 }
 
 .pref-container__search::placeholder {
-  color: #484868;
+  color: #888;
+}
+
+/* Clear (×) button inside search — appears when input has text */
+.pref-container__search-clear {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 22px;
+  background: transparent;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color .15s ease, background-color .15s ease;
+}
+
+.pref-container__search-clear:hover {
+  color: #fff;
+  background: #2a2a3e;
 }
 
 /* ── Your Picks box ──────────────────────────────────────── */
 
 .pref-container__picks-box {
-  border: 1.5px dashed rgba(233, 69, 96, 0.55);
-  background-color: rgba(233, 69, 96, 0.07);
+  border: 1px dashed rgba(233, 69, 96, 0.35);
+  background-color: rgba(233, 69, 96, 0.06);
   border-radius: 10px;
-  padding: 0.75rem;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+  animation: selectedIn .25s ease;
+}
+
+@keyframes selectedIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* "YOUR PICKS" label above selected chips */
 .pref-container__picks-label {
-  font-size: 0.65rem;
+  font-size: 0.68rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 1.5px;
   color: #e94560;
   display: block;
-  margin-bottom: 0.6rem;
+  opacity: 0.9;
+  margin-bottom: 8px;
 }
 
 /* ── Chips row ───────────────────────────────────────────── */
@@ -133,7 +188,12 @@
 .pref-container__chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 8px;
+}
+
+/* Tighter gap for the picks strip */
+.pref-container__chips--picks {
+  gap: 6px;
 }
 
 /* ── Individual chip ─────────────────────────────────────── */
@@ -141,25 +201,35 @@
 .pref-container__chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  padding: 0.3rem 0.8rem;
+  gap: 6px;
+  padding: 7px 13px;
   border-radius: 999px;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   cursor: pointer;
   user-select: none;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+  transition:
+    transform .18s cubic-bezier(.34, 1.56, .64, 1),
+    background-color .15s ease,
+    border-color .15s ease,
+    color .15s ease,
+    box-shadow .2s ease;
 
-  /* Unselected default */
-  background-color: #1e1e38;
-  border: 1px solid #38385a;
-  color: #c0c0d8;
+  /* Unselected default — transparent fill */
+  background-color: transparent;
+  border: 1px solid #3a3a52;
+  color: #ccc;
 }
 
 .pref-container__chip:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
-  border-color: #58587a;
+  transform: translateY(-2px);
+  border-color: #e94560;
   color: #fff;
+  box-shadow: 0 6px 14px -6px rgba(233, 69, 96, 0.35);
+}
+
+.pref-container__chip:active {
+  transform: translateY(-1px) scale(0.98);
 }
 
 /* Selected state */
@@ -167,28 +237,43 @@
   background-color: #e94560;
   border-color: #e94560;
   color: #fff;
-  transform: scale(1.05);
+  transform: scale(1.04);
+  box-shadow: 0 6px 18px -6px rgba(233, 69, 96, 0.35);
 }
 
 .pref-container__chip--selected:hover {
-  background-color: #c73550;
-  border-color: #c73550;
-  box-shadow: 0 3px 12px rgba(233, 69, 96, 0.4);
-  transform: scale(1.05) translateY(-1px);
+  background-color: #f05070;
+  border-color: #f05070;
+  transform: scale(1.04) translateY(-2px);
 }
 
-/* The "✕" next to selected chip text */
+/* The × circle inside selected chips */
 .pref-container__chip-x {
-  font-size: 0.65rem;
-  opacity: 0.8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 0.7rem;
+  line-height: 1;
+  margin-left: 2px;
+  transition: background-color .15s ease;
 }
 
-/* ── Available options wrapper (animated) ────────────────── */
+.pref-container__chip--selected:hover .pref-container__chip-x {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* ── Available options wrapper ───────────────────────────── */
 
 .pref-container__options-wrapper {
   max-height: 200px;
   overflow: hidden;
   transition: max-height 0.35s ease;
+  margin-bottom: 0;
 }
 
 .pref-container__options-wrapper--expanded {
@@ -196,7 +281,7 @@
   overflow-y: auto;
 }
 
-/* Custom scrollbar for the expanded wrapper */
+/* Custom scrollbar */
 .pref-container__options-wrapper--expanded::-webkit-scrollbar {
   width: 4px;
 }
@@ -213,9 +298,12 @@
 /* ── No results message ──────────────────────────────────── */
 
 .pref-container__no-results {
-  font-size: 0.8rem;
-  color: #484868;
+  font-size: 0.85rem;
+  color: #888;
   font-style: italic;
+  padding: 16px 4px;
+  text-align: center;
+  width: 100%;
 }
 
 /* ── Footer: availability counter + View more/less ──────── */
@@ -224,24 +312,40 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #2a2a3e;
 }
 
 .pref-container__available-count {
-  font-size: 0.75rem;
-  color: #505070;
+  font-size: 0.76rem;
+  color: #888;
 }
 
 .pref-container__view-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   background: none;
   border: none;
-  color: #888;
-  font-size: 0.8rem;
+  color: #e0e0e0;
+  font-size: 0.85rem;
+  font-weight: 500;
   cursor: pointer;
-  padding: 0;
-  margin-left: auto;
+  padding: 6px 4px;
   transition: color 0.15s ease;
 }
 
 .pref-container__view-more:hover {
-  color: #e0e0e0;
+  color: #e94560;
+}
+
+.pref-container__view-more__arrow {
+  display: inline-block;
+  font-size: 0.75rem;
+  transition: transform .25s ease;
+}
+
+.pref-container__view-more__arrow--open {
+  transform: rotate(180deg);
 }

@@ -57,7 +57,7 @@ function Preferences() {
   }, []);
 
   // ── Toggle helpers ─────────────────────────────────────
-  // Adds the item if not yet selected, removes it if already selected.
+    // Adds the item if not yet selected, removes it if already selected.
   function toggleGenre(genre) {
     setSelectedGenres((prev) =>
       prev.includes(genre) ? prev.filter((g) => g !== genre) : [...prev, genre]
@@ -112,67 +112,77 @@ function Preferences() {
 
   return (
     <div className="preferences-page">
+      <div className="preferences-page__inner">
 
-      {/* ── Page heading ───────────────────── */}
-      <div className="preferences-page__heading">
-        <h1 className="preferences-page__title">
-          Tell us what you're{" "}
-          <span className="preferences-page__title-accent">into.</span>
-        </h1>
-        <p className="preferences-page__subtitle">
-          Pick a few genres and tags so we can rank games you'll actually want to play.
-          The more you pick, the sharper the recommendations.
-        </p>
+        {/* ── Page heading ───────────────────── */}
+        <div className="preferences-page__heading">
+          <h1 className="preferences-page__title">
+            Tell us what you're{" "}
+            <span className="preferences-page__title-accent">into.</span>
+          </h1>
+          <p className="preferences-page__subtitle">
+            Pick a few genres and tags so we can rank games you'll actually want to play.
+            The more you pick, the sharper the recommendations.
+          </p>
+        </div>
+
+        {/* ── Two side-by-side containers ──── */}
+        <div className="preferences-page__containers">
+
+          <PreferencesContainer
+            containerTitle="Genres"
+            containerItems={genres}
+            selectedItems={selectedGenres}
+            onToggle={toggleGenre}
+            onClearAll={() => setSelectedGenres([])}
+            searchValue={genreSearch}
+            onSearchChange={setGenreSearch}
+            defaultCount={DEFAULT_GENRES_COUNT}
+            expanded={genresExpanded}
+            onToggleExpand={() => setGenresExpanded((prev) => !prev)}
+          />
+
+          <PreferencesContainer
+            containerTitle="Tags"
+            containerItems={tags}
+            selectedItems={selectedTags}
+            onToggle={toggleTag}
+            onClearAll={() => setSelectedTags([])}
+            searchValue={tagSearch}
+            onSearchChange={setTagSearch}
+            defaultCount={DEFAULT_TAGS_COUNT}
+            expanded={tagsExpanded}
+            onToggleExpand={() => setTagsExpanded((prev) => !prev)}
+          />
+
+        </div>
+
+        {/* ── Selection summary + submit ─────── */}
+        <div className="preferences-page__submit-wrapper">
+          <p className="preferences-page__summary">
+            {totalSelected === 0
+              ? "Select at least one preference to continue."
+              : (
+                <>
+                  <strong>{totalSelected}</strong> preference{totalSelected === 1 ? "" : "s"} selected
+                  {" · "}
+                  <strong>{selectedGenres.length}</strong> genre{selectedGenres.length === 1 ? "" : "s"},{" "}
+                  <strong>{selectedTags.length}</strong> tag{selectedTags.length === 1 ? "" : "s"}
+                </>
+              )
+            }
+          </p>
+          <button
+            className={`preferences-page__submit-btn${!hasSelections ? " preferences-page__submit-btn--disabled" : ""}`}
+            onClick={handleSubmit}
+            disabled={!hasSelections || submitting}
+          >
+            {submitting ? "Finding recommendations…" : "Submit preferences"}
+            <span className="preferences-page__submit-btn__arrow">→</span>
+          </button>
+        </div>
+
       </div>
-
-      {/* ── Two side-by-side containers ──── */}
-      <div className="preferences-page__containers">
-
-        <PreferencesContainer
-          containerTitle="Genres"
-          containerItems={genres}
-          selectedItems={selectedGenres}
-          onToggle={toggleGenre}
-          onClearAll={() => setSelectedGenres([])}
-          searchValue={genreSearch}
-          onSearchChange={setGenreSearch}
-          defaultCount={DEFAULT_GENRES_COUNT}
-          expanded={genresExpanded}
-          onToggleExpand={() => setGenresExpanded((prev) => !prev)}
-        />
-
-        <PreferencesContainer
-          containerTitle="Tags"
-          containerItems={tags}
-          selectedItems={selectedTags}
-          onToggle={toggleTag}
-          onClearAll={() => setSelectedTags([])}
-          searchValue={tagSearch}
-          onSearchChange={setTagSearch}
-          defaultCount={DEFAULT_TAGS_COUNT}
-          expanded={tagsExpanded}
-          onToggleExpand={() => setTagsExpanded((prev) => !prev)}
-        />
-
-      </div>
-
-      {/* ── Selection summary + submit ─────── */}
-      <div className="preferences-page__submit-wrapper">
-        <p className="preferences-page__summary">
-          <strong>{totalSelected}</strong> preferences selected
-          {" · "}
-          <strong>{selectedGenres.length}</strong> genres,{" "}
-          <strong>{selectedTags.length}</strong> tags
-        </p>
-        <button
-          className={`preferences-page__submit-btn ${!hasSelections ? "preferences-page__submit-btn--disabled" : ""}`}
-          onClick={handleSubmit}
-          disabled={!hasSelections || submitting}
-        >
-          {submitting ? "Finding recommendations..." : "Submit preferences →"}
-        </button>
-      </div>
-
     </div>
   );
 }

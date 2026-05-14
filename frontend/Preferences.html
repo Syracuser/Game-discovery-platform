@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Preferences · GameSense</title>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js"
+    integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L"
+    crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"
+    integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm"
+    crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"
+    integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y"
+    crossorigin="anonymous"></script>
+  <script type="text/babel" data-presets="react" src="tweaks-panel.jsx"></script>
+  <style>
+    /* ──────────────────────────────────────────────────────────────
+   GameSense · Preferences page
+   Inherits the existing dark theme:
+     bg #0f0f1a   panel #1a1a2e   subpanel #16213e
+     accent #e94560   borders #2a2a3e / #333
+   ──────────────────────────────────────────────────────────── */
+
+    :root {
+      --bg: #0f0f1a;
+      --panel: #1a1a2e;
+      --subpanel: #16213e;
+      --border: #2a2a3e;
+      --border-soft: #333;
+      --text: #e0e0e0;
+      --text-dim: #aaa;
+      --text-mute: #888;
+      --accent: #e94560;
+      /* derived from --accent so palette tweaks cascade automatically */
+      --accent-soft: color-mix(in srgb, var(--accent) 15%, transparent);
+      --accent-glow: color-mix(in srgb, var(--accent) 35%, transparent);
+      --accent-hover: color-mix(in srgb, var(--accent) 85%, #fff);
+      /* mood scale — chips, cards, hero respond to one knob */
+      --chip-pad-y: 7px;
+      --chip-pad-x: 13px;
+      --chip-font: 0.85rem;
+      --card-pad: 22px;
+      --hero-title: 2.6rem;
+      --grid-gap: 28px;
+      --radius: 14px;
+      --navbar-h: 60px;
+      --ease: cubic-bezier(.4, 0, .2, 1);
+      --ease-spring: cubic-bezier(.34, 1.56, .64, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background:
+        radial-gradient(1100px 600px at 80% -10%, rgba(233, 69, 96, 0.10), transparent 60%),
+        radial-gradient(900px 500px at -10% 30%, rgba(76, 70, 200, 0.10), transparent 60%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    /* ── Navbar (mirrors the existing app's chrome) ─────────────── */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: var(--navbar-h);
+      background-color: var(--panel);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .navbar__logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.2px;
+    }
+
+    .navbar__links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .navbar__link {
+      color: var(--text);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: color .15s var(--ease);
+    }
+
+    .navbar__link:hover {
+      color: var(--accent);
+    }
+
+    .navbar__link--active {
+      color: var(--accent);
+    }
+
+    /* ── Page shell ─────────────────────────────────────────────── */
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 56px 32px 120px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 44px;
+    }
+
+    .hero__eyebrow {
+      display: inline-block;
+      font-size: 0.72rem;
+      letter-spacing: 2.4px;
+      text-transform: uppercase;
+      color: var(--accent);
+      padding: 5px 12px;
+      border: 1px solid var(--accent);
+      border-radius: 999px;
+      background: var(--accent-soft);
+      margin-bottom: 18px;
+    }
+
+    .hero__title {
+      font-size: var(--hero-title);
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+      transition: font-size .25s var(--ease);
+    }
+
+    .hero__title em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .hero__subtitle {
+      color: var(--text-dim);
+      font-size: 1.05rem;
+      max-width: 620px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    /* ── Container grid (Genres + Tags side-by-side) ────────────── */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--grid-gap);
+      align-items: start;
+    }
+
+    /* ── Mood variants (Tweak: mood) ─────────────────────────────
+   Drives the overall density / scale of the page — chip size,
+   card padding, hero scale, gap rhythm. Three distinct feels.
+   ─────────────────────────────────────────────────────────── */
+    [data-mood="compact"] {
+      --chip-pad-y: 5px;
+      --chip-pad-x: 10px;
+      --chip-font: 0.78rem;
+      --card-pad: 16px;
+      --hero-title: 2rem;
+      --grid-gap: 18px;
+    }
+
+    [data-mood="showcase"] {
+      --chip-pad-y: 10px;
+      --chip-pad-x: 18px;
+      --chip-font: 0.95rem;
+      --card-pad: 30px;
+      --hero-title: 3.4rem;
+      --grid-gap: 36px;
+    }
+
+    [data-mood="showcase"] .chip {
+      letter-spacing: 0.3px;
+    }
+
+    [data-mood="showcase"] .card {
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.04) inset,
+        0 30px 60px -28px rgba(0, 0, 0, 0.7),
+        0 0 0 1px color-mix(in srgb, var(--accent) 8%, transparent);
+    }
+
+    [data-mood="showcase"] .hero {
+      margin-bottom: 60px;
+    }
+
+    [data-mood="compact"] .hero {
+      margin-bottom: 28px;
+    }
+
+    @media (max-width: 880px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ── Container card ─────────────────────────────────────────── */
+    .card {
+      background: linear-gradient(180deg, #1c1c33 0%, var(--panel) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: var(--card-pad) var(--card-pad) calc(var(--card-pad) - 4px);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.03) inset,
+        0 20px 40px -24px rgba(0, 0, 0, 0.6);
+      transition: border-color .2s var(--ease);
+    }
+
+    .card:focus-within {
+      border-color: rgba(233, 69, 96, 0.4);
+    }
+
+    .card__head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .card__title-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    .card__title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: 0.2px;
+    }
+
+    .card__count {
+      font-size: 0.78rem;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid rgba(233, 69, 96, 0.4);
+      padding: 2px 8px;
+      border-radius: 999px;
+      min-width: 22px;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      transform-origin: center;
+      animation: countPop .3s var(--ease-spring);
+    }
+
+    @keyframes countPop {
+      0% {
+        transform: scale(0.6);
+        opacity: 0;
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .card__clear {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--accent);
+      background: transparent;
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      padding: 4px 10px;
+      cursor: pointer;
+      transition: background-color .15s var(--ease), color .15s var(--ease);
+      /* Animate in when it appears */
+      animation: clearIn .25s var(--ease);
+    }
+
+    .card__clear:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    @keyframes clearIn {
+      from {
+        opacity: 0;
+        transform: translateY(-4px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ── Search input ───────────────────────────────────────────── */
+    .search {
+      position: relative;
+      margin-bottom: 14px;
+    }
+
+    .search__icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      color: var(--text-mute);
+      pointer-events: none;
+      transition: color .15s var(--ease);
+    }
+
+    .search:focus-within .search__icon {
+      color: var(--accent);
+    }
+
+    .search__input {
+      width: 100%;
+      height: 38px;
+      padding: 0 36px 0 38px;
+      background: var(--subpanel);
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 0.92rem;
+      outline: none;
+      transition: border-color .15s var(--ease), box-shadow .15s var(--ease);
+    }
+
+    .search__input::placeholder {
+      color: var(--text-mute);
+    }
+
+    .search__input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    .search__clear {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      background: transparent;
+      border: none;
+      color: var(--text-mute);
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 1;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color .15s var(--ease), background-color .15s var(--ease);
+    }
+
+    .search__clear:hover {
+      color: #fff;
+      background: var(--border);
+    }
+
+    /* ── Selected preferences strip ─────────────────────────────── */
+    .selected {
+      background: rgba(233, 69, 96, 0.06);
+      border: 1px dashed rgba(233, 69, 96, 0.35);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 14px;
+      animation: selectedIn .25s var(--ease);
+    }
+
+    @keyframes selectedIn {
+      from {
+        opacity: 0;
+        transform: translateY(-4px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .selected__label {
+      display: block;
+      font-size: 0.68rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+      opacity: 0.9;
+    }
+
+    .selected__list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    /* ── Chip ───────────────────────────────────────────────────── */
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      /* expand/collapse transition */
+      max-height: var(--chips-max, 600px);
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-right: 2px;
+      transition: max-height .35s var(--ease);
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+
+    .chips::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .chips::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .chips::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
+    }
+
+    .chips::-webkit-scrollbar-thumb:hover {
+      background: #3a3a52;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: var(--chip-pad-y) var(--chip-pad-x);
+      background: transparent;
+      border: 1px solid #3a3a52;
+      border-radius: 999px;
+      color: #ccc;
+      font-size: var(--chip-font);
+      font-family: inherit;
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+      transition:
+        transform .18s var(--ease-spring),
+        background-color .15s var(--ease),
+        border-color .15s var(--ease),
+        color .15s var(--ease),
+        box-shadow .2s var(--ease);
+    }
+
+    .chip:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+      color: #fff;
+      box-shadow: 0 6px 14px -6px var(--accent-glow);
+    }
+
+    .chip:active {
+      transform: translateY(-1px) scale(0.98);
+    }
+
+    .chip--selected {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+      transform: scale(1.04);
+      box-shadow: 0 6px 18px -6px var(--accent-glow);
+    }
+
+    .chip--selected:hover {
+      transform: scale(1.04) translateY(-2px);
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+    }
+
+    /* ── Chip-shape variants (Tweak: shape) ───────────────────────
+   pill   = default round-pill (no override needed)
+   tag    = ticket / sticker style with a notched corner
+   square = blocky, arcade-y, thicker stroke
+   ─────────────────────────────────────────────────────────── */
+    [data-chip-shape="tag"] .chip {
+      border-radius: 4px;
+      clip-path: polygon(9px 0, 100% 0, 100% calc(100% - 9px),
+          calc(100% - 9px) 100%, 0 100%, 0 9px);
+      padding-left: calc(var(--chip-pad-x) + 4px);
+    }
+
+    [data-chip-shape="square"] .chip {
+      border-radius: 3px;
+      border-width: 1.5px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      font-size: calc(var(--chip-font) - 0.06rem);
+    }
+
+    [data-chip-shape="square"] .chip--selected {
+      box-shadow:
+        0 0 0 1.5px var(--accent),
+        0 6px 18px -6px var(--accent-glow),
+        inset 0 0 0 1.5px rgba(255, 255, 255, 0.18);
+    }
+
+    /* The small × inside selected-at-top chips */
+    .chip__x {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-size: 0.7rem;
+      line-height: 1;
+      margin-left: 2px;
+      transition: background-color .15s var(--ease);
+    }
+
+    .chip:hover .chip__x {
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    /* Empty state when search hides everything */
+    .empty {
+      color: var(--text-mute);
+      font-size: 0.85rem;
+      font-style: italic;
+      padding: 16px 4px;
+      text-align: center;
+      width: 100%;
+    }
+
+    /* ── View more / less footer ────────────────────────────────── */
+    .card__foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .card__hint {
+      font-size: 0.76rem;
+      color: var(--text-mute);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .view-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 6px 4px;
+      transition: color .15s var(--ease);
+    }
+
+    .view-toggle:hover {
+      color: var(--accent);
+    }
+
+    .view-toggle__arrow {
+      display: inline-block;
+      transition: transform .25s var(--ease);
+      font-size: 0.75rem;
+    }
+
+    .view-toggle__arrow--open {
+      transform: rotate(180deg);
+    }
+
+    /* ── Submit bar ─────────────────────────────────────────────── */
+    .submit-bar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      margin-top: 44px;
+    }
+
+    .submit-summary {
+      font-size: 0.92rem;
+      color: var(--text-dim);
+    }
+
+    .submit-summary strong {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .submit-btn {
+      position: relative;
+      padding: 14px 38px;
+      background: var(--accent);
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      box-shadow: 0 14px 28px -12px var(--accent-glow);
+      transition:
+        transform .15s var(--ease-spring),
+        box-shadow .2s var(--ease),
+        background-color .15s var(--ease),
+        opacity .2s var(--ease);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      background: var(--accent-hover);
+      box-shadow: 0 18px 32px -10px var(--accent-glow);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .submit-btn:disabled {
+      background: #3a3a52;
+      color: var(--text-mute);
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .submit-btn__arrow {
+      transition: transform .2s var(--ease);
+    }
+
+    .submit-btn:hover:not(:disabled) .submit-btn__arrow {
+      transform: translateX(3px);
+    }
+
+    /* ── Toast (post-submit confirmation) ───────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--panel);
+      border: 1px solid var(--accent);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: transform .3s var(--ease-spring), opacity .25s var(--ease);
+      box-shadow: 0 20px 40px -16px rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 200;
+    }
+
+    .toast--visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast__dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 12px var(--accent);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" data-presets="react">
+    // Game discovery — preference taxonomy.
+    // `common` shows in the default container view.
+    // `extra` rolls in when the user clicks "View more".
+
+    const COMMON_GENRES = [
+      "Action",
+      "Adventure",
+      "RPG",
+      "Shooter",
+      "Strategy",
+      "Simulation",
+      "Puzzle",
+      "Platformer",
+      "Sports",
+      "Racing",
+      "Indie",
+      "Horror",
+    ];
+
+    const EXTRA_GENRES = [
+      "MMO",
+      "MOBA",
+      "Battle Royale",
+      "Fighting",
+      "Stealth",
+      "Survival Horror",
+      "Visual Novel",
+      "Rhythm",
+      "Tower Defense",
+      "Card Game",
+      "Roguelike",
+      "Metroidvania",
+      "Sandbox",
+      "Tactical",
+    ];
+
+    const COMMON_TAGS = [
+      "Multiplayer",
+      "Singleplayer",
+      "Co-op",
+      "Open World",
+      "Story Rich",
+      "Fast-Paced",
+      "Atmospheric",
+      "Pixel Graphics",
+      "Roguelike",
+      "Survival",
+      "Souls-like",
+      "Sandbox",
+      "Competitive",
+      "Casual",
+      "Crafting",
+    ];
+
+    const EXTRA_TAGS = [
+      "PvP",
+      "PvE",
+      "Local Co-op",
+      "Split Screen",
+      "Online",
+      "Cinematic",
+      "Choices Matter",
+      "Procedural Generation",
+      "Permadeath",
+      "Turn-Based",
+      "Real-Time",
+      "Stealth",
+      "Hack and Slash",
+      "Twin-Stick",
+      "Top-Down",
+      "First-Person",
+      "Third-Person",
+      "Anime",
+      "Dark Fantasy",
+      "Sci-Fi",
+      "Post-Apocalyptic",
+      "Cyberpunk",
+      "Lovecraftian",
+      "Mystery",
+      "Detective",
+      "Comedy",
+      "Relaxing",
+      "Difficult",
+      "Replay Value",
+      "Moddable",
+      "VR",
+      "Controller-Friendly",
+      "Short",
+      "Long",
+      "Female Protagonist",
+    ];
+
+    const ALL_GENRES = [...COMMON_GENRES, ...EXTRA_GENRES];
+    const ALL_TAGS = [...COMMON_TAGS, ...EXTRA_TAGS];
+
+    Object.assign(window, {
+      COMMON_GENRES,
+      COMMON_TAGS,
+      ALL_GENRES,
+      ALL_TAGS,
+    });
+
+
+    // ────────────────────────────────────────────────────────────────
+    // Preference-input · reusable components
+    // Container card (Genres / Tags), Chip, SearchInput, ViewToggle.
+    // ────────────────────────────────────────────────────────────────
+
+    const { useState, useMemo, useRef, useEffect } = React;
+
+    // ── SearchIcon (magnifying glass) ──────────────────────────────
+    function SearchIcon() {
+      return (
+        <svg className="search__icon" xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+      );
+    }
+
+    // ── SearchInput ────────────────────────────────────────────────
+    function SearchInput({ value, onChange, placeholder }) {
+      return (
+        <div className="search">
+          <SearchIcon />
+          <input
+            type="text"
+            className="search__input"
+            placeholder={placeholder}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+          />
+          {value && (
+            <button
+              type="button"
+              className="search__clear"
+              aria-label="Clear search"
+              onClick={() => onChange("")}
+            >
+              ×
+            </button>
+          )}
+        </div>
+      );
+    }
+
+    // ── Chip ────────────────────────────────────────────────────────
+    // Two visual modes — `withClose` adds the × indicator used in the
+    // "Selected at top" strip; otherwise it's a plain toggle chip.
+    function Chip({ label, selected, onClick, withClose }) {
+      return (
+        <button
+          type="button"
+          className={`chip ${selected ? "chip--selected" : ""}`}
+          onClick={onClick}
+        >
+          <span>{label}</span>
+          {withClose && <span className="chip__x" aria-hidden="true">×</span>}
+        </button>
+      );
+    }
+
+    // ── PreferenceContainer ────────────────────────────────────────
+    // One column of the side-by-side layout.
+    //   title         "Genres" or "Tags"
+    //   common        chips visible in collapsed state
+    //   all           full chip set, used when expanded
+    //   selected      array of currently-selected labels
+    //   onToggle(x)   add/remove a label from selection
+    //   onClear()     wipe the selection for this container
+    function PreferenceContainer({ title, common, all, selected, onToggle, onClear }) {
+      const [expanded, setExpanded] = useState(false);
+      const [query, setQuery] = useState("");
+
+      // Source list depends on expanded mode.
+      const source = expanded ? all : common;
+
+      // Live filter — case-insensitive substring match.
+      // Selected items always have a "home" up top, so we only need to
+      // worry about *unselected* items in the main grid below.
+      const filtered = useMemo(() => {
+        const q = query.trim().toLowerCase();
+        // De-dup selected from the grid so they only show once (at the top).
+        const base = source.filter((opt) => !selected.includes(opt));
+        if (!q) return base;
+        return base.filter((opt) => opt.toLowerCase().includes(q));
+      }, [source, selected, query, expanded]);
+
+      // When searching, also show selected items that match the query
+      // in the "Selected" strip — they're already pinned at top regardless,
+      // so we just show *all* selected items there for context.
+      const selectedToShow = selected;
+
+      // The "extra" hint count beyond what's visible right now.
+      const remaining = expanded ? 0 : (all.length - common.length);
+
+      return (
+        <section className="card">
+
+          <header className="card__head">
+            <div className="card__title-wrap">
+              <h2 className="card__title">{title}</h2>
+              {selected.length > 0 && (
+                <span className="card__count" key={selected.length}>
+                  {selected.length}
+                </span>
+              )}
+            </div>
+            {/* Clear-all only renders when there's something to clear */}
+            {selected.length > 0 && (
+              <button className="card__clear" onClick={onClear}>
+                Clear all
+              </button>
+            )}
+          </header>
+
+          <SearchInput
+            value={query}
+            onChange={setQuery}
+            placeholder={`Search ${title.toLowerCase()}…`}
+          />
+
+          {/* Selected-at-top strip — appears only when there are selections */}
+          {selectedToShow.length > 0 && (
+            <div className="selected">
+              <span className="selected__label">Your picks</span>
+              <div className="selected__list">
+                {selectedToShow.map((opt) => (
+                  <Chip
+                    key={opt}
+                    label={opt}
+                    selected={true}
+                    withClose
+                    onClick={() => onToggle(opt)}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Main chip grid — height animates on expand/collapse */}
+          <div
+            className="chips"
+            style={{ "--chips-max": expanded ? "320px" : "600px" }}
+          >
+            {filtered.length === 0 ? (
+              <div className="empty">
+                {query
+                  ? `No ${title.toLowerCase()} match “${query}”.`
+                  : `All ${title.toLowerCase()} are selected.`}
+              </div>
+            ) : (
+              filtered.map((opt) => (
+                <Chip
+                  key={opt}
+                  label={opt}
+                  selected={false}
+                  onClick={() => onToggle(opt)}
+                />
+              ))
+            )}
+          </div>
+
+          <footer className="card__foot">
+            <span className="card__hint">
+              {expanded
+                ? `Showing all ${all.length}`
+                : `+${remaining} more available`}
+            </span>
+            <button
+              className="view-toggle"
+              onClick={() => setExpanded((x) => !x)}
+            >
+              {expanded ? "View less" : "View more"}
+              <span
+                className={`view-toggle__arrow ${expanded ? "view-toggle__arrow--open" : ""}`}
+              >
+                ▾
+              </span>
+            </button>
+          </footer>
+
+        </section>
+      );
+    }
+
+    Object.assign(window, {
+      Chip,
+      SearchInput,
+      PreferenceContainer,
+    });
+
+
+    // ────────────────────────────────────────────────────────────────
+    // Preferences page · top-level layout
+    // ────────────────────────────────────────────────────────────────
+
+    const { useState: useStateApp, useEffect: useEffectApp } = React;
+
+    function Navbar() {
+      return (
+        <nav className="navbar">
+          <div className="navbar__logo">GameSense</div>
+          <div className="navbar__links">
+            <span className="navbar__link">Home</span>
+            <span className="navbar__link navbar__link--active">Preferences</span>
+            <span className="navbar__link">Wishlist</span>
+          </div>
+        </nav>
+      );
+    }
+
+    function App() {
+      const [selectedGenres, setSelectedGenres] = useStateApp([]);
+      const [selectedTags, setSelectedTags] = useStateApp([]);
+      const [toast, setToast] = useStateApp(null);
+
+      // Toggle helper — works for both lists.
+      const toggle = (list, setList) => (value) => {
+        setList(list.includes(value)
+          ? list.filter((v) => v !== value)
+          : [...list, value]);
+      };
+
+      const totalSelected = selectedGenres.length + selectedTags.length;
+      const canSubmit = totalSelected > 0;
+
+      const handleSubmit = () => {
+        if (!canSubmit) return;
+        setToast({
+          message: `Preferences saved · ${selectedGenres.length} genre${selectedGenres.length === 1 ? "" : "s"}, ${selectedTags.length} tag${selectedTags.length === 1 ? "" : "s"}`,
+        });
+      };
+
+      // Auto-dismiss toast after 2.4s
+      useEffectApp(() => {
+        if (!toast) return;
+        const t = setTimeout(() => setToast(null), 2400);
+        return () => clearTimeout(t);
+      }, [toast]);
+
+      return (
+        <React.Fragment>
+          <Navbar />
+
+          <main className="page">
+
+            <header className="hero">
+              <span className="hero__eyebrow">Step 1 of 2</span>
+              <h1 className="hero__title">
+                Tell us what you're <em>into.</em>
+              </h1>
+              <p className="hero__subtitle">
+                Pick a few genres and tags so we can rank games you'll actually want to play.
+                The more you pick, the sharper the recommendations.
+              </p>
+            </header>
+
+            <div className="grid">
+              <PreferenceContainer
+                title="Genres"
+                common={window.COMMON_GENRES}
+                all={window.ALL_GENRES}
+                selected={selectedGenres}
+                onToggle={toggle(selectedGenres, setSelectedGenres)}
+                onClear={() => setSelectedGenres([])}
+              />
+              <PreferenceContainer
+                title="Tags"
+                common={window.COMMON_TAGS}
+                all={window.ALL_TAGS}
+                selected={selectedTags}
+                onToggle={toggle(selectedTags, setSelectedTags)}
+                onClear={() => setSelectedTags([])}
+              />
+            </div>
+
+            <div className="submit-bar">
+              <p className="submit-summary">
+                {totalSelected === 0
+                  ? "Select at least one preference to continue."
+                  : <>
+                    <strong>{totalSelected}</strong> preference{totalSelected === 1 ? "" : "s"} selected
+                    {" · "}
+                    <strong>{selectedGenres.length}</strong> genre{selectedGenres.length === 1 ? "" : "s"},{" "}
+                    <strong>{selectedTags.length}</strong> tag{selectedTags.length === 1 ? "" : "s"}
+                  </>
+                }
+              </p>
+              <button
+                className="submit-btn"
+                disabled={!canSubmit}
+                onClick={handleSubmit}
+              >
+                Submit preferences
+                <span className="submit-btn__arrow">→</span>
+              </button>
+            </div>
+
+          </main>
+
+          <div className={`toast ${toast ? "toast--visible" : ""}`}>
+            <span className="toast__dot"></span>
+            <span>{toast?.message ?? ""}</span>
+          </div>
+        </React.Fragment>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
+  </script>
+</body>
+
+</html>
