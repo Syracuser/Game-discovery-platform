@@ -45,6 +45,7 @@ function Navbar({ searchText, setSearchText, isSidebarOpen, onToggleSidebar, sho
       {/* Right section: Navigation links */}
       <div className="navbar-links">
         <Link to="/" className="navbar-link">Home</Link>
+        <Link to="/preferences" className="navbar-link">Preferences</Link>
         <Link to="/wishlist" className="navbar-link">Wishlist</Link>
       </div>
     </nav>

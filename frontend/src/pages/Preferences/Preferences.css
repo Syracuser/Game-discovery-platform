@@ -1,0 +1,117 @@
+/* ── Page wrapper ────────────────────────────────────────── */
+
+.preferences-page {
+  min-height: calc(100vh - 60px); /* leave room for the navbar */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 2rem 4rem;
+  gap: 2.5rem;
+}
+
+/* ── Loading state ───────────────────────────────────────── */
+
+.preferences-page--loading {
+  justify-content: center;
+}
+
+.preferences-page__spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #2a2a3e;
+  border-top-color: #e94560;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Error state ─────────────────────────────────────────── */
+
+.preferences-page--error {
+  justify-content: center;
+}
+
+.preferences-page--error p {
+  color: #e94560;
+  font-size: 0.95rem;
+}
+
+/* ── Heading ─────────────────────────────────────────────── */
+
+.preferences-page__heading {
+  text-align: center;
+  max-width: 600px;
+}
+
+.preferences-page__title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 0.5rem;
+}
+
+.preferences-page__subtitle {
+  font-size: 0.9rem;
+  color: #888;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.preferences-page__subtitle strong {
+  color: #e0e0e0;
+}
+
+/* ── Side-by-side containers ─────────────────────────────── */
+
+.preferences-page__containers {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  flex-wrap: wrap;    /* stacks on small screens */
+  justify-content: center;
+}
+
+/* ── Submit area ─────────────────────────────────────────── */
+
+.preferences-page__submit-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.preferences-page__submit-btn {
+  padding: 0.75rem 2.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background-color: #e94560;
+  color: #fff;
+  transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.preferences-page__submit-btn:hover:not(:disabled) {
+  background-color: #c73550;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(233, 69, 96, 0.35);
+}
+
+.preferences-page__submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.preferences-page__submit-btn--disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.preferences-page__submit-hint {
+  font-size: 0.78rem;
+  color: #555;
+  margin: 0;
+}

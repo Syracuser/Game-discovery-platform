@@ -1,0 +1,214 @@
+/* ── Container box ───────────────────────────────────────── */
+
+.pref-container {
+  background-color: #1a1a2e;
+  border: 1px solid #2a2a3e;
+  border-radius: 12px;
+  padding: 1.5rem;
+  width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* ── Header ──────────────────────────────────────────────── */
+
+.pref-container__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pref-container__title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.pref-container__clear-all {
+  font-size: 0.75rem;
+  color: #e94560;
+  border: 1px solid #e94560;
+  border-radius: 4px;
+  padding: 2px 8px;
+  background: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.pref-container__clear-all:hover {
+  background-color: #e94560;
+  color: #fff;
+}
+
+/* ── Search Input ────────────────────────────────────────── */
+
+.pref-container__search-wrapper {
+  position: relative;
+}
+
+.pref-container__search-icon {
+  position: absolute;
+  left: 0.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  color: #666;
+  pointer-events: none;
+  transition: color 0.15s ease;
+}
+
+.pref-container__search-wrapper:focus-within .pref-container__search-icon {
+  color: #e94560;
+}
+
+.pref-container__search {
+  width: 100%;
+  background-color: #0f0f1a;
+  border: 1px solid #2a2a3e;
+  border-radius: 8px;
+  padding: 0.45rem 0.75rem 0.45rem 2rem;
+  color: #e0e0e0;
+  font-size: 0.85rem;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease;
+}
+
+.pref-container__search:focus {
+  border-color: #e94560;
+}
+
+.pref-container__search::placeholder {
+  color: #555;
+}
+
+/* ── Section label (above selected chips) ────────────────── */
+
+.pref-container__section-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #666;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+/* ── Selected section ────────────────────────────────────── */
+
+.pref-container__selected-section {
+  border-bottom: 1px solid #2a2a3e;
+  padding-bottom: 1rem;
+}
+
+/* ── Chips row ───────────────────────────────────────────── */
+
+.pref-container__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* ── Individual chip ─────────────────────────────────────── */
+
+.pref-container__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+
+  /* Unselected default */
+  background-color: #252538;
+  border: 1px solid #444;
+  color: #ccc;
+}
+
+.pref-container__chip:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+  border-color: #666;
+  color: #fff;
+}
+
+/* Selected state */
+.pref-container__chip--selected {
+  background-color: #e94560;
+  border-color: #e94560;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.pref-container__chip--selected:hover {
+  background-color: #c73550;
+  border-color: #c73550;
+  box-shadow: 0 3px 12px rgba(233, 69, 96, 0.4);
+  transform: scale(1.05) translateY(-1px);
+}
+
+/* The "✕" next to selected chip text */
+.pref-container__chip-x {
+  font-size: 0.65rem;
+  opacity: 0.8;
+}
+
+/* ── Available options wrapper (animated) ────────────────── */
+
+.pref-container__options-wrapper {
+  max-height: 200px;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+}
+
+.pref-container__options-wrapper--expanded {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+/* Custom scrollbar for the expanded wrapper */
+.pref-container__options-wrapper--expanded::-webkit-scrollbar {
+  width: 4px;
+}
+
+.pref-container__options-wrapper--expanded::-webkit-scrollbar-track {
+  background: #1a1a2e;
+}
+
+.pref-container__options-wrapper--expanded::-webkit-scrollbar-thumb {
+  background: #3a3a5e;
+  border-radius: 2px;
+}
+
+/* ── No results message ──────────────────────────────────── */
+
+.pref-container__no-results {
+  font-size: 0.8rem;
+  color: #555;
+  font-style: italic;
+}
+
+/* ── Expand / Collapse button ────────────────────────────── */
+
+.pref-container__expand-btn {
+  align-self: center;
+  background: none;
+  border: 1px solid #2a2a3e;
+  border-radius: 6px;
+  color: #888;
+  font-size: 0.78rem;
+  padding: 0.3rem 1rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.pref-container__expand-btn:hover {
+  border-color: #e94560;
+  color: #e94560;
+}

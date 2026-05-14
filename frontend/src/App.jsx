@@ -3,6 +3,7 @@ import Layout from "./components/Layout/Layout";
 import Home from "./pages/Home/Home";
 import Wishlist from "./pages/Wishlist/Wishlist";
 import GameDetails from "./pages/GameDetails/GameDetails";
+import Preferences from "./pages/Preferences/Preferences";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/games/:id" element={<GameDetails />} />
+          <Route path="/preferences" element={<Preferences />} />
         </Route>
       </Routes>
     </BrowserRouter>
