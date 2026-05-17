@@ -237,7 +237,10 @@ frontend/
 
 ### Phase 8 — UI Improvements
 - Add Home page sections
+- Add icons
+- Improve overall UI visuals
 - Improve layout and usability
+
 
 ---
 
