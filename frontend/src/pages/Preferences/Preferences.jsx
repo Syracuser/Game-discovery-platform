@@ -18,6 +18,7 @@ function Preferences() {
   // ── Data fetched from the API ─────────────────────────
   const [genres, setGenres] = useState([]);
   const [tags, setTags]     = useState([]);
+
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(null);
 
@@ -35,6 +36,42 @@ function Preferences() {
 
   // ── Submit state ──────────────────────────────────────
   const [submitting, setSubmitting] = useState(false);
+
+
+  // ── Toggle helpers ─────────────────────────────────────
+    // Adds the item to the state list if not yet selected, removes it if already selected.
+  function toggleGenre(genre) {
+    setSelectedGenres((prev) =>
+      prev.includes(genre) ? prev.filter((g) => g !== genre) : [...prev, genre]
+    );
+  }
+
+  function toggleTag(tag) {
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+    );
+  }
+
+
+  // ── Submit handler ─────────────────────────────────────
+  async function handleSubmit() {
+    if (selectedGenres.length === 0 && selectedTags.length === 0) return;
+
+    setSubmitting(true);
+    try {
+      const response = await axios.post(`${API_URL}/recommend`, {
+        genres: selectedGenres,
+        tags: selectedTags,
+      });
+      // Results will be used in a future task — log for now.
+      console.log("Recommendations received:", response.data);
+    } catch (err) {
+      console.error("Failed to fetch recommendations:", err);
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
 
   // ── Fetch genres and tags on mount ───────────────────
   useEffect(() => {
@@ -56,38 +93,6 @@ function Preferences() {
     fetchOptions();
   }, []);
 
-  // ── Toggle helpers ─────────────────────────────────────
-    // Adds the item if not yet selected, removes it if already selected.
-  function toggleGenre(genre) {
-    setSelectedGenres((prev) =>
-      prev.includes(genre) ? prev.filter((g) => g !== genre) : [...prev, genre]
-    );
-  }
-
-  function toggleTag(tag) {
-    setSelectedTags((prev) =>
-      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
-    );
-  }
-
-  // ── Submit handler ─────────────────────────────────────
-  async function handleSubmit() {
-    if (selectedGenres.length === 0 && selectedTags.length === 0) return;
-
-    setSubmitting(true);
-    try {
-      const response = await axios.post(`${API_URL}/recommend`, {
-        genres: selectedGenres,
-        tags: selectedTags,
-      });
-      // Results will be used in a future task — log for now.
-      console.log("Recommendations received:", response.data);
-    } catch (err) {
-      console.error("Failed to fetch recommendations:", err);
-    } finally {
-      setSubmitting(false);
-    }
-  }
 
   // ── Render ─────────────────────────────────────────────
 
@@ -129,6 +134,7 @@ function Preferences() {
         {/* ── Two side-by-side containers ──── */}
         <div className="preferences-page__containers">
 
+          {/* Genres Container */}
           <PreferencesContainer
             containerTitle="Genres"
             containerItems={genres}
@@ -141,7 +147,7 @@ function Preferences() {
             expanded={genresExpanded}
             onToggleExpand={() => setGenresExpanded((prev) => !prev)}
           />
-
+          {/* Tags Container */}
           <PreferencesContainer
             containerTitle="Tags"
             containerItems={tags}
@@ -157,7 +163,7 @@ function Preferences() {
 
         </div>
 
-        {/* ── Selection summary + submit ─────── */}
+        {/* ── Selection summary + submit button ─────── */}
         <div className="preferences-page__submit-wrapper">
           <p className="preferences-page__summary">
             {totalSelected === 0
