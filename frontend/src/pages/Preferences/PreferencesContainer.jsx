@@ -29,11 +29,12 @@ function PreferencesContainer({
 }) {
   const lowerSearch = searchValue.toLowerCase();
 
-  // All unselected items that match the current search query.
+  //  'filteredUnselected' - All unselected items that match the current search query.
   // Selected items are excluded here — they live in the Selected section above.
   const filteredUnselected = containerItems
     .filter((item) => !selectedItems.includes(item))
     .filter((item) => item.toLowerCase().includes(lowerSearch));
+
 
   // In collapsed state, only show the first `defaultCount` chips.
   // In expanded state, show everything.
@@ -41,7 +42,8 @@ function PreferencesContainer({
     ? filteredUnselected
     : filteredUnselected.slice(0, defaultCount);
 
-  const totalUnselected = containerItems.filter((item) => !selectedItems.includes(item)).length;
+    // Go through each item in the container and return only the items that are not selected.
+  const totalUnselected = containerItems.filter((item) => !selectedItems.includes(item)).length; 
 
   return (
     <div className="pref-container">
@@ -56,6 +58,7 @@ function PreferencesContainer({
             </span>
           )}
         </div>
+
         {selectedItems.length > 0 && (
           <button className="pref-container__clear-all" onClick={onClearAll}>
             Clear all
@@ -76,6 +79,7 @@ function PreferencesContainer({
           value={searchValue}
           onChange={(e) => onSearchChange(e.target.value)}
         />
+        {/* If there is any value in the search bar, show X button to clear serach. */}
         {searchValue && (
           <button
             type="button"
@@ -139,6 +143,7 @@ function PreferencesContainer({
 
       {/* ── Footer: availability counter + View more/less ── */}
       <div className="pref-container__footer">
+        {/* Availability counter */}
         <span className="pref-container__available-count">
           {expanded
             ? `Showing all ${containerItems.length}`
