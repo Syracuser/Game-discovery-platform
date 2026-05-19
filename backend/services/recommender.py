@@ -55,8 +55,8 @@ async def get_recommendations(user_genres: list[str], user_tags: list[str]) -> l
         game["match_score"] = round(probability, 2)
         scored_games.append(game)
 
-    # Sort highest match score first
-    scored_games.sort(key=lambda g: g["match_score"], reverse=True)
+    # Sort by match score first; use rating as tiebreaker for equal scores
+    scored_games.sort(key=lambda g: (g["match_score"], g["rating"]), reverse=True)
 
     return {
         "results": scored_games,
