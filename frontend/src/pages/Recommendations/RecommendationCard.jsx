@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./RecommendationCard.css";
 
@@ -28,18 +29,27 @@ function getReleaseYear(releaseDate) {
 }
 
 function RecommendationCard({ game, rank, selectedGenres, selectedTags }) {
+  const [chipsExpanded, setChipsExpanded] = useState(false);
+
   const matchPct = Math.round(game.match_score * 100);
   const matchLabel = getMatchLabel(rank, game.match_score);
   const year = getReleaseYear(game.release_date);
 
-  // Combine genres + tags into one chip list, cap at MAX_VISIBLE_CHIPS.
+  // Combine genres + tags into one chip list, split at MAX_VISIBLE_CHIPS.
   const allChips = [...(game.genres || []), ...(game.tags || [])];
   const visibleChips = allChips.slice(0, MAX_VISIBLE_CHIPS);
-  const extraChipCount = allChips.length - MAX_VISIBLE_CHIPS;
+  const extraChips = allChips.slice(MAX_VISIBLE_CHIPS);
+  const hasExtra = extraChips.length > 0;
 
   // A chip is highlighted if the user selected it as a preference.
   function isHighlighted(chip) {
     return selectedGenres.includes(chip) || selectedTags.includes(chip);
+  }
+
+  function chipClass(chip) {
+    return `rec-card__chip ${
+      isHighlighted(chip) ? "rec-card__chip--highlighted" : "rec-card__chip--muted"
+    }`;
   }
 
   return (
@@ -78,22 +88,33 @@ function RecommendationCard({ game, rank, selectedGenres, selectedTags }) {
 
         {/* Genre / tag chips */}
         <div className="rec-card__chips">
+          {/* Always-visible chips */}
           {visibleChips.map((chip) => (
-            <span
-              key={chip}
-              className={`rec-card__chip ${
-                isHighlighted(chip)
-                  ? "rec-card__chip--highlighted"
-                  : "rec-card__chip--muted"
-              }`}
-            >
+            <span key={chip} className={chipClass(chip)}>
               {chip}
             </span>
           ))}
-          {extraChipCount > 0 && (
-            <span className="rec-card__chip rec-card__chip--more">
-              +{extraChipCount} more
-            </span>
+
+          {/* Extra chips — only rendered when expanded, animate in */}
+          {chipsExpanded &&
+            extraChips.map((chip, i) => (
+              <span
+                key={chip}
+                className={`${chipClass(chip)} rec-card__chip--extra`}
+                style={{ animationDelay: `${i * 40}ms` }}
+              >
+                {chip}
+              </span>
+            ))}
+
+          {/* Toggle pill */}
+          {hasExtra && (
+            <button
+              className="rec-card__chip rec-card__chip--toggle"
+              onClick={() => setChipsExpanded((prev) => !prev)}
+            >
+              {chipsExpanded ? "Show less" : `+${extraChips.length} more`}
+            </button>
           )}
         </div>
 

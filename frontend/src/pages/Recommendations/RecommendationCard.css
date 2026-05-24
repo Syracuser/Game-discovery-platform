@@ -59,10 +59,10 @@
 
 .rec-card__content {
   flex: 1;
-  padding: 22px 26px;
+  padding: 16px 22px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 8px;
   min-width: 0;
 }
 
@@ -138,15 +138,46 @@
 }
 
 .rec-card__chip--muted {
-  color: #555;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid #2a2a3e;
+  color: #aaa;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #3a3a52;
 }
 
-.rec-card__chip--more {
-  color: #555;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid #2a2a3e;
+/* Extra chips animate in when expanded */
+@keyframes chip-appear {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rec-card__chip--extra {
+  animation: chip-appear 0.22s ease both;
+}
+
+/* +N more / Show less toggle */
+.rec-card__chip--more,
+.rec-card__chip--toggle {
+  color: #aaa;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #3a3a52;
+}
+
+.rec-card__chip--toggle {
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease,
+    background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.rec-card__chip--toggle:hover {
+  color: #e94560;
+  border-color: rgba(233, 69, 96, 0.45);
+  background-color: rgba(233, 69, 96, 0.08);
+  box-shadow: 0 0 10px rgba(233, 69, 96, 0.15);
 }
 
 /* ── Bottom row: rating + price/CTA ────────────── */
