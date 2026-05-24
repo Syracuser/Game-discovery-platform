@@ -179,8 +179,9 @@
 
 .rec-card__actions {
   display: flex;
-  align-items: center;
-  gap: 20px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
 }
 
 .rec-card__price {
