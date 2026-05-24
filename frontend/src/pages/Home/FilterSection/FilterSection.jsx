@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ScrollArea from "../ScrollArea/ScrollArea";
+import ScrollArea from "../../../components/ScrollArea/ScrollArea";
 import "./FilterSection.css";
 
 // A reusable accordion section that shows a title and a list of checkboxes.

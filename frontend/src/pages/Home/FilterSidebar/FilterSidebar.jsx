@@ -1,5 +1,5 @@
 import FilterSection from "../FilterSection/FilterSection";
-import ScrollArea from "../ScrollArea/ScrollArea";
+import ScrollArea from "../../../components/ScrollArea/ScrollArea";
 import "./FilterSidebar.css";
 
 // The sidebar that contains all filter sections (Genre, Tags, and Studio).
