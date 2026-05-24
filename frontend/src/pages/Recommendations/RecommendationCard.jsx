@@ -28,6 +28,46 @@ function getReleaseYear(releaseDate) {
   return match ? match[0] : "";
 }
 
+const MAX_EXPLANATION_ITEMS = 5;
+
+/**
+ * Computes the overlap between what the user selected and what the game has.
+ * Returns { matchedGenres, matchedTags }, or null if there is no overlap at all.
+ */
+function getMatchData(selectedGenres, selectedTags, game) {
+  const safeArr = (arr) => (Array.isArray(arr) ? arr : []);
+
+  const matchedGenres = safeArr(selectedGenres).filter((g) =>
+    safeArr(game.genres).includes(g)
+  );
+  const matchedTags = safeArr(selectedTags).filter((t) =>
+    safeArr(game.tags).includes(t)
+  );
+
+  if (matchedGenres.length === 0 && matchedTags.length === 0) return null;
+  return { matchedGenres, matchedTags };
+}
+
+/**
+ * Renders a list of matched values as JSX — each value is wrapped in a highlight span,
+ * separated by commas, with a "+N more" suffix when the list is long.
+ */
+function renderHighlightedList(items) {
+  const visible = items.slice(0, MAX_EXPLANATION_ITEMS);
+  const extra = items.length - MAX_EXPLANATION_ITEMS;
+  return (
+    <>
+      {visible.map((item, i) => (
+        <span key={item}>
+          <span className="rec-card__explanation-value">{item}</span>
+          {i < visible.length - 1 && ", "}
+        </span>
+      ))}
+      {extra > 0 && ` +${extra} more`}
+    </>
+  );
+}
+
 function RecommendationCard({ game, rank, selectedGenres, selectedTags }) {
   const [chipsExpanded, setChipsExpanded] = useState(false);
 
@@ -40,6 +80,8 @@ function RecommendationCard({ game, rank, selectedGenres, selectedTags }) {
   const visibleChips = allChips.slice(0, MAX_VISIBLE_CHIPS);
   const extraChips = allChips.slice(MAX_VISIBLE_CHIPS);
   const hasExtra = extraChips.length > 0;
+
+  const matchData = getMatchData(selectedGenres, selectedTags, game);
 
   // A chip is highlighted if the user selected it as a preference.
   function isHighlighted(chip) {
@@ -72,10 +114,13 @@ function RecommendationCard({ game, rank, selectedGenres, selectedTags }) {
       {/* ── Right: all game info ─────────────────────── */}
       <div className="rec-card__content">
 
-        {/* Match badges */}
+        {/* Match badges + price floated to the right */}
         <div className="rec-card__badges">
           <span className="rec-card__match-label">✦ {matchLabel}</span>
           <span className="rec-card__match-pct">● {matchPct} % MATCH</span>
+          <span className="rec-card__price">
+            {game.price === 0 ? "Free" : `$${game.price.toFixed(2)}`}
+          </span>
         </div>
 
         {/* Studio + year, directly above the title */}
@@ -118,25 +163,45 @@ function RecommendationCard({ game, rank, selectedGenres, selectedTags }) {
           )}
         </div>
 
-        {/* Rating (left) + price & CTA (right) */}
-        <div className="rec-card__bottom-row">
-          <div className="rec-card__rating">
-            <span className="rec-card__stars">{buildStars(game.rating)}</span>
-            <span className="rec-card__rating-value">
-              {(game.rating / 2).toFixed(1)}
-            </span>
-          </div>
-          <div className="rec-card__actions">
-            <span className="rec-card__price">
-              {game.price === 0 ? "Free" : `$${game.price.toFixed(2)}`}
-            </span>
+        {/* Explanation + rating grouped so they stay together at the card bottom */}
+        <div className="rec-card__footer">
+
+          {/* Match explanation — only shown when there is genre/tag overlap */}
+          {matchData && (
+            <p className="rec-card__explanation">
+              {"Recommended for you because it matches your selected "}
+              {matchData.matchedGenres.length > 0 && matchData.matchedTags.length > 0 && (
+                <>
+                  {"genres: "}{renderHighlightedList(matchData.matchedGenres)}
+                  {" and tags: "}{renderHighlightedList(matchData.matchedTags)}
+                </>
+              )}
+              {matchData.matchedGenres.length > 0 && matchData.matchedTags.length === 0 && (
+                <>{"genres: "}{renderHighlightedList(matchData.matchedGenres)}</>
+              )}
+              {matchData.matchedTags.length > 0 && matchData.matchedGenres.length === 0 && (
+                <>{"tags: "}{renderHighlightedList(matchData.matchedTags)}</>
+              )}
+              {"."}
+            </p>
+          )}
+
+          {/* Rating (left) + CTA (right) — equal height, no dead space */}
+          <div className="rec-card__bottom-row">
+            <div className="rec-card__rating">
+              <span className="rec-card__stars">{buildStars(game.rating)}</span>
+              <span className="rec-card__rating-value">
+                {(game.rating / 2).toFixed(1)}
+              </span>
+            </div>
             <Link to={`/games/${game._id}`} className="rec-card__view-btn">
               View Game →
             </Link>
           </div>
-        </div>
 
-      </div>
+        </div>{/* end rec-card__footer */}
+
+      </div>{/* end rec-card__content */}
     </div>
   );
 }

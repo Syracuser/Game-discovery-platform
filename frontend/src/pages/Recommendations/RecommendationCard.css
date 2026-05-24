@@ -180,14 +180,35 @@
   box-shadow: 0 0 10px rgba(233, 69, 96, 0.15);
 }
 
+/* ── Footer: explanation + rating row, anchored to card bottom ── */
+
+.rec-card__footer {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ── Match explanation ──────────────────────────── */
+
+.rec-card__explanation {
+  font-size: 0.85rem;
+  color: #888;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.rec-card__explanation-value {
+  color: #ffffff;
+  font-weight: 600;
+}
+
 /* ── Bottom row: rating + price/CTA ────────────── */
 
 .rec-card__bottom-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: auto;
-  flex-wrap: wrap;
   gap: 12px;
 }
 
@@ -208,17 +229,12 @@
   color: #999;
 }
 
-.rec-card__actions {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 6px;
-}
 
 .rec-card__price {
   font-size: 1.05rem;
   font-weight: 600;
   color: #e0e0e0;
+  margin-left: auto;
 }
 
 .rec-card__view-btn {
