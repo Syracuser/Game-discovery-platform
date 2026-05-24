@@ -1,0 +1,60 @@
+.based-on {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 14px 20px;
+  background-color: #1a1a2e;
+  border: 1px solid #2a2a3e;
+  border-radius: 10px;
+  margin-bottom: 36px;
+}
+
+.based-on__label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #555;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.based-on__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  flex: 1;
+}
+
+.based-on__chip {
+  font-size: 0.8rem;
+  color: #e94560;
+  background-color: rgba(233, 69, 96, 0.1);
+  border: 1px solid rgba(233, 69, 96, 0.35);
+  border-radius: 999px;
+  padding: 4px 13px;
+  white-space: nowrap;
+}
+
+.based-on__chip--more {
+  color: #666;
+  background-color: rgba(255, 255, 255, 0.04);
+  border-color: #2a2a3e;
+}
+
+.based-on__edit-link {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 0.82rem;
+  color: #666;
+  white-space: nowrap;
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.based-on__edit-link:hover {
+  color: #e94560;
+}

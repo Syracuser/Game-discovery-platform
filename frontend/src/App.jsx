@@ -4,6 +4,7 @@ import Home from "./pages/Home/Home";
 import Wishlist from "./pages/Wishlist/Wishlist";
 import GameDetails from "./pages/GameDetails/GameDetails";
 import Preferences from "./pages/Preferences/Preferences";
+import Recommendations from "./pages/Recommendations/Recommendations";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/games/:id" element={<GameDetails />} />
           <Route path="/preferences" element={<Preferences />} />
+          <Route path="/recommendations" element={<Recommendations />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import API_URL from "../../api/config";
 import PreferencesContainer from "./PreferencesContainer";
@@ -15,6 +16,8 @@ const DEFAULT_TAGS_COUNT = 12;
 // ─────────────────────────────────────────────────────────
 
 function Preferences() {
+  const navigate = useNavigate();
+
   // ── Data fetched from the API ─────────────────────────
   const [genres, setGenres] = useState([]);
   const [tags, setTags]     = useState([]);
@@ -63,8 +66,13 @@ function Preferences() {
         genres: selectedGenres,
         tags: selectedTags,
       });
-      // Results will be used in a future task — log for now.
-      console.log("Recommendations received:", response.data);
+      navigate("/recommendations", {
+        state: {
+          results: response.data.results,
+          selectedGenres,
+          selectedTags,
+        },
+      });
     } catch (err) {
       console.error("Failed to fetch recommendations:", err);
     } finally {

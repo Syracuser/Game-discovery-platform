@@ -1,0 +1,116 @@
+.recommendations-page {
+  /* Escape the Layout's 2rem padding to apply our own full-bleed background. */
+  margin: -2rem;
+  min-height: calc(100vh - 60px);
+  background:
+    radial-gradient(1000px 500px at 70% -5%, rgba(233, 69, 96, 0.07), transparent 60%),
+    radial-gradient(800px 400px at -5% 50%, rgba(76, 70, 200, 0.06), transparent 60%),
+    #0f0f1a;
+}
+
+.recommendations-page__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 40px 100px;
+}
+
+/* ── Header ─────────────────────────────────────── */
+
+.recommendations-page__header {
+  margin-bottom: 32px;
+}
+
+.recommendations-page__title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+  margin: 0 0 10px;
+  line-height: 1.15;
+}
+
+.recommendations-page__title-accent {
+  color: #e94560;
+}
+
+.recommendations-page__subtitle {
+  font-size: 0.95rem;
+  color: #666;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.recommendations-page__subtitle-icon {
+  color: #e94560;
+  opacity: 0.7;
+  font-size: 0.85rem;
+}
+
+/* ── Controls row ───────────────────────────────── */
+
+.recommendations-page__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.recommendations-page__count-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.recommendations-page__count-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e0e0e0;
+}
+
+.recommendations-page__count-pill {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #e94560;
+  background: rgba(233, 69, 96, 0.1);
+  border: 1px solid rgba(233, 69, 96, 0.3);
+  border-radius: 999px;
+  padding: 3px 11px;
+}
+
+/* ── Card list ──────────────────────────────────── */
+
+.recommendations-page__list {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Responsive ─────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .recommendations-page__inner {
+    padding: 36px 24px 80px;
+  }
+
+  .recommendations-page__title {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .recommendations-page__inner {
+    padding: 28px 16px 60px;
+  }
+
+  .recommendations-page__title {
+    font-size: 1.6rem;
+  }
+
+  .recommendations-page__controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
