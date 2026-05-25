@@ -52,6 +52,7 @@ function Home() {
 
   // ── Data fetching ────────────────────────────
 
+  // Fetch Genres, Tags, Studios from backend
   useEffect(() => {
     axios.get(`${API_URL}/genres`)
       .then((res) => setGenres(res.data))
@@ -66,6 +67,7 @@ function Home() {
       .catch((err) => console.error("Failed to fetch studios:", err));
   }, []);
 
+  // Fetch Games from backend
   useEffect(() => {
     axios.get(`${API_URL}/games`)
       .then((res) => setGames(res.data))
@@ -120,32 +122,42 @@ function Home() {
   const handleToggleGenre = makeToggler(setSelectedGenres, "genre");
   const handleToggleTag   = makeToggler(setSelectedTags, "tag");
 
-  function handleSelectStudio(studio) { setSelectedStudio(studio); }
-  function handleClearStudio()        { setSelectedStudio(""); }
+
+  function handleSelectStudio(studio) {
+    setSelectedStudio(studio); 
+    }
+
+  function handleClearStudio() { 
+    setSelectedStudio(""); 
+  }
 
 
   // ── Filtering ────────────────────────────────
 
   const filteredGames = games
     .filter((game) =>
+    // Filters by search. If nothing searched, return all games.
       game.name.toLowerCase().includes(searchText.toLowerCase())
     )
     .filter((game) =>
+    // No genres selected = show all. Otherwise game must match ALL selected genres.
       selectedGenres.length === 0 ||
       selectedGenres.every((g) => game.genres.includes(g))
     )
     .filter((game) =>
+    // No tags selected = show all. Otherwise game must have ALL selected tags.
       selectedTags.length === 0 ||
       selectedTags.every((t) => game.tags.includes(t))
     )
     .filter((game) =>
+    // No studio selected = show all. Otherwise game's studio must match.
       !selectedStudio || game.studio === selectedStudio
     );
 
 
+
+
   // ── Render ───────────────────────────────────
-  // Fragment so FilterSidebar and main-content are siblings
-  // inside layout__body's flex row — required for the push animation.
 
   return (
     <>

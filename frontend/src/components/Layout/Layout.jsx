@@ -30,10 +30,10 @@ function Layout() {
 
       <div className="layout__body">
         {isHomePage ? (
-          // Home manages its own sidebar — render Outlet directly so
-          // FilterSidebar and main-content are siblings inside layout__body.
+          //if the currently rendered page is the Home page - pass down to it the Filter-sidebar state.
           <Outlet context={{ searchText, isSidebarOpen, setIsSidebarOpen }} />
         ) : (
+          // If the currently rendered page is NOT the home page - just pass the search-bar text state.
           <main className="main-content">
             <Outlet context={{ searchText }} />
           </main>
