@@ -18,6 +18,7 @@ function Home() {
   // ── Context (from Layout) ────────────────────
   const { searchText, isSidebarOpen, setIsSidebarOpen } = useOutletContext();
 
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -80,8 +81,8 @@ function Home() {
 
 
   // ── Preselect handler ────────────────────────
-  // When the user clicks a filter crumb in GameDetails, they're sent back
-  // to "/" with { preselect: { type, value } } in location.state.
+  // When the user clicks a filter in the breadcrumb in GameDetails, they're sent back
+  // to "/" (the home page) with { preselect: { type, value } } in location.state.
   // This reads that state, applies the filter, opens the sidebar,
   // then clears the state so it doesn't re-apply on future renders.
   useEffect(() => {
@@ -180,13 +181,16 @@ function Home() {
           <div className="home__spinner-container">
             <div className="home__spinner"></div>
           </div>
+
         ) : error ? (
           <div className="home">
             <p className="home__error">Failed to load games. Please try again later.</p>
           </div>
+
         ) : (
           <div className="home">
             <h1 className="home__title">All Games</h1>
+
             <div className="home__games-grid">
               {filteredGames.map((game) => (
                 <Link

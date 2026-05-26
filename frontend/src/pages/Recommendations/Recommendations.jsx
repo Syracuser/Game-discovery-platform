@@ -17,6 +17,7 @@ import "./Recommendations.css";
 // is null and the empty state is shown gracefully.
 // ─────────────────────────────────────────────────────────────────
 
+// Function that returns a sorted list of games.
 function getSortedResults(results, sortBy) {
   const copy = [...results]; // never mutate location state
   if (sortBy === "match")   return copy.sort((a, b) => b.match_score - a.match_score);
@@ -29,7 +30,11 @@ function getSortedResults(results, sortBy) {
 }
 
 function Recommendations() {
+  // Reads 'state' object/data from Preferences.jsx 
   const location = useLocation();
+
+  // Grabs the ranked games, picked genres, and picked tags.
+  // assigns default values of empty lists if the user didn't arrive through the preferences page
   const {
     results = [],
     selectedGenres = [],
@@ -38,6 +43,8 @@ function Recommendations() {
 
   const [sortBy, setSortBy] = useState("match");
 
+  // Return a sorted list of games
+  // (List of games sorted by: match/price/rating/release-date)
   const sortedResults = getSortedResults(results, sortBy);
   const hasPreferences = selectedGenres.length > 0 || selectedTags.length > 0;
 
@@ -59,6 +66,7 @@ function Recommendations() {
             Recommended{" "}
             <span className="recommendations-page__title-accent">For You</span>
           </h1>
+
           <p className="recommendations-page__subtitle">
             <span className="recommendations-page__subtitle-icon">✦</span>
             {results.length} game{results.length !== 1 ? "s" : ""} matched to your taste
@@ -76,6 +84,7 @@ function Recommendations() {
               {results.length} games
             </span>
           </div>
+
           <SortDropdown value={sortBy} onChange={setSortBy} />
         </div>
 
