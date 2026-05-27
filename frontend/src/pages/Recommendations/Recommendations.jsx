@@ -18,6 +18,7 @@ import "./Recommendations.css";
 // ─────────────────────────────────────────────────────────────────
 
 // Function that returns a sorted list of games.
+// (List of games sorted by: match/price/rating/release-date)
 function getSortedResults(results, sortBy) {
   const copy = [...results]; // never mutate location state
   if (sortBy === "match")   return copy.sort((a, b) => b.match_score - a.match_score);
@@ -43,8 +44,7 @@ function Recommendations() {
 
   const [sortBy, setSortBy] = useState("match");
 
-  // Return a sorted list of games
-  // (List of games sorted by: match/price/rating/release-date)
+  // Return a sorted list of games by Match %
   const sortedResults = getSortedResults(results, sortBy);
   const hasPreferences = selectedGenres.length > 0 || selectedTags.length > 0;
 

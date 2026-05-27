@@ -14,6 +14,7 @@ function SortDropdown({ value, onChange }) {
       <label className="sort-dropdown__label" htmlFor="sort-select">
         Sort by
       </label>
+
       <div className="sort-dropdown__wrapper">
         <select
           id="sort-select"

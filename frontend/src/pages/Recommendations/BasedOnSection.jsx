@@ -5,11 +5,12 @@ import "./BasedOnSection.css";
 const MAX_VISIBLE_CHIPS = 4;
 
 function BasedOnSection({ selectedGenres, selectedTags }) {
+
   const [expanded, setExpanded] = useState(false);
 
   const allChips = [...selectedGenres, ...selectedTags];
   const visibleChips = allChips.slice(0, MAX_VISIBLE_CHIPS);
-  const extraChips = allChips.slice(MAX_VISIBLE_CHIPS);
+  const extraChips = allChips.slice(MAX_VISIBLE_CHIPS); // All the chips that come after the visible chips.
   const hasExtra = extraChips.length > 0;
 
   return (
