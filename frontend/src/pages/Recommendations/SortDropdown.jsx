@@ -19,8 +19,8 @@ function SortDropdown({ value, onChange }) {
         <select
           id="sort-select"
           className="sort-dropdown__select"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
+          value={value} // When changed to a different option, will display name of currently selected label. 
+          onChange={(e) => onChange(e.target.value)} //When another option is selected, updates the state to match the selected option's value
         >
           {SORT_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>

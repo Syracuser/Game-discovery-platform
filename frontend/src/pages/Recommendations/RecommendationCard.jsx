@@ -35,13 +35,14 @@ const MAX_EXPLANATION_ITEMS = 5;
  * Returns { matchedGenres, matchedTags }, or null if there is no overlap at all.
  */
 function getMatchData(selectedGenres, selectedTags, game) {
-  const safeArr = (arr) => (Array.isArray(arr) ? arr : []);
+  const safeArr = (arr) => (Array.isArray(arr) ? arr : []); // Check that the item being looped on is an array.
 
   const matchedGenres = safeArr(selectedGenres).filter((g) =>
-    safeArr(game.genres).includes(g)
+    safeArr(game.genres).includes(g) // Returns Genres that both the user selected and the game has.
+
   );
   const matchedTags = safeArr(selectedTags).filter((t) =>
-    safeArr(game.tags).includes(t)
+    safeArr(game.tags).includes(t) 
   );
 
   if (matchedGenres.length === 0 && matchedTags.length === 0) return null;
@@ -110,6 +111,7 @@ function RecommendationCard({ game, rank, selectedGenres, selectedTags }) {
           <div className="rec-card__image-placeholder">✦</div>
         )}
       </div>
+
 
       {/* ── Right: all game info ─────────────────────── */}
       <div className="rec-card__content">
@@ -194,6 +196,7 @@ function RecommendationCard({ game, rank, selectedGenres, selectedTags }) {
                 {(game.rating / 2).toFixed(1)}
               </span>
             </div>
+
             <Link to={`/games/${game._id}`} className="rec-card__view-btn">
               View Game →
             </Link>
