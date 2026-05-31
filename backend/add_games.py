@@ -36,6 +36,7 @@ NEW_GAMES = [
             f"{_STEAM}/1237970/header.jpg",
             f"{_STEAM}/1237970/capsule_616x353.jpg",
         ],
+        "platforms": ["PC", "Xbox", "PlayStation"],
         "description": (
             "A single-player campaign that builds an unlikely bond between pilot and Titan, "
             "backed by one of the most fluid and creative multiplayer modes ever put into a shooter. "
@@ -74,6 +75,7 @@ NEW_GAMES = [
             f"{_STEAM}/1229490/header.jpg",
             f"{_STEAM}/1229490/capsule_616x353.jpg",
         ],
+        "platforms": ["PC"],
         "description": (
             "A fast-paced retro first-person shooter where you are a machine that runs on blood. "
             "Dash through hellish arenas, tear enemies apart at close range to restore health, "
@@ -112,6 +114,7 @@ NEW_GAMES = [
             f"{_STEAM}/814380/header.jpg",
             f"{_STEAM}/814380/capsule_616x353.jpg",
         ],
+        "platforms": ["PC", "PlayStation", "Xbox"],
         "description": (
             "Set in late 1500s Sengoku Japan, Sekiro puts you in the role of a shinobi sworn to protect a young lord. "
             "Master the art of the blade, grapple across rooftops, and face enemies who will punish every mistake — "
@@ -150,6 +153,7 @@ NEW_GAMES = [
             f"{_STEAM}/1174180/header.jpg",
             f"{_STEAM}/1174180/capsule_616x353.jpg",
         ],
+        "platforms": ["PC", "PlayStation", "Xbox"],
         "description": (
             "Live the outlaw life in the most immersive open world ever built. "
             "As Arthur Morgan, navigate loyalty, survival, and the slow death of the Wild West "
@@ -188,6 +192,7 @@ NEW_GAMES = [
             f"{_STEAM}/1110910/header.jpg",
             f"{_STEAM}/1110910/capsule_616x353.jpg",
         ],
+        "platforms": ["PC", "PlayStation", "Xbox", "Nintendo Switch"],
         "description": (
             "A gothic soulslike where your only defense is possessing the empty shells of fallen warriors. "
             "Every enemy encounter is a deliberate test of patience and timing, "
@@ -226,6 +231,7 @@ NEW_GAMES = [
             f"{_STEAM}/601150/header.jpg",
             f"{_STEAM}/601150/capsule_616x353.jpg",
         ],
+        "platforms": ["PC", "PlayStation", "Xbox"],
         "description": (
             "Three playable demon hunters, each with a radically different style. "
             "Style Meter combat has never looked or felt better — pull off ridiculous combos, "
@@ -264,6 +270,7 @@ NEW_GAMES = [
             f"{_STEAM}/588650/header.jpg",
             f"{_STEAM}/588650/capsule_616x353.jpg",
         ],
+        "platforms": ["PC", "PlayStation", "Xbox", "Nintendo Switch"],
         "description": (
             "A roguelike-metroidvania where every run is different but every lesson carries forward. "
             "Die, learn, adapt, and push deeper into a cursed island that refuses to let you stay dead."
@@ -301,6 +308,7 @@ NEW_GAMES = [
             f"{_STEAM}/367520/header.jpg",
             f"{_STEAM}/367520/capsule_616x353.jpg",
         ],
+        "platforms": ["PC", "PlayStation", "Xbox", "Nintendo Switch"],
         "description": (
             "Descend into Hallownest, a vast underground kingdom of insects and dreams. "
             "A precise, challenging adventure with a world dense enough to get genuinely lost in — "
@@ -339,6 +347,7 @@ NEW_GAMES = [
             f"{_STEAM}/2592160/header.jpg",
             f"{_STEAM}/2592160/capsule_616x353.jpg",
         ],
+        "platforms": ["PC"],
         "description": (
             "Lead a team of misfit superheroes through a city in crisis. "
             "A narrative strategy game about the messy reality of heroism — managing egos, "
@@ -377,6 +386,7 @@ NEW_GAMES = [
             f"{_STEAM}/1593500/header.jpg",
             f"{_STEAM}/1593500/capsule_616x353.jpg",
         ],
+        "platforms": ["PC", "PlayStation"],
         "description": (
             "Kratos trades Greek myth for Norse legend and acquires a son along the way. "
             "A journey about fatherhood, grief, and the weight of the past, "
@@ -415,6 +425,7 @@ NEW_GAMES = [
             f"{_STEAM}/2322010/header.jpg",
             f"{_STEAM}/2322010/capsule_616x353.jpg",
         ],
+        "platforms": ["PC", "PlayStation"],
         "description": (
             "The apocalypse is coming and Kratos cannot stop all of it — only choose how to face it. "
             "A massive, emotionally driven sequel that expands every system from its predecessor "
