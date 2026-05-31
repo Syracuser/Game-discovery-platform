@@ -11,6 +11,7 @@ class GameModel(BaseModel):
     image: str = ""
     description: str = ""
     screenshots: list[str] = []
+    platforms: list[str] = []
     publisher: str = ""
     release_date: str = ""
     system_requirements: dict = {}

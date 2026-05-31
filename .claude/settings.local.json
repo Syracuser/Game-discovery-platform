@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "WebFetch(domain:uiverse.io)",
-      "WebFetch(domain:ui.aceternity.com)"
+      "WebFetch(domain:ui.aceternity.com)",
+      "WebSearch"
     ]
   }
 }
