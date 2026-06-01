@@ -154,11 +154,6 @@ function GameSidebar({ game }) {
           </span>
         </div>
 
-        <div className="game-sidebar__meta-row">
-          <span className="game-sidebar__meta-label">Price</span>
-          <span className="game-sidebar__meta-value">${game.price.toFixed(2)}</span>
-        </div>
-
       </div>
 
     </div>
