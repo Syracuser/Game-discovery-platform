@@ -115,7 +115,7 @@ function GameSidebar({ game }) {
 
         <button className="game-sidebar__action-btn">
           <span className="game-sidebar__action-icon">&#128278;</span>
-          Watchlist
+          Wishlist
         </button>
 
       </div>
