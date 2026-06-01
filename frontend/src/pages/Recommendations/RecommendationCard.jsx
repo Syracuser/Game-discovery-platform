@@ -116,13 +116,10 @@ function RecommendationCard({ game, rank, selectedGenres, selectedTags }) {
       {/* ── Right: all game info ─────────────────────── */}
       <div className="rec-card__content">
 
-        {/* Match badges + price floated to the right */}
+        {/* Match badges */}
         <div className="rec-card__badges">
           <span className="rec-card__match-label">✦ {matchLabel}</span>
           <span className="rec-card__match-pct">● {matchPct} % MATCH</span>
-          <span className="rec-card__price">
-            {game.price === 0 ? "Free" : `$${game.price.toFixed(2)}`}
-          </span>
         </div>
 
         {/* Studio + year, directly above the title */}

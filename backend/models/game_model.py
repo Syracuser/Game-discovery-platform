@@ -7,7 +7,6 @@ class GameModel(BaseModel):
     tags: list[str]
     rating: float
     studio: str
-    price: float
     image: str = ""
     description: str = ""
     screenshots: list[str] = []
