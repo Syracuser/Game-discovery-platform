@@ -1,1 +1,70 @@
-/* Wishlist page styles will go here */
+/* ── Full-bleed page background — escapes Layout's 2rem padding ── */
+.wishlist-page {
+  margin: -2rem;
+  min-height: calc(100vh - 60px);
+  background:
+    radial-gradient(1200px 650px at 85% -10%, rgba(233, 69, 96, 0.13), transparent 62%),
+    radial-gradient(950px 520px at -10% 30%, rgba(76, 70, 200, 0.09), transparent 60%),
+    #0f0f1a;
+}
+
+/* ── Inner content wrapper ── */
+.wishlist-page__inner {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 56px 40px 100px;
+}
+
+/* ── Page header ── */
+.wishlist-page__header {
+  margin-bottom: 48px;
+}
+
+.wishlist-page__title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+  margin: 0 0 10px;
+  line-height: 1.15;
+}
+
+.wishlist-page__title-accent {
+  color: #e94560;
+}
+
+/* ── Subtitle row — pill badge + description text ── */
+.wishlist-page__subtitle {
+  font-size: 0.95rem;
+  color: #666;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.wishlist-page__count {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #e94560;
+  background: rgba(233, 69, 96, 0.10);
+  border: 1px solid rgba(233, 69, 96, 0.3);
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 720px) {
+  .wishlist-page__inner  { padding: 36px 20px 80px; }
+  .wishlist-page__header { margin-bottom: 32px; }
+  .wishlist-page__title  { font-size: 1.7rem; }
+}
+
+@media (max-width: 480px) {
+  .wishlist-page__inner { padding: 28px 16px 60px; }
+}

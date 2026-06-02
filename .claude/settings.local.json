@@ -3,7 +3,8 @@
     "allow": [
       "WebFetch(domain:uiverse.io)",
       "WebFetch(domain:ui.aceternity.com)",
-      "WebSearch"
+      "WebSearch",
+      "WebFetch(domain:github.com)"
     ]
   }
 }

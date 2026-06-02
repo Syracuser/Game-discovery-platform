@@ -1,0 +1,145 @@
+/* ── Empty state stage — centers the card vertically ── */
+.empty-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 80px 20px 60px;
+}
+
+/* ── Empty card — animated on mount ── */
+.empty {
+  position: relative;
+  width: min(560px, 100%);
+  text-align: center;
+  animation: card-rise 0.55s cubic-bezier(.2, .7, .2, 1) both;
+}
+
+@keyframes card-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Sparkle icon ── */
+.empty__icon-wrap {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 28px;
+  display: grid;
+  place-items: center;
+}
+
+.empty__icon {
+  font-size: 2.6rem;
+  line-height: 1;
+  color: #e94560;
+  opacity: 0.55;
+}
+
+/* ── Headline ── */
+.empty__title {
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 18px;
+  line-height: 1.15;
+  letter-spacing: -0.6px;
+  text-wrap: balance;
+}
+
+/* em is styled as accent color, not italic */
+.empty__title em {
+  font-style: normal;
+  color: #e94560;
+}
+
+/* ── Subtitle ── */
+.empty__subtitle {
+  font-size: 1rem;
+  color: #888;
+  max-width: 420px;
+  margin: 0 auto 32px;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+/* ── CTAs row ── */
+.empty__ctas {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: inherit;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+}
+
+.cta:focus-visible {
+  outline: 2px solid rgba(233, 69, 96, 0.5);
+  outline-offset: 3px;
+  border-radius: 10px;
+}
+
+.cta__arrow {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.cta:hover .cta__arrow {
+  transform: translateX(2px);
+}
+
+/* Primary pill button — accent tint, fills to solid on hover */
+.cta--primary {
+  padding: 11px 22px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #e94560;
+  background-color: rgba(233, 69, 96, 0.10);
+  border: 1px solid rgba(233, 69, 96, 0.4);
+  border-radius: 10px;
+}
+
+.cta--primary:hover {
+  color: #fff;
+  background-color: #e94560;
+  border-color: #e94560;
+  box-shadow: 0 8px 22px -10px rgba(233, 69, 96, 0.6);
+  transform: translateY(-1px);
+}
+
+.cta--primary:active {
+  transform: translateY(0);
+}
+
+/* Ghost text button — dim text, brightens on hover */
+.cta--ghost {
+  padding: 6px 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  background: none;
+  border: 0;
+  color: #666;
+}
+
+.cta--ghost:hover {
+  color: #e0e0e0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 720px) {
+  .empty__title { font-size: 1.6rem; }
+  .empty__ctas  { flex-direction: column; gap: 10px; }
+}
