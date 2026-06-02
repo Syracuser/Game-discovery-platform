@@ -10,7 +10,7 @@ function EmptyState() {
         </div>
 
         <h2 className="empty__title">
-          A quiet space for the games <em>you'll get to.</em>
+          No wishlisted games here yet, <em>Let's fix that.</em>
         </h2>
 
         <p className="empty__subtitle">

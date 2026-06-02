@@ -11,7 +11,7 @@ function Wishlist() {
             Your <span className="wishlist-page__title-accent">Wishlist</span>
           </h1>
           <p className="wishlist-page__subtitle">
-            <span className="wishlist-page__count">0 Saved</span>
+            <span className="wishlist-page__count">0 Wishlisted</span>
             Keep track of games you want to play later
           </p>
         </header>

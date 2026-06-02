@@ -74,19 +74,20 @@ function Recommendations() {
           </p>
         </div>
 
-        {/* ── Controls row ─────────────────────────────── */}
-        <div className="recommendations-page__controls">
-          <div className="recommendations-page__count-row">
-            <span className="recommendations-page__count-label">
-              All recommendations
-            </span>
-            <span className="recommendations-page__count-pill">
-              {results.length} games
-            </span>
+        {/* ── Controls row — hidden when there are no results ── */}
+        {sortedResults.length > 0 && (
+          <div className="recommendations-page__controls">
+            <div className="recommendations-page__count-row">
+              <span className="recommendations-page__count-label">
+                All recommendations
+              </span>
+              <span className="recommendations-page__count-pill">
+                {results.length} games
+              </span>
+            </div>
+            <SortDropdown value={sortBy} onChange={setSortBy} />
           </div>
-
-          <SortDropdown value={sortBy} onChange={setSortBy} />
-        </div>
+        )}
 
         {/* ── Game cards or empty state ─────────────────── */}
         {sortedResults.length === 0 ? (
