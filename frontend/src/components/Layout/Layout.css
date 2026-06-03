@@ -1,7 +1,14 @@
-/* Flex row — sidebar and main content sit side by side.
-   The sidebar animates its own width, so main-content grows/shrinks smoothly. */
+/* Column flex so the footer is pushed to the bottom on short pages */
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Grows to fill remaining space between the navbar and footer */
 .layout__body {
   display: flex;
+  flex: 1;
 }
 
 /* flex: 1 takes all remaining space; min-width: 0 prevents grid overflow */

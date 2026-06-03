@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
+import Footer from "../Footer/Footer";
 import "./Layout.css";
 
 // ─────────────────────────────────────────────
@@ -39,6 +40,8 @@ function Layout() {
           </main>
         )}
       </div>
+
+      <Footer />
 
     </div>
   );

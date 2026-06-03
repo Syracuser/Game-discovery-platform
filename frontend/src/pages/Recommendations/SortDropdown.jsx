@@ -1,35 +1,75 @@
+import { useState, useRef, useEffect } from "react";
+import { FaChevronDown } from "react-icons/fa6";
+import { IoCheckmark } from "react-icons/io5";
 import "./SortDropdown.css";
 
 const SORT_OPTIONS = [
   { value: "match",   label: "Match %" },
-  { value: "price",   label: "Price: Low → High" },
-  { value: "rating",  label: "Rating" },
+  { value: "rating",  label: "User Rating" },
   { value: "release", label: "Release: Newest" },
+  { value: "price",   label: "Price: Low → High" },
 ];
 
-// Controlled dropdown — parent owns the sort state.
+// Controlled custom dropdown — parent owns the sort state.
 function SortDropdown({ value, onChange }) {
-  return (
-    <div className="sort-dropdown">
-      <label className="sort-dropdown__label" htmlFor="sort-select">
-        Sort by
-      </label>
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef(null);
 
-      <div className="sort-dropdown__wrapper">
-        <select
-          id="sort-select"
-          className="sort-dropdown__select"
-          value={value} // When changed to a different option, will display name of currently selected label. 
-          onChange={(e) => onChange(e.target.value)} //When another option is selected, updates the state to match the selected option's value
-        >
-          {SORT_OPTIONS.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
-        <span className="sort-dropdown__arrow">▾</span>
-      </div>
+  // Close the menu when the user clicks anywhere outside this component
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const activeLabel = SORT_OPTIONS.find((opt) => opt.value === value)?.label;
+
+  function handleSelect(optValue) {
+    onChange(optValue);
+    setIsOpen(false);
+  }
+
+  return (
+    <div className={`sort-dropdown ${isOpen ? "sort-dropdown--open" : ""}`} ref={containerRef}>
+
+      {/* Trigger button */}
+      <button
+        className="sort-dropdown__btn"
+        onClick={() => setIsOpen((prev) => !prev)}
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
+      >
+        <span className="sort-dropdown__btn-label">{activeLabel}</span>
+        {/* Chevron — rotates when menu is open via CSS */}
+        <FaChevronDown className="sort-dropdown__chevron" />
+      </button>
+
+      {/* Dropdown menu */}
+      {isOpen && (
+        <ul className="sort-dropdown__menu" role="listbox">
+          {SORT_OPTIONS.map((opt) => {
+            const isActive = opt.value === value;
+            return (
+              <li
+                key={opt.value}
+                role="option"
+                aria-selected={isActive}
+                className={`sort-dropdown__option ${isActive ? "sort-dropdown__option--active" : ""}`}
+                onClick={() => handleSelect(opt.value)}
+              >
+                {/* Checkmark — only visible on the active option */}
+                <IoCheckmark className="sort-dropdown__check" />
+                {opt.label}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
     </div>
   );
 }

@@ -1,0 +1,122 @@
+/* ─── Footer shell ─────────────────────────────────── */
+.footer {
+  background-color: #1a1a2e;
+  margin-top: auto; /* pushes footer to the bottom when content is short */
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Thin gradient line across the very top of the footer */
+.footer__accent-line {
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(233, 69, 96, 0.4),
+    #e94560,
+    rgba(233, 69, 96, 0.4),
+    transparent
+  );
+}
+
+/* Three-column row */
+.footer__content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 26px 32px;
+  min-height: 100px;
+}
+
+/* ─── Left section ─────────────────────────────────── */
+.footer__left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Icon container box */
+.footer__logo-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background-color: rgba(233, 69, 96, 0.1);
+  border: 1px solid rgba(233, 69, 96, 0.3);
+  flex-shrink: 0;
+}
+
+.footer__logo-icon {
+  font-size: 18px;
+  color: #e94560;
+}
+
+.footer__brand {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer__brand-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.footer__brand-accent {
+  color: #e94560;
+}
+
+.footer__subtitle {
+  font-size: 12px;
+  color: #888;
+  margin-top: 2px;
+}
+
+/* ─── Center section ───────────────────────────────── */
+.footer__center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer__nav-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #888;
+}
+
+.footer__nav-links {
+  display: flex;
+  gap: 24px;
+}
+
+.footer__nav-link {
+  font-size: 11px;
+  font-weight: 500;
+  color: #888;
+  transition: color 0.2s ease;
+}
+
+.footer__nav-link:hover {
+  color: #e94560;
+}
+
+/* ─── Right section ────────────────────────────────── */
+.footer__right {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+  font-size: 11px;
+  color: #888;
+  line-height: 1.8;
+}
+
+.footer__rawg {
+  color: #e94560;
+  font-weight: 500;
+}

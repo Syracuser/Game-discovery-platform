@@ -18,7 +18,7 @@ function FilterSection({ title, options, selectedOptions, onToggleOption, single
       {/* Header — clicking it toggles the section open/closed */}
       <button
         className="filter-section__header"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => setIsOpen((prev) => !prev)}
       >
         <span className="filter-section__title">{title}</span>
         
