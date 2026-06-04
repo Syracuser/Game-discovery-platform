@@ -3,7 +3,7 @@ import { useOutletContext, useNavigate, useLocation, Link } from "react-router-d
 import axios from "axios";
 import API_URL from "../../api/config";
 import FilterSidebar from "./FilterSidebar/FilterSidebar";
-import GameCard from "./GameCard/GameCard";
+import GameCard from "../../components/GameCard/GameCard";
 import "./Home.css";
 
 // ─────────────────────────────────────────────

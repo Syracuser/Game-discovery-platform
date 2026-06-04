@@ -1,5 +1,5 @@
 import { useState } from "react";
-import PLATFORM_ICONS from "../../../utils/platformIcons";
+import PLATFORM_ICONS from "../../utils/platformIcons";
 import "./GameCard.css";
 
 function GameCard({ game }) {
