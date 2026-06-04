@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
-import BasedOnSection from "./BasedOnSection";
-import RecommendationCard from "./RecommendationCard";
-import SortDropdown from "./SortDropdown";
-import EmptyState from "./EmptyState";
+import BasedOnSection from "./BasedOnSection/BasedOnSection";
+import RecommendationCard from "./RecommendationCard/RecommendationCard";
+import SortDropdown from "./SortDropdown/SortDropdown";
+import EmptyState from "./EmptyState/EmptyState";
 import "./Recommendations.css";
 
 // ─────────────────────────────────────────────────────────────────

@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { useParams, Link, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import API_URL from "../../api/config";
-import GameMediaGallery from "./GameMediaGallery";
-import GameSidebar from "./GameSidebar";
-import GameDescriptionSection from "./GameDescriptionSection";
-import SystemRequirementsSection from "./SystemRequirementsSection";
+import GameMediaGallery from "./GameMediaGallery/GameMediaGallery";
+import GameSidebar from "./GameSidebar/GameSidebar";
+import GameDescriptionSection from "./GameDescriptionSection/GameDescriptionSection";
+import SystemRequirementsSection from "./SystemRequirementsSection/SystemRequirementsSection";
 import "./GameDetails.css";
 
 // ─────────────────────────────────────────────

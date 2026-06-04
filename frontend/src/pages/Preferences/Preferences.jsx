@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import API_URL from "../../api/config";
-import PreferencesContainer from "./PreferencesContainer";
+import PreferencesContainer from "./PreferencesContainer/PreferencesContainer";
 import "./Preferences.css";
 
 // How many chips to show before the "View More" button appears.

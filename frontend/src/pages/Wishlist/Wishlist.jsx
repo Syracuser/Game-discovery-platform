@@ -1,4 +1,4 @@
-import EmptyState from "./EmptyState";
+import EmptyState from "./EmptyState/EmptyState";
 import "./Wishlist.css";
 
 function Wishlist() {
