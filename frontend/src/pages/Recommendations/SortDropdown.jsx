@@ -11,7 +11,10 @@ const SORT_OPTIONS = [
 ];
 
 // Controlled custom dropdown — parent owns the sort state.
+
+// Default state set to: "match"
 function SortDropdown({ value, onChange }) {
+
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef(null);
 
@@ -26,8 +29,10 @@ function SortDropdown({ value, onChange }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+// Loops through each option, and returns the label of the option who's value matched the 'value' state passed as a prop
   const activeLabel = SORT_OPTIONS.find((opt) => opt.value === value)?.label;
 
+  // Sets the passed in 'value' prop to be the newly selected option, and closes the dropdown
   function handleSelect(optValue) {
     onChange(optValue);
     setIsOpen(false);

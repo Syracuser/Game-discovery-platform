@@ -79,7 +79,7 @@ function Recommendations() {
           <div className="recommendations-page__controls">
             <div className="recommendations-page__count-row">
               <span className="recommendations-page__count-label">
-                All recommendations
+                All recommendations:
               </span>
               <span className="recommendations-page__count-pill">
                 {results.length} games
