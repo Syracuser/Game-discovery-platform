@@ -118,7 +118,6 @@ The home page includes:
 Each game page includes:
 - Full game information
 - Studio, genres and rating
-- “Why you might like this” insights
 - Similar games section
 - Add to wishlist option
 
