@@ -16,7 +16,7 @@ import "./Home.css";
 function Home() {
 
   // ── Context (from Layout) ────────────────────
-  const { searchText, isSidebarOpen, setIsSidebarOpen } = useOutletContext();
+  const { isSidebarOpen, setIsSidebarOpen } = useOutletContext();
 
 
   const navigate = useNavigate();
@@ -136,10 +136,6 @@ function Home() {
   // ── Filtering ────────────────────────────────
 
   const filteredGames = games
-    .filter((game) =>
-    // Filters by search. If nothing searched, return all games.
-      game.name.toLowerCase().includes(searchText.toLowerCase())
-    )
     .filter((game) =>
     // No genres selected = show all. Otherwise game must match ALL selected genres.
       selectedGenres.length === 0 ||

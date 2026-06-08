@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
+import { FaMagnifyingGlass } from "react-icons/fa6";
 import "./Navbar.css";
 
-function Navbar({ searchText, setSearchText, isSidebarOpen, onToggleSidebar, showFilterToggle }) {
+function Navbar({ searchInputValue, setSearchInputValue, onSearchSubmit, isSidebarOpen, onToggleSidebar, showFilterToggle }) {
   return (
     <nav className="navbar">
       {/* Left section: Filter toggle button (Home only) + App name */}
@@ -27,20 +28,17 @@ function Navbar({ searchText, setSearchText, isSidebarOpen, onToggleSidebar, sho
       </div>
 
       {/* Middle section: Search bar */}
-      <div className="navbar-search-wrapper">
+      <form className="navbar-search-wrapper" onSubmit={onSearchSubmit}>
         {/* Magnifying glass icon — turns red when the input is focused */}
-        <svg className="navbar-search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="11" cy="11" r="8" />
-          <line x1="21" y1="21" x2="16.65" y2="16.65" />
-        </svg>
+        <FaMagnifyingGlass className="navbar-search-icon" />
         <input
           type="text"
           className="navbar-search"
           placeholder="Search games..."
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
+          value={searchInputValue}
+          onChange={(e) => setSearchInputValue(e.target.value)}
         />
-      </div>
+      </form>
 
       {/* Right section: Navigation links */}
       <div className="navbar-links">

@@ -8,7 +8,10 @@
 /* Base body styles — dark gaming theme */
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #0f0f1a;
+  background:
+    radial-gradient(1100px 600px at 80% -10%, rgba(233, 69, 96, 0.10), transparent 60%),
+    radial-gradient(900px 500px at -10% 30%, rgba(76, 70, 200, 0.10), transparent 60%),
+    #0f0f1a;
   color: #e0e0e0;
 }
 

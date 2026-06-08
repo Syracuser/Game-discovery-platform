@@ -1,15 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import buildStars from "../../../utils/buildStars";
 import "./RecommendationCard.css";
 
 const MAX_VISIBLE_CHIPS = 5;
-
-// Converts a 0–10 rating to a 5-star string (e.g. 9.4 → "★★★★★").
-function buildStars(rating) {
-  const filled = Math.round(rating / 2);
-  const empty = 5 - filled;
-  return "★".repeat(filled) + "☆".repeat(empty);
-}
 
 // Returns the match label badge text based on rank and score.
 function getMatchLabel(rank, score) {

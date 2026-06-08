@@ -1,3 +1,4 @@
+import buildStars from "../../../utils/buildStars";
 import "./GameSidebar.css";
 
 // ─────────────────────────────────────────────
@@ -11,25 +12,6 @@ import "./GameSidebar.css";
 // How many tags to show before collapsing the rest into a "+ N More" badge.
 // Matches the mockup which displays 6 tags then a count.
 const MAX_VISIBLE_TAGS = 6;
-
-
-// ── buildStars ───────────────────────────────
-// Converts our 10-point rating scale to a 5-star display string.
-//
-// How it works:
-//   1. Divide the rating by 2 to convert from a 1-10 scale to a 1-5 scale.
-//   2. Round to the nearest whole number — that is how many filled stars to show.
-//   3. The remaining stars (up to 5) are shown as empty stars.
-//
-// Examples:
-//   9.0  →  9.0 / 2 = 4.5  →  round = 5  →  "★★★★★"
-//   7.5  →  7.5 / 2 = 3.75 →  round = 4  →  "★★★★☆"
-
-function buildStars(rating) {
-  const filled = Math.round(rating / 2);
-  const empty  = 5 - filled;
-  return "★".repeat(filled) + "☆".repeat(empty);
-}
 
 
 // ── GameSidebar ──────────────────────────────

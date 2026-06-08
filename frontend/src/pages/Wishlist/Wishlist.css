@@ -2,10 +2,6 @@
 .wishlist-page {
   margin: -2rem;
   min-height: calc(100vh - 60px);
-  background:
-    radial-gradient(1200px 650px at 85% -10%, rgba(233, 69, 96, 0.13), transparent 62%),
-    radial-gradient(950px 520px at -10% 30%, rgba(76, 70, 200, 0.09), transparent 60%),
-    #0f0f1a;
 }
 
 /* ── Inner content wrapper ── */
