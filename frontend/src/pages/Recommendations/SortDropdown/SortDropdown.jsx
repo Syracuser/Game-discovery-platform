@@ -7,7 +7,6 @@ const SORT_OPTIONS = [
   { value: "match",   label: "Match %" },
   { value: "rating",  label: "User Rating" },
   { value: "release", label: "Release: Newest" },
-  { value: "price",   label: "Price: Low → High" },
 ];
 
 // Controlled custom dropdown — parent owns the sort state.

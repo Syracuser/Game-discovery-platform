@@ -44,12 +44,9 @@ function Home() {
   const [selectedTags,    setSelectedTags]    = useState([]);
   const [selectedStudio,  setSelectedStudio]  = useState("");
 
-  // Tracks the order filters were checked in, across genres and tags.
-  // Each entry is { type: 'genre'|'tag', value: string }.
-  // The first element is encoded into the game URL for GameDetails breadcrumb.
-  const [filterOrder, setFilterOrder] = useState([]);
-
-  const firstFilter = filterOrder[0] ?? null;
+  // The first filter the user checked — encoded into game URLs so GameDetails
+  // can show a breadcrumb back to that filtered view.
+  const [firstFilter, setFirstFilter] = useState(null);
 
 
   // ── Games state ──────────────────────────────
@@ -101,7 +98,7 @@ function Home() {
     if (type === "genre") setSelectedGenres([value]);
     if (type === "tag")   setSelectedTags([value]);
 
-    setFilterOrder([{ type, value }]);
+    setFirstFilter({ type, value });
     setIsSidebarOpen(true);
 
     navigate("/", { replace: true, state: null });
@@ -112,18 +109,18 @@ function Home() {
 
   /**
    * Factory that produces a toggle-handler for a given state setter.
-   * Also updates filterOrder so the first-checked filter can be passed to GameDetails.
+   * Also tracks the first filter checked so it can be passed to GameDetails for the breadcrumb.
    */
   function makeToggler(setState, type) {
     return (value) => {
       setState((prev) =>
         prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
       );
-      setFilterOrder((prev) => {
-        const exists = prev.some((f) => f.type === type && f.value === value);
-        return exists
-          ? prev.filter((f) => !(f.type === type && f.value === value))
-          : [...prev, { type, value }];
+      setFirstFilter((prev) => {
+        const isChecked = prev?.type === type && prev?.value === value;
+        if (isChecked) return null;           // unchecking the current first filter → clear it
+        if (prev === null) return { type, value }; // no first filter yet → set this one
+        return prev;                          // already have a first filter → keep it
       });
     };
   }

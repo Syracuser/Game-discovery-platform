@@ -18,15 +18,16 @@ import "./Recommendations.css";
 // ─────────────────────────────────────────────────────────────────
 
 // Function that returns a sorted list of games.
-// (List of games sorted by: match/price/rating/release-date)
+// (List of games sorted by: match/rating/release-date)
 function getSortedResults(results, sortBy) {
   const copy = [...results]; // never mutate location state
   if (sortBy === "match")   return copy.sort((a, b) => b.match_score - a.match_score);
-  if (sortBy === "price")   return copy.sort((a, b) => a.price - b.price);
   if (sortBy === "rating")  return copy.sort((a, b) => b.rating - a.rating);
-  if (sortBy === "release") return copy.sort((a, b) =>
-    (b.release_date ?? "").localeCompare(a.release_date ?? "")
-  );
+  if (sortBy === "release") return copy.sort((a, b) => {
+    const dateA = a.release_date ? new Date(a.release_date) : new Date(0);
+    const dateB = b.release_date ? new Date(b.release_date) : new Date(0);
+    return dateB - dateA; // newest first
+  });
   return copy;
 }
 

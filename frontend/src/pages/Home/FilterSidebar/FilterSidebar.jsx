@@ -45,7 +45,7 @@ function FilterSidebar({
           <FilterSection
             title="Studios"
             options={studios}
-            selectedOptions={selectedStudio}
+            selectedOptions={selectedStudio ? [selectedStudio] : []}
             onToggleOption={onSelectStudio}
             singleSelect={true}
             onClearOption={onClearStudio}
