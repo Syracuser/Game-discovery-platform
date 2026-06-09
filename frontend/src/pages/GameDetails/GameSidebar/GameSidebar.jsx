@@ -1,4 +1,5 @@
 import buildStars from "../../../utils/buildStars";
+import useWishlist from "../../../hooks/useWishlist";
 import "./GameSidebar.css";
 
 // ─────────────────────────────────────────────
@@ -17,6 +18,12 @@ const MAX_VISIBLE_TAGS = 6;
 // ── GameSidebar ──────────────────────────────
 
 function GameSidebar({ game }) {
+
+  const { addGame, removeGame, isWishlisted } = useWishlist();
+
+  function handleWishlistClick() {
+    isWishlisted(game._id) ? removeGame(game._id) : addGame(game);
+  }
 
   // ── Tag slicing ───────────────────────────
   // Only the first MAX_VISIBLE_TAGS tags are shown as pills.
@@ -85,9 +92,13 @@ function GameSidebar({ game }) {
       {/* Action buttons */}
       <div className="game-sidebar__actions">
 
-        <button className="game-sidebar__action-btn">
+        <button
+          className={`game-sidebar__action-btn${isWishlisted(game._id) ? " is-active" : ""}`}
+          onClick={handleWishlistClick}
+          aria-label={isWishlisted(game._id) ? "Remove from wishlist" : "Add to wishlist"}
+        >
           <span className="game-sidebar__action-icon">&#128278;</span>
-          Wishlist
+          {isWishlisted(game._id) ? "Wishlisted" : "Wishlist"}
         </button>
 
       </div>

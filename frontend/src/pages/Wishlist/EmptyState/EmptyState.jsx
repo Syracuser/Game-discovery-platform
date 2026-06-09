@@ -3,7 +3,7 @@ import "./EmptyState.css";
 
 function EmptyState() {
   return (
-    <div className="empty-stage">
+    <div className="empty-state">
       <div className="empty">
         <div className="empty__icon-wrap" aria-hidden="true">
           <span className="empty__icon">✦</span>

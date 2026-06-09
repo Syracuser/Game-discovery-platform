@@ -4,6 +4,7 @@ import axios from "axios";
 import API_URL from "../../api/config";
 import GameCard from "../../components/GameCard/GameCard";
 import EmptyState from "./EmptyState/EmptyState";
+import useWishlist from "../../hooks/useWishlist";
 import "./SearchResults.css";
 
 // ─────────────────────────────────────────────
@@ -16,6 +17,12 @@ function SearchResults() {
 
   const [searchParams] = useSearchParams();
   const query = searchParams.get("q") ?? "";
+
+  const { addGame, removeGame, isWishlisted } = useWishlist();
+  
+  function handleWishlistToggle(game) {
+    isWishlisted(game._id) ? removeGame(game._id) : addGame(game);
+  }
 
   // No query = nothing to search for, send the user back home.
   if (!query.trim()) return <Navigate to="/" replace />;
@@ -81,7 +88,11 @@ function SearchResults() {
               key={game._id}
               className="search-results__game-link"
             >
-              <GameCard game={game} />
+              <GameCard
+                game={game}
+                isWishlisted={isWishlisted(game._id)}
+                onWishlistToggle={handleWishlistToggle}
+              />
             </Link>
           ))}
         </div>

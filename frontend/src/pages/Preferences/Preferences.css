@@ -156,3 +156,9 @@
 .preferences-page__submit-btn:hover:not(:disabled) .preferences-page__submit-btn__arrow {
   transform: translateX(3px);
 }
+
+.preferences-page__submit-error {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: #e05c5c;
+}

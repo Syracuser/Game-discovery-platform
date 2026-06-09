@@ -30,7 +30,7 @@ function Wishlist() {
         ) : (
           <div className="home__games-grid">
             {wishlist.map((game) => (
-              <Link to={`/games/${game._id}`} key={game._id} className="home__game-link">
+              <Link to={`/games/${game._id}`} key={game._id} className="game-link">
                 <GameCard
                   game={game}
                   isWishlisted={true}

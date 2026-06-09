@@ -39,6 +39,7 @@ function Preferences() {
 
   // ── Submit state ──────────────────────────────────────
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
 
 
   // ── Toggle helpers ─────────────────────────────────────
@@ -61,6 +62,7 @@ function Preferences() {
     if (selectedGenres.length === 0 && selectedTags.length === 0) return;
 
     setSubmitting(true);
+    setSubmitError(null);
     try {
       const response = await axios.post(`${API_URL}/recommend`, {
         genres: selectedGenres,
@@ -75,6 +77,7 @@ function Preferences() {
       });
     } catch (err) {
       console.error("Failed to fetch recommendations:", err);
+      setSubmitError("Something went wrong. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -194,6 +197,9 @@ function Preferences() {
             {submitting ? "Finding recommendations…" : "Submit preferences"}
             <span className="preferences-page__submit-btn__arrow">→</span>
           </button>
+          {submitError && (
+            <p className="preferences-page__submit-error">{submitError}</p>
+          )}
         </div>
 
       </div>

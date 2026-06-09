@@ -53,10 +53,6 @@
   }
 }
 
-/* Removes default link styling from the card wrapper */
-.home__game-link {
-  display: block;
-}
 
 /* Error message */
 .home__error {

@@ -200,7 +200,7 @@ function Home() {
                 <Link
                   to={`/games/${game._id}${firstFilter ? `?filter=${firstFilter.type}:${firstFilter.value}` : ""}`}
                   key={game._id}
-                  className="home__game-link"
+                  className="game-link"
                 >
                   <GameCard
                     game={game}

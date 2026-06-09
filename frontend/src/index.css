@@ -21,3 +21,8 @@ a {
   text-decoration: none;
 }
 
+/* Shared link wrapper for game cards */
+.game-link {
+  display: block;
+}
+

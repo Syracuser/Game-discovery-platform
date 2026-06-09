@@ -1,5 +1,5 @@
-/* ── Empty state stage — centers the card vertically ── */
-.empty-stage {
+/* ── Empty state — centers the card vertically ── */
+.empty-state {
   position: relative;
   display: grid;
   place-items: center;
