@@ -4,6 +4,7 @@ import axios from "axios";
 import API_URL from "../../api/config";
 import FilterSidebar from "./FilterSidebar/FilterSidebar";
 import GameCard from "../../components/GameCard/GameCard";
+import useWishlist from "../../hooks/useWishlist";
 import "./Home.css";
 
 // ─────────────────────────────────────────────
@@ -17,6 +18,13 @@ function Home() {
 
   // ── Context (from Layout) ────────────────────
   const { isSidebarOpen, setIsSidebarOpen } = useOutletContext();
+
+  // ── Wishlist ─────────────────────────────────
+  const { addGame, removeGame, isWishlisted } = useWishlist();
+
+  function handleWishlistToggle(game) {
+    isWishlisted(game._id) ? removeGame(game._id) : addGame(game);
+  }
 
 
   const navigate = useNavigate();
@@ -194,7 +202,11 @@ function Home() {
                   key={game._id}
                   className="home__game-link"
                 >
-                  <GameCard game={game} />
+                  <GameCard
+                    game={game}
+                    isWishlisted={isWishlisted(game._id)}
+                    onWishlistToggle={handleWishlistToggle}
+                  />
                 </Link>
               ))}
             </div>

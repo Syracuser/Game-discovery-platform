@@ -86,16 +86,6 @@ function GameSidebar({ game }) {
       <div className="game-sidebar__actions">
 
         <button className="game-sidebar__action-btn">
-          <span className="game-sidebar__action-icon">&#128077;</span>
-          Like
-        </button>
-
-        <button className="game-sidebar__action-btn">
-          <span className="game-sidebar__action-icon">&#10084;</span>
-          Favorite
-        </button>
-
-        <button className="game-sidebar__action-btn">
           <span className="game-sidebar__action-icon">&#128278;</span>
           Wishlist
         </button>

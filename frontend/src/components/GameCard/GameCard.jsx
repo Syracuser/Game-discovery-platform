@@ -2,8 +2,7 @@ import { useState } from "react";
 import PLATFORM_ICONS from "../../utils/platformIcons";
 import "./GameCard.css";
 
-function GameCard({ game }) {
-  const [wishlisted, setWishlisted] = useState(false);
+function GameCard({ game, isWishlisted = false, onWishlistToggle }) {
   const [popAnim, setPopAnim] = useState(false);
 
   function handleWishlistClick(e) {
@@ -11,7 +10,7 @@ function GameCard({ game }) {
     e.preventDefault();
     e.stopPropagation();
 
-    setWishlisted((prev) => !prev);
+    onWishlistToggle?.(game);
 
     // Trigger the pop animation briefly
     setPopAnim(true);
@@ -20,7 +19,7 @@ function GameCard({ game }) {
 
   const wishClass = [
     "gc__wish",
-    wishlisted ? "is-on" : "",
+    isWishlisted ? "is-on" : "",
     popAnim ? "is-pop" : "",
   ]
     .filter(Boolean)
@@ -48,10 +47,10 @@ function GameCard({ game }) {
         <button
           className={wishClass}
           onClick={handleWishlistClick}
-          aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
+          aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
         >
           {/* Filled heart when wishlisted, outline heart otherwise */}
-          {wishlisted ? (
+          {isWishlisted ? (
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
             </svg>
