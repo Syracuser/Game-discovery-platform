@@ -2,7 +2,10 @@ from fastapi import APIRouter, HTTPException
 from bson import ObjectId
 from database.connection import games_collection
 from models.game_model import GameModel
-from ml.model import ALL_GENRES, ALL_TAGS
+# The vocabulary (which genres/tags the trained model knows) lives with the loaded
+# model. We import it from the recommender so there's a single source of truth and
+# the model file is only loaded once.
+from services.recommender import ALL_GENRES, ALL_TAGS
 
 """
 Game Routes

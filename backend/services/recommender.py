@@ -4,17 +4,21 @@
 
 from fastapi import HTTPException
 from database.connection import games_collection
-from ml.model import build_feature_vector, load_model, ALL_GENRES, ALL_TAGS
+from ml.model import build_feature_vector, load_model
 
 # Load once when the module is first imported (at server startup).
 # Reused for every request — no repeated disk I/O.
+# The vocabulary (ALL_GENRES / ALL_TAGS) is loaded straight from the saved
+# model file — it travels bundled with the model, so the server never needs
+# to query the database just to know which genres/tags exist.
 # If the model file doesn't exist yet, model is set to None and
 # each request will return a clear 503 error instead of crashing.
 
 try:
-    model = load_model()
+    model, ALL_GENRES, ALL_TAGS = load_model()
 except FileNotFoundError:
     model = None
+    ALL_GENRES, ALL_TAGS = [], []
 
 
 async def get_recommendations(user_genres: list[str], user_tags: list[str]) -> list[dict]:
@@ -48,7 +52,7 @@ async def get_recommendations(user_genres: list[str], user_tags: list[str]) -> l
     
     for game in games:
         # Build a feature vector for this user + game pair, then get the match probability
-        vector = build_feature_vector(valid_genres, valid_tags, game["genres"], game["tags"])
+        vector = build_feature_vector(valid_genres, valid_tags, game["genres"], game["tags"], ALL_GENRES, ALL_TAGS)
         probability = model.predict_proba([vector])[0][1]  # probability that liked=1
 
         game["_id"] = str(game["_id"])

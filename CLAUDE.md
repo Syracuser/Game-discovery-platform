@@ -1,9 +1,5 @@
 # Game Discovery Platform - Project Instructions
 
-## Current Phase
-- **Phase 1 — Backend Foundation** (complete)
-- **Phase 2 — Frontend Basics** (in progress)
-- Build Home page, display games, search, filtering by genre and studio
 
 ## Key Decisions
 - **Backend:** FastAPI (Python)

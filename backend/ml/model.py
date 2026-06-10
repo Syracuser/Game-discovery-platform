@@ -15,36 +15,26 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
 
-# These lists are manually derived from the games currently in the database.
-# The order matters — it defines positions in the feature vector.
-#
-# ⚠️  IMPORTANT: If you add new games with new genres or tags, you must:
-#   1. Add the new genre/tag to the correct list below
-#   2. Retrain the model by running: python ml/model.py
-#
-# If these lists fall out of sync with the database, unknown genres/tags will be
-# silently ignored by the recommender and recommendations will be less accurate.
-ALL_GENRES = [
-    "Action", "FPS", "Multiplayer", "Indie", "Soulslike",
-    "Open World", "Adventure", "Hack and Slash", "Roguelike",
-    "Metroidvania", "Strategy", "Narrative",
-]
-
-ALL_TAGS = [
-    "fast-paced", "mechs", "parkour", "shooter", "retro", "stylish", "gore",
-    "hard", "samurai", "japan", "stealth", "western", "story-rich", "realistic",
-    "sandbox", "dark", "gothic", "atmospheric", "demons", "combos", "pixel",
-    "procedural", "exploration", "difficult", "insects", "superheroes",
-    "tactical", "management", "comedy", "mythology", "norse", "combat", "sequel",
-]
-
 # Path where the trained model will be saved after training
 MODEL_PATH = os.path.join(os.path.dirname(__file__), "trained_model.pkl")
 
 
+def fetch_vocab_from_db(games: list[dict]) -> tuple[list[str], list[str]]:
+    """
+    Given a list of game dicts, collect all unique genres and tags.
+    Returns two sorted lists: (ALL_GENRES, ALL_TAGS).
+    Sorted so the order is stable and consistent across retrains —
+    this matters because the order defines positions in the feature vector.
+    """
+    genres = sorted(set(g for game in games for g in game.get("genres", [])))
+    tags   = sorted(set(t for game in games for t in game.get("tags",   [])))
+    return genres, tags
+
+
 def build_feature_vector(
     user_genres: list[str], user_tags: list[str],
-    game_genres: list[str], game_tags: list[str]
+    game_genres: list[str], game_tags: list[str],
+    all_genres: list[str], all_tags: list[str],
 ) -> list[int]:
 
     """
@@ -53,9 +43,13 @@ def build_feature_vector(
     Each position represents one genre or tag. It's 1 if both the user
     and the game share it, and 0 otherwise. This overlap is what the
     model learns to associate with "liked" or "not liked".
+
+    `all_genres` / `all_tags` are the vocabulary (the full ordered list of
+    every known genre/tag). They're passed in rather than read from a global
+    so this function never depends on import-time state.
     """
-    genre_features = [1 if g in user_genres and g in game_genres else 0 for g in ALL_GENRES]
-    tag_features   = [1 if t in user_tags   and t in game_tags   else 0 for t in ALL_TAGS]
+    genre_features = [1 if g in user_genres and g in game_genres else 0 for g in all_genres]
+    tag_features   = [1 if t in user_tags   and t in game_tags   else 0 for t in all_tags]
     return genre_features + tag_features
 
 
@@ -102,21 +96,28 @@ RAW_DATA = [
 ]
 
 
-def build_dataset():
+def build_dataset(all_genres: list[str], all_tags: list[str]):
     """Convert RAW_DATA into numpy arrays the model can train on."""
     X = []  # inputs: one feature vector per row
     y = []  # labels: 1 = liked, 0 = didn't like
 
     for user_genres, user_tags, game_genres, game_tags, liked in RAW_DATA:
-        X.append(build_feature_vector(user_genres, user_tags, game_genres, game_tags))
+        X.append(build_feature_vector(user_genres, user_tags, game_genres, game_tags, all_genres, all_tags))
         y.append(liked)
 
     return np.array(X), np.array(y)
 
 
-def train():
-    """Train the model on the synthetic dataset and save it to disk."""
-    X, y = build_dataset()
+def train(all_genres: list[str], all_tags: list[str]):
+    """
+    Train the model on the synthetic dataset and save it to disk.
+
+    We save the vocabulary (all_genres / all_tags) *inside* the same file as the
+    model. The vocabulary defines what each position in the feature vector means,
+    so the model is useless without it — bundling them keeps the two in sync and
+    means the server never has to touch the database to know the vocabulary.
+    """
+    X, y = build_dataset(all_genres, all_tags)
 
     # Hold back 20% of the data to test on — the model never sees this during training
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -127,25 +128,47 @@ def train():
     accuracy = accuracy_score(y_test, model.predict(X_test))
     print(f"Model trained. Test accuracy: {accuracy:.0%}")
 
-    joblib.dump(model, MODEL_PATH)
+    # Save the model together with its vocabulary as one bundle
+    bundle = {"model": model, "all_genres": all_genres, "all_tags": all_tags}
+    joblib.dump(bundle, MODEL_PATH)
     print(f"Model saved to: {MODEL_PATH}")
 
     return model
 
 
-def load_model():
-    """Load the saved model from disk. Run train() first if it doesn't exist."""
+def load_model() -> tuple:
+    """
+    Load the saved bundle from disk. Run train() first if it doesn't exist.
+    Returns (model, all_genres, all_tags) — the model plus the vocabulary it was trained on.
+    """
     if not os.path.exists(MODEL_PATH):
         raise FileNotFoundError("No trained model found. Run ml/model.py first to train it.")
-    return joblib.load(MODEL_PATH)
+    bundle = joblib.load(MODEL_PATH)
+    return bundle["model"], bundle["all_genres"], bundle["all_tags"]
 
 
 # ── Test block ────────────────────────────────────────────────────────────────
 # This only runs when you execute this file directly: python ml/model.py
-# It trains the model and prints sample predictions so you can verify it works.
+# It reads the vocabulary from the database, trains the model, then prints
+# sample predictions so you can verify it works.
+#
+# Reading the database with asyncio.run() is safe HERE (but not when imported by
+# the server) because running this file directly has no event loop yet — so
+# asyncio.run() is free to create its own. The server already has a running loop,
+# which is why it loads the vocabulary from the saved model file instead.
 
 if __name__ == "__main__":
-    model = train()
+    import asyncio
+    from database.connection import games_collection
+
+    async def _load_games():
+        return await games_collection.find({}, {"genres": 1, "tags": 1}).to_list(None)
+
+    games = asyncio.run(_load_games())
+    all_genres, all_tags = fetch_vocab_from_db(games)
+    print(f"Vocabulary from DB: {len(all_genres)} genres, {len(all_tags)} tags")
+
+    model = train(all_genres, all_tags)
 
     print("\n--- Sample Predictions ---")
 
@@ -180,7 +203,7 @@ if __name__ == "__main__":
         print(f"\n{user['label']} ({user['genres']}):")
         for game in games_to_score:
             # Build the overlap vector between this user's preferences and this game's traits
-            vec = build_feature_vector(user["genres"], user["tags"], game["genres"], game["tags"])
+            vec = build_feature_vector(user["genres"], user["tags"], game["genres"], game["tags"], all_genres, all_tags)
 
             # predict_proba returns [[prob_dislike, prob_like]] — [0][1] grabs the "like" probability
             prob = model.predict_proba([vec])[0][1]
