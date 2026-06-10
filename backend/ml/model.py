@@ -4,7 +4,7 @@ ml/model.py
 Trains a Logistic Regression model to predict whether a user will enjoy a game,
 based on the overlap between the user's preferred genres/tags and a game's genres/tags.
 
-To train and test: python ml/model.py
+To train and test: python -m ml.model
 """
 
 import os
@@ -96,28 +96,89 @@ RAW_DATA = [
 ]
 
 
-def build_dataset(all_genres: list[str], all_tags: list[str]):
-    """Convert RAW_DATA into numpy arrays the model can train on."""
+def generate_training_data(games: list[dict]) -> list[tuple]:
+    """
+    Automatically build training examples from the games already in the database.
+
+    The old approach hand-wrote every example, which doesn't scale: when new games
+    (e.g. from RAWG) bring brand-new genres, no hand-written row teaches the model
+    about them. This function fixes that by generating examples from one honest rule:
+
+        A user who likes a game's genres/tags will enjoy THAT game (and games like it),
+        and will NOT enjoy a game that shares nothing with their taste.
+
+    For each game we create:
+      - 1 POSITIVE example (label 1): a user whose taste IS this game's genres/tags.
+        High overlap -> they like it.
+      - 1 NEGATIVE example (label 0): that same user paired with a game that shares
+        ZERO genres. No overlap -> they don't like it.
+
+    We generate one negative per positive so the dataset stays balanced (equal likes
+    and dislikes). Balance matters: a lopsided dataset teaches the model to just
+    always guess the majority label, which would make its scores useless.
+
+    Returns rows in the same shape as the old RAW_DATA:
+        (user_genres, user_tags, game_genres, game_tags, liked)
+    """
+    rows = []
+
+    for game in games:
+        game_genres = game.get("genres", [])
+        game_tags   = game.get("tags", [])
+
+        # Skip games with no genres — there's nothing meaningful to learn from them.
+        if not game_genres:
+            continue
+
+        # POSITIVE: a user whose taste exactly matches this game's traits would like it.
+        user_genres = game_genres
+        user_tags   = game_tags
+        rows.append((user_genres, user_tags, game_genres, game_tags, 1))
+
+        # NEGATIVE: find a different game that shares NO genres with this user.
+        # Sharing zero genres makes it a clean "dislike" — no risk of accidentally
+        # teaching the model that overlapping games should be disliked.
+        for other in games:
+            if other is game:
+                continue
+            other_genres = other.get("genres", [])
+            if not set(user_genres) & set(other_genres):  # empty intersection = no shared genres
+                rows.append((user_genres, user_tags, other_genres, other.get("tags", []), 0))
+                break  # one negative per positive keeps the dataset balanced
+
+    return rows
+
+
+def build_dataset(all_genres: list[str], all_tags: list[str], raw_data: list[tuple]):
+    """
+    Convert a list of training rows into numpy arrays the model can train on.
+
+    `raw_data` is passed in (rather than read from a global) so we can train on
+    either the old hand-written RAW_DATA or the auto-generated data and compare them.
+    """
     X = []  # inputs: one feature vector per row
     y = []  # labels: 1 = liked, 0 = didn't like
 
-    for user_genres, user_tags, game_genres, game_tags, liked in RAW_DATA:
+    for user_genres, user_tags, game_genres, game_tags, liked in raw_data:
         X.append(build_feature_vector(user_genres, user_tags, game_genres, game_tags, all_genres, all_tags))
         y.append(liked)
 
     return np.array(X), np.array(y)
 
 
-def train(all_genres: list[str], all_tags: list[str]):
+def train(all_genres: list[str], all_tags: list[str], raw_data: list[tuple]):
     """
-    Train the model on the synthetic dataset and save it to disk.
+    Train the model on the given training data and save it to disk.
+
+    `raw_data` is the list of training rows to learn from — passed in so the caller
+    chooses the data source (auto-generated, or the old hand-written RAW_DATA).
 
     We save the vocabulary (all_genres / all_tags) *inside* the same file as the
     model. The vocabulary defines what each position in the feature vector means,
     so the model is useless without it — bundling them keeps the two in sync and
     means the server never has to touch the database to know the vocabulary.
     """
-    X, y = build_dataset(all_genres, all_tags)
+    X, y = build_dataset(all_genres, all_tags, raw_data)
 
     # Hold back 20% of the data to test on — the model never sees this during training
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -134,6 +195,23 @@ def train(all_genres: list[str], all_tags: list[str]):
     print(f"Model saved to: {MODEL_PATH}")
 
     return model
+
+
+def evaluate(all_genres: list[str], all_tags: list[str], raw_data: list[tuple]):
+    """
+    Train on the given data and return (model, accuracy) WITHOUT saving to disk.
+
+    Used to compare two datasets fairly: same vocabulary, same train/test split
+    (random_state=42 makes the split identical every run), so any difference in
+    accuracy comes from the data itself — not from luck in how rows were divided.
+    """
+    X, y = build_dataset(all_genres, all_tags, raw_data)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    model = LogisticRegression()
+    model.fit(X_train, y_train)
+    accuracy = accuracy_score(y_test, model.predict(X_test))
+    return model, accuracy
 
 
 def load_model() -> tuple:
@@ -168,7 +246,21 @@ if __name__ == "__main__":
     all_genres, all_tags = fetch_vocab_from_db(games)
     print(f"Vocabulary from DB: {len(all_genres)} genres, {len(all_tags)} tags")
 
-    model = train(all_genres, all_tags)
+    # ── Compare old vs new training data before committing to either ──────────────
+    # We train both ways on the SAME vocabulary and split, then compare accuracy.
+    # Nothing is saved during this comparison — we only save further below.
+    generated_data = generate_training_data(games)
+    print(f"\nHand-written examples : {len(RAW_DATA)} rows")
+    print(f"Auto-generated examples: {len(generated_data)} rows")
+
+    _, old_acc = evaluate(all_genres, all_tags, RAW_DATA)
+    _, new_acc = evaluate(all_genres, all_tags, generated_data)
+    print(f"\nTest accuracy — hand-written : {old_acc:.0%}")
+    print(f"Test accuracy — auto-generated: {new_acc:.0%}")
+
+    # Train and SAVE the model using the auto-generated data (the scalable approach).
+    print("\nTraining final model on auto-generated data...")
+    model = train(all_genres, all_tags, generated_data)
 
     print("\n--- Sample Predictions ---")
 
@@ -191,9 +283,10 @@ if __name__ == "__main__":
         },
     ]
 
-    # Three real games to score — chosen to be very different so we can see clear contrast in predictions
+    # Three real games to score — chosen to be very different so we can see clear contrast in predictions.
+    # Red Dead Redemption 2 is included specifically to verify the "Story fan" can match a story-rich game.
     games_to_score = [
-        {"name": "Titanfall 2",  "genres": ["Action", "FPS", "Multiplayer"], "tags": ["fast-paced", "mechs", "parkour", "shooter"]},
+        {"name": "Red Dead Redemption 2", "genres": ["Action", "Open World", "Adventure"], "tags": ["western", "story-rich", "realistic", "sandbox"]},
         {"name": "Hollow Knight", "genres": ["Action", "Metroidvania", "Indie"], "tags": ["atmospheric", "exploration", "difficult", "insects"]},
         {"name": "Sekiro",        "genres": ["Action", "Soulslike"],              "tags": ["hard", "samurai", "japan", "stealth"]},
     ]
