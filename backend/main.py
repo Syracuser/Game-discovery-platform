@@ -5,6 +5,7 @@ from database.connection import database
 from routes.games import router as games_router
 from routes.recommend import router as recommend_router
 from routes.options import router as options_router
+from routes.browse import router as browse_router
 
 """
 Lifespan controls what happens when the server starts and stops.
@@ -47,6 +48,7 @@ app.add_middleware(
 app.include_router(games_router)
 app.include_router(recommend_router)
 app.include_router(options_router)
+app.include_router(browse_router)
 
 
 

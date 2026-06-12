@@ -26,7 +26,7 @@
 /* ── Poster / Image area ─────────────────────────── */
 .gc__poster {
   position: relative;
-  aspect-ratio: 16 / 7;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   background: #1f1f2b;
 }

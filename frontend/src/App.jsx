@@ -6,6 +6,7 @@ import GameDetails from "./pages/GameDetails/GameDetails";
 import Preferences from "./pages/Preferences/Preferences";
 import Recommendations from "./pages/Recommendations/Recommendations";
 import SearchResults from "./pages/SearchResults/SearchResults";
+import Browse from "./pages/Browse/Browse";
 import NotFound from "./pages/NotFound/NotFound";
 
 function App() {
@@ -21,6 +22,10 @@ function App() {
           <Route path="/preferences" element={<Preferences />} />
           <Route path="/recommendations" element={<Recommendations />} />
           <Route path="/search" element={<SearchResults />} />
+          {/* Live RAWG browse sections — one Browse page, parameterized by section */}
+          <Route path="/popular" element={<Browse section="popular" />} />
+          <Route path="/new" element={<Browse section="new" />} />
+          <Route path="/trending" element={<Browse section="trending" />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

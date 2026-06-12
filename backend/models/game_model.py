@@ -14,6 +14,10 @@ class GameModel(BaseModel):
     publisher: str = ""
     release_date: str = ""
     system_requirements: dict = {}
+    # RAWG's unique game id, stored so we can detect duplicates on re-import.
+    # Optional (defaults to None) — hand-added games that don't come from RAWG
+    # simply leave this empty, so existing games stay valid.
+    rawg_id: int | None = None
 
 
 """
