@@ -129,6 +129,13 @@ function GameSidebar({ game }) {
           </div>
         )}
 
+        {game.platforms?.length > 0 && (
+          <div className="game-sidebar__meta-row">
+            <span className="game-sidebar__meta-label">Platforms</span>
+            <span className="game-sidebar__meta-value">{game.platforms.join(", ")}</span>
+          </div>
+        )}
+
         <div className="game-sidebar__meta-row">
           <span className="game-sidebar__meta-label">Rating</span>
           <span className="game-sidebar__meta-value game-sidebar__meta-value--rating">

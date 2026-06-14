@@ -6,6 +6,7 @@ import GameMediaGallery from "./GameMediaGallery/GameMediaGallery";
 import GameSidebar from "./GameSidebar/GameSidebar";
 import GameDescriptionSection from "./GameDescriptionSection/GameDescriptionSection";
 import SystemRequirementsSection from "./SystemRequirementsSection/SystemRequirementsSection";
+import BackButton from "../../components/BackButton/BackButton";
 import "./GameDetails.css";
 
 // ─────────────────────────────────────────────
@@ -90,6 +91,8 @@ function GameDetails() {
 
   return (
     <div className="game-details">
+
+      <BackButton />
 
       {/* ── Page header ─────────────────────────────
           Breadcrumb sits at the left edge.

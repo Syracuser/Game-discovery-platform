@@ -4,6 +4,7 @@ import BasedOnSection from "./BasedOnSection/BasedOnSection";
 import RecommendationCard from "./RecommendationCard/RecommendationCard";
 import SortDropdown from "./SortDropdown/SortDropdown";
 import EmptyState from "./EmptyState/EmptyState";
+import BackButton from "../../components/BackButton/BackButton";
 import "./Recommendations.css";
 
 // ─────────────────────────────────────────────────────────────────
@@ -53,6 +54,8 @@ function Recommendations() {
     <div className="recommendations-page">
       <div className="recommendations-page__inner">
 
+        <BackButton />
+
         {/* "BASED ON" preference chips — only if preferences exist */}
         {hasPreferences && (
           <BasedOnSection
@@ -97,7 +100,7 @@ function Recommendations() {
           <div className="recommendations-page__list">
             {sortedResults.map((game, index) => (
               <RecommendationCard
-                key={game._id}
+                key={game.rawg_id}
                 game={game}
                 rank={index + 1}
                 selectedGenres={selectedGenres}

@@ -87,55 +87,79 @@
   pointer-events: none;
 }
 
-/* App name / logo — styled as a clickable link */
+/* App name / logo — "Game" in white, "Sense" in accent red (matches the footer) */
 .navbar-logo {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #e94560;
+  color: #ffffff;
   text-decoration: none;
 }
 
-/* Search bar wrapper — needed to position the icon inside the input */
-.navbar-search-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-/* Magnifying glass icon */
-.navbar-search-icon {
-  position: absolute;
-  left: 0.75rem;
-  width: 1rem;
-  height: 1rem;
-  color: #888;
-  pointer-events: none; /* clicks pass through to the input */
-  transition: color 0.2s ease;
-}
-
-/* Icon turns red when the input is focused */
-.navbar-search-wrapper:focus-within .navbar-search-icon {
+.navbar-logo-accent {
   color: #e94560;
 }
 
-/* Search bar in the middle */
+/* Search bar wrapper — lays the button and input in a row to form one pill.
+   The focus ring lives HERE (on the whole wrapper) so it wraps the button AND
+   input together, instead of stopping at the seam between them. */
+.navbar-search-wrapper {
+  display: flex;
+  align-items: center;
+  border-radius: 20px;
+  transition: box-shadow 0.2s ease;
+}
+
+/* When anything inside (the input) is focused, glow the whole pill red. */
+.navbar-search-wrapper:focus-within {
+  box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.15);
+}
+
+/* Clickable search button — left segment of the pill, in the app's accent red */
+.navbar-search-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.9rem;
+  height: 38px;
+  border: none;
+  border-radius: 20px 0 0 20px; /* round only the LEFT side to join the input */
+  background-color: #e94560;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.navbar-search-btn:hover {
+  background-color: #d83a54; /* slightly darker red on hover */
+}
+
+/* Magnifying glass icon (now sits inside the button) */
+.navbar-search-icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Search bar in the middle — right segment of the pill */
 .navbar-search {
   width: 300px;
-  padding: 0.5rem 1rem 0.5rem 2.25rem; /* left padding makes room for the icon */
+  height: 38px;
+  padding: 0.5rem 1rem; /* even padding now; the icon lives in the button */
   border: 1px solid #333;
-  border-radius: 20px;
+  border-left: none;            /* button sits flush against it */
+  border-radius: 0 20px 20px 0; /* round only the RIGHT side */
   background-color: #16213e;
   color: #e0e0e0;
   font-size: 0.95rem;
   outline: none;
+  box-sizing: border-box;
   transition: width 0.3s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Expands slightly and glows red when focused */
+/* Expands slightly and turns its border red when focused. The glow itself is on
+   the wrapper (.navbar-search-wrapper:focus-within) so it surrounds the whole pill. */
 .navbar-search:focus {
   width: 380px;
   border-color: #e94560;
-  box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.15);
 }
 
 /* Container for the nav links on the right */
@@ -149,9 +173,18 @@
   color: #e0e0e0;
   text-decoration: none;
   font-size: 1rem;
+  padding-bottom: 3px;
+  border-bottom: 2px solid transparent; /* reserved space so text doesn't shift when underline appears */
 }
 
 /* Hover effect on nav links */
 .navbar-link:hover {
   color: #e94560;
+}
+
+/* Active link — the current page's link gets red text + a red underline.
+   NavLink adds the "active" class automatically when the route matches. */
+.navbar-link.active {
+  color: #e94560;
+  border-bottom-color: #e94560;
 }

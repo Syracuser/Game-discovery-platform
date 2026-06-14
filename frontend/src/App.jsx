@@ -1,7 +1,9 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./layout/Layout";
 import Home from "./pages/Home/Home";
-import AllGames from "./pages/AllGames/AllGames";
+// AllGames is retired from user access (see the /games route below) but kept for
+// possible revival. Import intentionally removed to avoid an unused-import warning;
+// re-add `import AllGames from "./pages/AllGames/AllGames";` if you revive the route.
 import Wishlist from "./pages/Wishlist/Wishlist";
 import GameDetails from "./pages/GameDetails/GameDetails";
 import Preferences from "./pages/Preferences/Preferences";
@@ -18,7 +20,11 @@ function App() {
         {/* No "path" here because it applies to ALL child routes */}
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
-          <Route path="/games" element={<AllGames />} />
+          {/* AllGames (the stored-games filter browser) is RETIRED from user access:
+              it only shows the ML training core, which isn't meant for users. The
+              component is kept (not deleted) but /games now redirects to Home so it's
+              unreachable. To revive it, swap this back to <AllGames />. */}
+          <Route path="/games" element={<Navigate to="/" replace />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/games/:id" element={<GameDetails />} />
           {/* Live RAWG game detail — same page, but fetches live by rawg_id */}

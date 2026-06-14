@@ -17,18 +17,21 @@ It is a planning reference — not all of it is built yet. Status is marked per 
 | Issue A — dedupe gap | ✅ Done for dev — deleted the 2 visible seed duplicates (RDR2, God of War). Root cause vanishes at launch: **all seed games get wiped, leaving only RAWG games** (no rawg_id=None games left to collide). |
 | Issue B — card image CSS | ✅ Done — changed `.gc__poster` aspect-ratio `16/7` → `16/9` so cover art isn't over-cropped. |
 
-**Last completed:** Wishlist for live games — whole wishlist re-keyed to `rawg_id`.
-**🎉 All three core scaling items are DONE.** What remains is cleanup/decisions below.
+**Last completed:** Live recommendations (RAWG candidate pool + model ranking, top 15).
+**🎉 All core scaling items AND the live-data conversions are DONE.**
+
+**Also converted to live RAWG (post-core fixes):**
+- ✅ **Search** — `/search?q=` hits RAWG's full catalog (was DB-only). SearchResults uses `rawg_id`.
+- ✅ **Recommendations** — `/recommend` fetches a RAWG candidate pool by genre, scores
+  with the model, returns top 15. Fallback to popular pool when no genres picked.
 
 > 📌 **Remaining open decisions / cleanup (small, not blocking):**
-> - **SearchResults & AllGames still key wishlist on `_id`** — left as-is because
->   they browse STORED games. Revisit if/when search moves to live RAWG.
-> - **Navbar links** — review they point at the right routes (Home = live sections
->   now; filter browser moved to `/games`). Add a `/games` nav link if keeping it.
-> - Fate of the `/games` filter page (AllGames) — keep it or retire it? If keeping,
->   add a Navbar link to it (currently no nav link points there).
-> - Navbar links generally — review that they point at the right routes now that
->   Home = live sections and the filter browser moved to `/games`.
+> - **AllGames `/games` page** still keys wishlist on `_id` (it browses STORED games).
+>   Tied to the decision below about that page's fate.
+> - **Fate of the `/games` filter page (AllGames)** — keep or retire? It browses the
+>   stored ML-training games, which aren't meant to be user-facing. Likely retire.
+> - **Navbar links** — review they point at the right routes now (Home = live sections;
+>   filter browser at `/games`; add/remove nav links to match final decisions).
 
 > ⚠️ **Final-cleanup reminder:** before launch, delete ALL hand-seeded games
 > (rawg_id = None). They are dev-only scaffolding; the live app is RAWG-only.

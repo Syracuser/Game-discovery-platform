@@ -4,6 +4,7 @@ import axios from "axios";
 import API_URL from "../../api/config";
 import GameCard from "../../components/GameCard/GameCard";
 import EmptyState from "./EmptyState/EmptyState";
+import BackButton from "../../components/BackButton/BackButton";
 import useWishlist from "../../hooks/useWishlist";
 import "./SearchResults.css";
 
@@ -69,6 +70,8 @@ function SearchResults() {
 
   return (
     <div className="search-results">
+
+      <BackButton />
 
       <header className="search-results__header">
         <h1 className="search-results__title">Search results</h1>

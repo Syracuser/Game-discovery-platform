@@ -188,7 +188,7 @@ function RecommendationCard({ game, rank, selectedGenres, selectedTags }) {
               </span>
             </div>
 
-            <Link to={`/games/${game._id}`} className="rec-card__view-btn">
+            <Link to={`/games/rawg/${game.rawg_id}`} className="rec-card__view-btn">
               View Game →
             </Link>
           </div>

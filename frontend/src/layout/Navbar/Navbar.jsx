@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import "./Navbar.css";
 
@@ -23,14 +23,18 @@ function Navbar({ searchInputValue, setSearchInputValue, onSearchSubmit, isSideb
           <span></span>
         </label>
         <Link to="/" className="navbar-logo">
-          GameSense
+          Game<span className="navbar-logo-accent">Sense</span>
         </Link>
       </div>
 
       {/* Middle section: Search bar */}
       <form className="navbar-search-wrapper" onSubmit={onSearchSubmit}>
-        {/* Magnifying glass icon — turns red when the input is focused */}
-        <FaMagnifyingGlass className="navbar-search-icon" />
+        {/* Clickable search button — type="submit" so it triggers the SAME
+            onSearchSubmit as pressing Enter (an additional way to search, not a
+            replacement). Has the app's accent-red background. */}
+        <button type="submit" className="navbar-search-btn" aria-label="Search">
+          <FaMagnifyingGlass className="navbar-search-icon" />
+        </button>
         <input
           type="text"
           className="navbar-search"
@@ -40,11 +44,13 @@ function Navbar({ searchInputValue, setSearchInputValue, onSearchSubmit, isSideb
         />
       </form>
 
-      {/* Right section: Navigation links */}
+      {/* Right section: Navigation links.
+          NavLink auto-adds an "active" class when its route matches the current URL,
+          so the current page's link is highlighted (red text + underline) via CSS. */}
       <div className="navbar-links">
-        <Link to="/" className="navbar-link">Home</Link>
-        <Link to="/preferences" className="navbar-link">Preferences</Link>
-        <Link to="/wishlist" className="navbar-link">Wishlist</Link>
+        <NavLink to="/" className="navbar-link">Home</NavLink>
+        <NavLink to="/preferences" className="navbar-link">Preferences</NavLink>
+        <NavLink to="/wishlist" className="navbar-link">Wishlist</NavLink>
       </div>
     </nav>
   );
