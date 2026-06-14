@@ -92,3 +92,41 @@ async def get_trending(page: int = 1) -> dict:
         "ordering": "-added",
         "page": page,
     })
+
+
+async def get_game_detail(rawg_id: int) -> dict:
+    """
+    Fetch ONE game's full detail live from RAWG, mapped to our game shape, with
+    screenshots populated. Used by the live detail page (/games/rawg/:rawgId).
+
+    This makes TWO RAWG calls because screenshots live on a separate endpoint:
+      1. /games/{id}            — the full game detail (description, developers, etc.)
+      2. /games/{id}/screenshots — the screenshot image URLs
+
+    Unlike the browse list (1 call, summary only), a detail PAGE is a single game
+    viewed on demand, so two calls here is fine.
+    """
+    detail_url = f"{RAWG_BASE}/{rawg_id}"
+    shots_url = f"{RAWG_BASE}/{rawg_id}/screenshots"
+    params = {"key": RAWG_API_KEY}
+
+    async with httpx.AsyncClient(timeout=10) as client:
+        # Call 1: the full game detail.
+        detail_resp = await client.get(detail_url, params=params)
+        detail_resp.raise_for_status()
+        raw = detail_resp.json()
+
+        # Call 2: screenshots. If this fails we still return the game — screenshots
+        # are a nice-to-have, not worth failing the whole page over.
+        try:
+            shots_resp = await client.get(shots_url, params=params)
+            shots_resp.raise_for_status()
+            screenshots = [s["image"] for s in shots_resp.json().get("results", [])]
+        except httpx.HTTPError:
+            screenshots = []
+
+    # Shape the game like our stored games, then attach the screenshots we fetched
+    # (map_rawg_game sets screenshots to [] by design, so we fill them in here).
+    game = map_rawg_game(raw)
+    game["screenshots"] = screenshots
+    return game

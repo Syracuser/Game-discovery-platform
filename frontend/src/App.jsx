@@ -21,6 +21,8 @@ function App() {
           <Route path="/games" element={<AllGames />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/games/:id" element={<GameDetails />} />
+          {/* Live RAWG game detail — same page, but fetches live by rawg_id */}
+          <Route path="/games/rawg/:rawgId" element={<GameDetails />} />
           <Route path="/preferences" element={<Preferences />} />
           <Route path="/recommendations" element={<Recommendations />} />
           <Route path="/search" element={<SearchResults />} />

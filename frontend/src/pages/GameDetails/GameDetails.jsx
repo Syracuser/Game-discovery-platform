@@ -24,7 +24,15 @@ function parseFilterParam(param) {
 
 
 function GameDetails() {
-  const { id } = useParams();
+  // This one page serves TWO kinds of game:
+  //  - stored DB games  → route /games/:id        → param `id`     (Mongo id)
+  //  - live RAWG games  → route /games/rawg/:rawgId → param `rawgId` (RAWG id)
+  // We detect which one we got and fetch from the matching endpoint. Everything
+  // below (layout, sections) is identical because the live game is mapped to the
+  // same shape as a stored game.
+  const { id, rawgId } = useParams();
+  const isLiveGame = Boolean(rawgId);
+
   const [searchParams] = useSearchParams();
 
   // Read the ?filter=genre:Action query param (null if the user arrived without a filter)
@@ -41,15 +49,20 @@ function GameDetails() {
   useEffect(() => {
     setLoading(true);
     setError(false);
-// Fetch a specific game 
-    axios.get(`${API_URL}/games/${id}`)
+
+    // Live games come from the RAWG passthrough endpoint; stored games from the DB.
+    const url = isLiveGame
+      ? `${API_URL}/rawg/${rawgId}`
+      : `${API_URL}/games/${id}`;
+
+    axios.get(url)
       .then((response) => setGame(response.data))
       .catch((err) => {
         console.error("Failed to fetch game:", err);
         setError(true);
       })
       .finally(() => setLoading(false));
-  }, [id]);
+  }, [id, rawgId, isLiveGame]);
 
 
   // ── Early returns ────────────────────────────
