@@ -66,7 +66,17 @@ TAG_BLOCKLIST = {
 
 
 def _is_blocked(tag: str) -> bool:
-    """True if a tag is on the blocklist (compared case-insensitively)."""
+    """
+    True if a tag should be dropped — for either of two reasons:
+      1. It's on the junk/technical blocklist (compared case-insensitively).
+      2. It's non-English. RAWG returns some tags in other languages (e.g.
+         Russian "Ремейк"). We keep tags English-only. `isascii()` is a simple,
+         reliable heuristic: English gameplay tags are plain ASCII, while
+         Cyrillic/Japanese/etc. are not. (It would also drop accented words like
+         "café", but RAWG's real tags don't use those, so it's safe in practice.)
+    """
+    if not tag.isascii():
+        return True
     return tag.lower() in TAG_BLOCKLIST
 
 

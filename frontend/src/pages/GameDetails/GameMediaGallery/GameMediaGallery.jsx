@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { HiOutlineChevronLeft, HiOutlineChevronRight } from "react-icons/hi2";
 import "./GameMediaGallery.css";
 
 // ─────────────────────────────────────────────
@@ -58,7 +59,7 @@ function GameMediaGallery({ screenshots, name }) {
               onClick={handlePrev}
               aria-label="Previous screenshot"
             >
-              ‹
+              <HiOutlineChevronLeft />
             </button>
 
             <button
@@ -66,7 +67,7 @@ function GameMediaGallery({ screenshots, name }) {
               onClick={handleNext}
               aria-label="Next screenshot"
             >
-              ›
+              <HiOutlineChevronRight />
             </button>
           </>
         )}

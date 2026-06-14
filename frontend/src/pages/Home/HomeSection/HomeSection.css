@@ -12,9 +12,18 @@
 }
 
 .home__section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   color: #ffffff;
   font-size: 1.5rem;
   font-weight: 700;
+}
+
+/* The section icon (flame / trophy / sparkles) next to the title */
+.home__section-icon {
+  color: #e94560;       /* app accent so it stands out from the white title */
+  font-size: 1.6rem;    /* react-icons scale with font-size */
 }
 
 .home__view-all {

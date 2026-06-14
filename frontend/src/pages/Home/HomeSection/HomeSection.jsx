@@ -13,7 +13,7 @@ import "./HomeSection.css";
 // loads independently, so one slow section doesn't block the others.
 // ─────────────────────────────────────────────
 
-function HomeSection({ sectionKey, title, isWishlisted, onWishlistToggle }) {
+function HomeSection({ sectionKey, title, Icon, isWishlisted, onWishlistToggle }) {
   const [games,   setGames]   = useState([]);
   const [loading, setLoading] = useState(true);
   const [error,   setError]   = useState(false);
@@ -31,7 +31,10 @@ function HomeSection({ sectionKey, title, isWishlisted, onWishlistToggle }) {
   return (
     <section className="home__section">
       <div className="home__section-head">
-        <h2 className="home__section-title">{title}</h2>
+        <h2 className="home__section-title">
+          {Icon && <Icon className="home__section-icon" />}
+          {title}
+        </h2>
         <Link to={`/${sectionKey}`} className="home__view-all">View All →</Link>
       </div>
 
