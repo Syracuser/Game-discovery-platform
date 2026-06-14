@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 import httpx
-from services.browse import get_popular, get_new, get_trending, get_game_detail
+from services.browse import get_popular, get_new, get_trending, get_game_detail, search_games
 
 """
 Browse Routes
@@ -9,6 +9,7 @@ Live RAWG passthrough endpoints for browsing the full catalog:
 - GET /popular        — all-time popular games
 - GET /new            — recent releases (junk-filtered)
 - GET /trending       — recent games gaining traction
+- GET /search?q=...   — live search across RAWG's full catalog
 - GET /rawg/{rawg_id} — one game's full detail (live), for the live detail page
 
 The list endpoints support ?page=N for the "View All" / pagination pages.
@@ -45,6 +46,12 @@ async def browse_new(page: int = 1):
 @router.get("/trending")
 async def browse_trending(page: int = 1):
     return await _safe(get_trending(page))
+
+
+@router.get("/search")
+async def browse_search(q: str, page: int = 1):
+    """Live search across RAWG's full catalog (replaces the old DB-only search)."""
+    return await _safe(search_games(q, page))
 
 
 @router.get("/rawg/{rawg_id}")

@@ -9,8 +9,9 @@ import "./SearchResults.css";
 
 // ─────────────────────────────────────────────
 // SearchResults — dedicated page for search results.
-// Reads the query from the URL (?q=...), fetches all
-// games, and filters client-side by name match.
+// Reads the query from the URL (?q=...) and searches RAWG's FULL catalog live
+// (via our /search endpoint), so any real game can be found — not just our
+// stored DB games. Results are live games, so they use rawg_id.
 // ─────────────────────────────────────────────
 
 function SearchResults() {
@@ -19,36 +20,34 @@ function SearchResults() {
   const query = searchParams.get("q") ?? "";
 
   const { addGame, removeGame, isWishlisted } = useWishlist();
-  
-  function handleWishlistToggle(game) {
-    isWishlisted(game._id) ? removeGame(game._id) : addGame(game);
-  }
-
-  // No query = nothing to search for, send the user back home.
-  if (!query.trim()) return <Navigate to="/" replace />;
 
   const [games,   setGames]   = useState([]);
   const [loading, setLoading] = useState(true);
   const [error,   setError]   = useState(false);
 
-  // Fetch all games.
+  // Live search against RAWG via our backend. Re-runs whenever the query changes.
   useEffect(() => {
+    if (!query.trim()) return;
+
     setLoading(true);
     setError(false);
 
-    axios.get(`${API_URL}/games`)
-      .then((res) => setGames(res.data))
+    axios.get(`${API_URL}/search`, { params: { q: query } })
+      .then((res) => setGames(res.data.results))
       .catch((err) => {
-        console.error("Failed to fetch games:", err);
+        console.error("Failed to search games:", err);
         setError(true);
       })
       .finally(() => setLoading(false));
   }, [query]);
 
-  //  Only returns games that matched out user's query.
-  const results = games.filter((game) =>
-    game.name.toLowerCase().includes(query.toLowerCase())
-  );
+  function handleWishlistToggle(game) {
+    isWishlisted(game.rawg_id) ? removeGame(game.rawg_id) : addGame(game);
+  }
+
+  // No query = nothing to search for, send the user back home.
+  // (Placed after the hooks above so hook order stays consistent every render.)
+  if (!query.trim()) return <Navigate to="/" replace />;
 
   // ── Render ───────────────────────────────────
 
@@ -74,23 +73,22 @@ function SearchResults() {
       <header className="search-results__header">
         <h1 className="search-results__title">Search results</h1>
         <p className="search-results__query">Results for: "<span>{query}</span>"</p>
-        <span className="search-results__pill">{results.length} results found</span>
+        <span className="search-results__pill">{games.length} results found</span>
       </header>
 
-{/* Display only the games that matched the user's query.*/}
-      {results.length === 0 ? (
+      {games.length === 0 ? (
         <EmptyState query={query} />
       ) : (
         <div className="search-results__grid">
-          {results.map((game) => (
+          {games.map((game) => (
             <Link
-              to={`/games/${game._id}`}
-              key={game._id}
+              to={`/games/rawg/${game.rawg_id}`}
+              key={game.rawg_id}
               className="search-results__game-link"
             >
               <GameCard
                 game={game}
-                isWishlisted={isWishlisted(game._id)}
+                isWishlisted={isWishlisted(game.rawg_id)}
                 onWishlistToggle={handleWishlistToggle}
               />
             </Link>

@@ -94,6 +94,18 @@ async def get_trending(page: int = 1) -> dict:
     })
 
 
+async def search_games(query: str, page: int = 1) -> dict:
+    """
+    Live search across RAWG's full catalog using its `search` parameter.
+
+    This replaces the old "fetch all stored games and filter client-side" approach,
+    which only searched our ~70 DB games. Now a search for any real game (e.g.
+    "Dead Space") hits RAWG's entire library. Results are mapped to our game shape
+    and paginated, just like the browse sections.
+    """
+    return await _fetch_rawg_list({"search": query, "page": page})
+
+
 async def get_game_detail(rawg_id: int) -> dict:
     """
     Fetch ONE game's full detail live from RAWG, mapped to our game shape, with
