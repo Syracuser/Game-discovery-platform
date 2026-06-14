@@ -22,7 +22,7 @@ function GameSidebar({ game }) {
   const { addGame, removeGame, isWishlisted } = useWishlist();
 
   function handleWishlistClick() {
-    isWishlisted(game._id) ? removeGame(game._id) : addGame(game);
+    isWishlisted(game.rawg_id) ? removeGame(game.rawg_id) : addGame(game);
   }
 
   // ── Tag slicing ───────────────────────────
@@ -93,12 +93,12 @@ function GameSidebar({ game }) {
       <div className="game-sidebar__actions">
 
         <button
-          className={`game-sidebar__action-btn${isWishlisted(game._id) ? " is-active" : ""}`}
+          className={`game-sidebar__action-btn${isWishlisted(game.rawg_id) ? " is-active" : ""}`}
           onClick={handleWishlistClick}
-          aria-label={isWishlisted(game._id) ? "Remove from wishlist" : "Add to wishlist"}
+          aria-label={isWishlisted(game.rawg_id) ? "Remove from wishlist" : "Add to wishlist"}
         >
           <span className="game-sidebar__action-icon">&#128278;</span>
-          {isWishlisted(game._id) ? "Wishlisted" : "Wishlist"}
+          {isWishlisted(game.rawg_id) ? "Wishlisted" : "Wishlist"}
         </button>
 
       </div>

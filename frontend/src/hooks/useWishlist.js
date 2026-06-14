@@ -6,11 +6,15 @@ import { useState, useEffect } from "react";
  * Manages the user's wishlist using localStorage so it persists across page refreshes.
  * Stores full game objects so the Wishlist page can render them without any extra fetch.
  *
+ * Games are keyed by `rawg_id`. In the final product every game the user can browse
+ * is a live RAWG game (the stored DB games are the ML training core, not user-facing),
+ * so rawg_id is the single consistent id across the whole wishlist.
+ *
  * Returns:
  *  - wishlist:      array of game objects currently in the wishlist
  *  - addGame:       (game) => void — adds a game if it isn't already there
- *  - removeGame:    (gameId) => void — removes a game by its _id
- *  - isWishlisted:  (gameId) => boolean — quick check if a game is in the wishlist
+ *  - removeGame:    (rawgId) => void — removes a game by its rawg_id
+ *  - isWishlisted:  (rawgId) => boolean — quick check if a game is in the wishlist
  */
 
 const STORAGE_KEY = "wishlist";
@@ -33,17 +37,17 @@ function useWishlist() {
 
   function addGame(game) {
     setWishlist((prev) => { // prev = current wishlist
-      const alreadyAdded = prev.some((g) => g._id === game._id); // Check if the game being added is already in the existing wishlist.
-      return alreadyAdded ? prev : [...prev, game]; // if it is, keep the wishlist as is. If it isn't, return the new wishlist with the game
+      const alreadyAdded = prev.some((g) => g.rawg_id === game.rawg_id); // Check if the game being added is already in the existing wishlist.
+      return alreadyAdded ? prev : [...prev, game]; // if it is, keep the wishlist as is. If it isn't, add the game and return the new wishlist with the game
     });
   }
 
-  function removeGame(gameId) {
-    setWishlist((prev) => prev.filter((g) => g._id !== gameId)); // Goes through the current wishlist and checks if any games in it have the new game's ID
+  function removeGame(rawgId) {
+    setWishlist((prev) => prev.filter((g) => g.rawg_id !== rawgId)); // Keep every game whose rawg_id is NOT the one being removed
   }
 
-  function isWishlisted(gameId) {
-    return wishlist.some((g) => g._id === gameId); // Check if the game being added is already in the existing wishlist.
+  function isWishlisted(rawgId) {
+    return wishlist.some((g) => g.rawg_id === rawgId); // Check if a game with this rawg_id is already in the wishlist
   }
 
   return { wishlist, addGame, removeGame, isWishlisted };

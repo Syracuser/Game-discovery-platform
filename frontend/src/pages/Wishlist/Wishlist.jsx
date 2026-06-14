@@ -8,7 +8,7 @@ function Wishlist() {
   const { wishlist, addGame, removeGame, isWishlisted } = useWishlist();
 
   function handleWishlistToggle(game) {
-    isWishlisted(game._id) ? removeGame(game._id) : addGame(game);
+    isWishlisted(game.rawg_id) ? removeGame(game.rawg_id) : addGame(game);
   }
 
   return (
@@ -30,7 +30,7 @@ function Wishlist() {
         ) : (
           <div className="home__games-grid">
             {wishlist.map((game) => (
-              <Link to={`/games/${game._id}`} key={game._id} className="game-link">
+              <Link to={`/games/rawg/${game.rawg_id}`} key={game.rawg_id} className="game-link">
                 <GameCard
                   game={game}
                   isWishlisted={true}

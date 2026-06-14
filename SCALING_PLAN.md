@@ -12,13 +12,25 @@ It is a planning reference — not all of it is built yet. Status is marked per 
 | Item | Status |
 |------|--------|
 | 1️⃣ Variety training core | ✅ **Done** — built, ~44 games added, model retrained (60% → 83% accuracy) |
-| 2️⃣ Live display / pagination | 🟡 Backend ✅, Browse pages ✅, Home live sections ✅ (Trending/Popular/New rows + View All). Filterable browser moved to `/games` (AllGames page). LEFT: the live detail route `/games/rawg/:rawgId` (cards link to it but it's not built yet). |
-| 3️⃣ Wishlist for live games | 🔴 Not started |
+| 2️⃣ Live display / pagination | ✅ **Done** — backend endpoints, browse pages + Pagination, Home live sections, AND the live detail route `/games/rawg/:rawgId` (with screenshots). Filterable browser moved to `/games` (AllGames page). |
+| 3️⃣ Wishlist for live games | 🔴 Not started (the last remaining feature) |
 | Issue A — dedupe gap | ✅ Done for dev — deleted the 2 visible seed duplicates (RDR2, God of War). Root cause vanishes at launch: **all seed games get wiped, leaving only RAWG games** (no rawg_id=None games left to collide). |
 | Issue B — card image CSS | ✅ Done — changed `.gc__poster` aspect-ratio `16/7` → `16/9` so cover art isn't over-cropped. |
 
-**Last completed:** Issue B (game card image crop fix).
-**Suggested next:** Live pagination (the big remaining piece — needs design first).
+**Last completed:** Live detail route (`/games/rawg/:rawgId`) — backend `GET /rawg/{id}`
+(detail + screenshots, mapped) + `GameDetails` now branches on stored vs live id.
+**Suggested next:** Wishlist for live games (the last remaining feature).
+
+> ⚠️ **Known gap (deferred to the wishlist task):** the wishlist BUTTON on a live
+> game's detail page (`GameSidebar`) still uses `game._id`, which live games don't
+> have. It renders fine but doesn't function for live games yet — fixed as part of
+> item 3️⃣ (where `_id` vs `rawg_id` gets handled across the whole wishlist).
+
+> 📌 **Open decisions (small, not blocking):**
+> - Fate of the `/games` filter page (AllGames) — keep it or retire it? If keeping,
+>   add a Navbar link to it (currently no nav link points there).
+> - Navbar links generally — review that they point at the right routes now that
+>   Home = live sections and the filter browser moved to `/games`.
 
 > ⚠️ **Final-cleanup reminder:** before launch, delete ALL hand-seeded games
 > (rawg_id = None). They are dev-only scaffolding; the live app is RAWG-only.
@@ -69,15 +81,20 @@ examples, accuracy 60% → 83%, predictions now discriminate by genre.
 
 ---
 
-## 2️⃣ Live Display Games (Pagination)
+## 2️⃣ Live Display Games (Pagination)  — ✅ DONE
+
+**Built:** backend (`services/browse.py` + `routes/browse.py`): `/popular`, `/new`,
+`/trending` (live, junk-filtered, mapped), plus `/rawg/{id}` for one game's full
+detail + screenshots. Frontend: reusable `Pagination` component, one parameterized
+`Browse` page (all 3 sections), Home live-section rows (`HomeSection`), and
+`GameDetails` extended to handle live games (`/games/rawg/:rawgId`). The old
+filterable browser was preserved at `/games` (the `AllGames` page).
 
 **Why:** To browse the whole catalog without importing it. Home page shows curated
 sections (Popular / New, ~12 cards each); "View All" leads to a paginated page
 where each "Next" makes a fresh live RAWG call.
 
-**Status:** 🟢 Designed (decisions below). Not built yet.
-
-**Design decisions:**
+**Design decisions (as built):**
 - **Shape:** reuse `map_rawg_game()` on the backend so live games look IDENTICAL
   to stored games — the existing `GameCard` renders them with no changes.
 - **No cache** to start (fetch live each load). Caching is a later optimization.
