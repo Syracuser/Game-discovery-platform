@@ -1,0 +1,47 @@
+/* ── One live section row (Trending / Popular / New) ── */
+
+.home__section {
+  margin-bottom: 40px;
+}
+
+.home__section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.home__section-title {
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.home__view-all {
+  color: #e94560;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.home__view-all:hover {
+  opacity: 0.75;
+}
+
+/* A section shows a single row of cards (first ~12 of that section). */
+.home__row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 18px;
+}
+
+.home__section-loading {
+  color: #8b8b98;
+  padding: 20px 0;
+}
+
+.home__error {
+  color: #ff6b6b;
+  padding: 10px 0;
+}

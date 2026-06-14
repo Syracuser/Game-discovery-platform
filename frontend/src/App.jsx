@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./layout/Layout";
 import Home from "./pages/Home/Home";
+import AllGames from "./pages/AllGames/AllGames";
 import Wishlist from "./pages/Wishlist/Wishlist";
 import GameDetails from "./pages/GameDetails/GameDetails";
 import Preferences from "./pages/Preferences/Preferences";
@@ -17,6 +18,7 @@ function App() {
         {/* No "path" here because it applies to ALL child routes */}
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
+          <Route path="/games" element={<AllGames />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/games/:id" element={<GameDetails />} />
           <Route path="/preferences" element={<Preferences />} />

@@ -12,7 +12,7 @@ It is a planning reference — not all of it is built yet. Status is marked per 
 | Item | Status |
 |------|--------|
 | 1️⃣ Variety training core | ✅ **Done** — built, ~44 games added, model retrained (60% → 83% accuracy) |
-| 2️⃣ Live display / pagination | 🟡 Backend done + Browse pages done (`/popular`, `/new`, `/trending` with Pagination, links by rawg_id). LEFT: home-page section previews ("View All"), and the live detail route `/games/rawg/:rawgId`. |
+| 2️⃣ Live display / pagination | 🟡 Backend ✅, Browse pages ✅, Home live sections ✅ (Trending/Popular/New rows + View All). Filterable browser moved to `/games` (AllGames page). LEFT: the live detail route `/games/rawg/:rawgId` (cards link to it but it's not built yet). |
 | 3️⃣ Wishlist for live games | 🔴 Not started |
 | Issue A — dedupe gap | ✅ Done for dev — deleted the 2 visible seed duplicates (RDR2, God of War). Root cause vanishes at launch: **all seed games get wiped, leaving only RAWG games** (no rawg_id=None games left to collide). |
 | Issue B — card image CSS | ✅ Done — changed `.gc__poster` aspect-ratio `16/7` → `16/9` so cover art isn't over-cropped. |

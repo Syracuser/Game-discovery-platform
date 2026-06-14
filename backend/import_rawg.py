@@ -70,6 +70,34 @@ def _is_blocked(tag: str) -> bool:
     return tag.lower() in TAG_BLOCKLIST
 
 
+# ── Platform normalization ────────────────────────────────────────────────────
+# RAWG returns specific console+generation names ("PlayStation 4", "Xbox 360"),
+# but our frontend icon map only knows simple families ("PlayStation", "Xbox").
+# We fold each RAWG platform into its family so cards show ONE icon per family.
+# Anything not listed (mobile: iOS/Android, web, etc.) is dropped on purpose.
+
+def _normalize_platforms(rawg_platform_names: list[str]) -> list[str]:
+    """Map RAWG's specific platform names to our 4 icon families, dropping unknowns."""
+    families = []
+    for name in rawg_platform_names:
+        lower = name.lower()
+        if "playstation" in lower:
+            family = "PlayStation"
+        elif "xbox" in lower:
+            family = "Xbox"
+        elif "nintendo switch" in lower:
+            family = "Nintendo Switch"
+        elif lower in ("pc", "macos", "linux"):  # all desktop OSes -> PC
+            family = "PC"
+        else:
+            continue  # mobile / web / anything else we don't have an icon for
+
+        # Avoid duplicates (e.g. PS3 + PS4 should add "PlayStation" only once)
+        if family not in families:
+            families.append(family)
+    return families
+
+
 # ── Mapping: RAWG's shape -> our GameModel's shape ────────────────────────────
 
 def map_rawg_game(raw: dict) -> dict:
@@ -95,7 +123,10 @@ def map_rawg_game(raw: dict) -> dict:
     publisher = publishers[0]["name"] if publishers else ""
 
     # platforms are nested one level deeper: [{"platform": {"name": "PC"}}, ...]
-    platforms = [p["platform"]["name"] for p in raw.get("platforms", [])]
+    # Then normalize RAWG's specific names ("PlayStation 4") into our icon families
+    # ("PlayStation"), dropping platforms we have no icon for (mobile, etc.).
+    raw_platform_names = [p["platform"]["name"] for p in raw.get("platforms", [])]
+    platforms = _normalize_platforms(raw_platform_names)
 
     # RAWG rating is on a 0–5 scale; our games use 0–10. Multiply by 2 to match.
     # round() keeps it tidy (e.g. 4.47 * 2 = 8.94 -> 8.9).

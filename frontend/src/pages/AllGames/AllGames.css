@@ -1,11 +1,6 @@
 .home {
   padding: 20px;
-  max-width: 1160px;
-  margin: 0 auto;
 }
-
-/* Section row styles live in HomeSection/HomeSection.css (the component owns them).
-   The error class below is shared by HomeSection's error state. */
 
 .home__title {
   color: #ffffff;

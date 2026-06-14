@@ -10,8 +10,9 @@ import "./Layout.css";
 // ─────────────────────────────────────────────
 
 function Layout() {
-  const navigate   = useNavigate(); 
-  const isHomePage = useLocation().pathname === "/";
+  const navigate   = useNavigate();
+  // The filter sidebar belongs to the AllGames page (/games), not the live Home.
+  const isFilterPage = useLocation().pathname === "/games";
 
   const [searchInputValue, setSearchInputValue] = useState("");
   const [isSidebarOpen,    setIsSidebarOpen]    = useState(false);
@@ -33,11 +34,11 @@ function Layout() {
         onSearchSubmit={handleSearchSubmit}
         isSidebarOpen={isSidebarOpen}
         onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
-        showFilterToggle={isHomePage}
+        showFilterToggle={isFilterPage}
       />
 
       <div className="layout__body">
-        {isHomePage ? (
+        {isFilterPage ? (
           <Outlet context={{ isSidebarOpen, setIsSidebarOpen }} />
         ) : (
           <main className="main-content">
