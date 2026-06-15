@@ -9,7 +9,7 @@ each game was recommended.
 ---
 
 ## The problem it solves
-There are nearly a million games out there. Most "browse a catalog" sites leave you
+There are god knows how many of games out there. Most "browse a catalog" sites leave you
 scrolling endlessly. GameSense flips that: tell it what you like, and it surfaces the
 games you're most likely to actually enjoy.
 
@@ -75,8 +75,8 @@ be ranked from best fit to worst.
 ## ❓ Anticipated Questions (cheat sheet)
 
 **Why Logistic Regression?**
-> "It's the simplest model that fits the problem. My recommendation is basically a
-> yes/no question — 'will this user like this game?' — and Logistic Regression is the
+> "It's the simplest model that fits the problem. My recommendation works by basically 
+> asking a yes/no question — 'will this user like this game?' — and Logistic Regression is the
 > standard model for yes/no predictions. It also gives a *probability*, not just yes/no,
 > which is exactly what I need to **rank** games from best match to worst. Anything more
 > complex would be overkill for this problem."
