@@ -9,7 +9,7 @@ function HomeHero() {
   return (
     <header className="home-hero">
       <h1 className="home-hero__title">
-        Life's too for <span className="home-hero__accent">bad</span> games.
+        Life's too short for <span className="home-hero__accent">bad</span> games.
         <br/> Game<span className="home-hero__accent">Sense</span> fixes that.
       </h1>
       <p className="home-hero__subtitle">
