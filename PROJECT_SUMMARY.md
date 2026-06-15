@@ -105,9 +105,29 @@ modest data, and is explainable — fancier models need huge data and are hard t
 > browses is fetched live from RAWG, so they get the full catalog without me having to
 > download and store a million games."
 
+**How do recommendations actually pick which games to rank? (And why might a very
+obscure game not show up?)**
+> "Recommendations can't score all ~900,000 games live — that would be far too slow. So
+> instead I fetch a **candidate pool**: the top games in the user's chosen genres (sorted
+> by popularity), then the model ranks *that pool* and returns the best 15. It's fast and
+> the results are relevant.
+>
+> The honest trade-off is that a very obscure game might not surface — if it's not among
+> the popular games in its genre, it never enters the pool to be ranked. I tested making
+> the pool bigger, but to catch a truly obscure title you'd need thousands of candidates,
+> which pushes the page to ~20 seconds — not worth it. The *proper* fix would be a
+> precomputed search index over the whole catalog, which is a much bigger system. For this
+> project, the pool approach is the right balance of speed and relevance."
+
+*(Why this is a good answer: it shows you understand the speed-vs-coverage trade-off,
+that you actually tested alternatives, and that you know what the "real" fix would be —
+which is more impressive than pretending there's no limitation.)*
+
 **What would you improve next?**
 > "With real user data, I'd explore collaborative filtering — recommending based on what
-> *similar users* liked, not just genre/tag overlap — and possibly more advanced models."
+> *similar users* liked, not just genre/tag overlap — and possibly more advanced models.
+> I'd also consider a precomputed index so recommendations could reach the whole catalog,
+> not just a popular-games pool."
 
 > 💡 **If asked something you don't know:** don't bluff. A strong, honest answer is
 > *"I deliberately chose the simple, well-understood approach — I prioritized understanding
