@@ -24,14 +24,21 @@ It is a planning reference — not all of it is built yet. Status is marked per 
 - ✅ **Search** — `/search?q=` hits RAWG's full catalog (was DB-only). SearchResults uses `rawg_id`.
 - ✅ **Recommendations** — `/recommend` fetches a RAWG candidate pool by genre, scores
   with the model, returns top 15. Fallback to popular pool when no genres picked.
+- ✅ **`/games` (AllGames) RETIRED from user access** — route now redirects to `/` with
+  `<Navigate>`; the component is kept (not deleted) for possible revival. No nav link to it.
+- ✅ **Non-English tags filtered** — `map_rawg_game` drops non-ASCII tags (RAWG returns some
+  Russian/etc. tags). DB cleaned via a clear + rebuild + retrain.
+- ✅ **Platform normalization** — RAWG's specific names (`PlayStation 4`) folded into icon
+  families (`PlayStation`); mobile/web dropped. Also shown in the detail sidebar metadata.
 
-> 📌 **Remaining open decisions / cleanup (small, not blocking):**
-> - **AllGames `/games` page** still keys wishlist on `_id` (it browses STORED games).
->   Tied to the decision below about that page's fate.
-> - **Fate of the `/games` filter page (AllGames)** — keep or retire? It browses the
->   stored ML-training games, which aren't meant to be user-facing. Likely retire.
-> - **Navbar links** — review they point at the right routes now (Home = live sections;
->   filter browser at `/games`; add/remove nav links to match final decisions).
+**Polish done:** search button in navbar (red, submit), navbar logo two-tone, active
+nav-link highlight (`NavLink`), reusable `BackButton` (GameDetails/Recommendations/SearchResults),
+gallery chevron icons, Home section icons (flame/trophy/sparkles), Home hero header.
+
+> 📌 **Remaining open items (small, not blocking):**
+> - **Caching** of live RAWG calls — deliberately skipped; revisit only if needed.
+> - **RAWG search is fuzzy** — occasionally an exact title isn't first. `search_precise=true`
+>   is an option if it ever annoys.
 
 > ⚠️ **Final-cleanup reminder:** before launch, delete ALL hand-seeded games
 > (rawg_id = None). They are dev-only scaffolding; the live app is RAWG-only.
@@ -159,47 +166,53 @@ detail page = 1 detail call for that game.
 
 ---
 
-## 3️⃣ Wishlist for Live Games
+## 3️⃣ Wishlist for Live Games  — ✅ DONE
 
 **Why:** A user must be able to wishlist a game from deep pagination (a live game
-not in our DB). We save a **lightweight reference** (e.g. rawg_id + name + image),
-NOT a full game record. The wishlist re-shows or re-fetches by id on demand.
+not in our DB).
 
-This keeps the wishlist universal (works for core AND live games) without pulling
-the whole catalog into the DB or the ML model.
+**How it was built:** the wishlist is **localStorage-based** (`useWishlist` hook) and
+stores the **full game object** the user was viewing — which is already lightweight
+enough (it's just the mapped RAWG fields). The whole wishlist was re-keyed from `_id`
+to **`rawg_id`**, since every user-facing game is a live RAWG game. Updated:
+`useWishlist`, `GameSidebar` (detail-page button), `Wishlist` page, and the GameCard
+callers (Home/Browse/Search). Works end-to-end: wishlist from a card or detail page,
+see it on `/wishlist`, click back to its live detail page, persists across refresh.
 
-**Status:** 🔴 Not designed yet. Open questions:
-- Exact fields to store in a wishlist reference
-- One wishlist collection for both core + live games, or separate handling?
-
----
-
-## 🧩 Supporting Concerns (under scaling)
-
-- **RAWG rate limits** — live pagination + per-genre fetching both hit the API
-- **DB / ML performance** — `/genres`, `/tags` (distinct) and the ML scoring loop
-  run over every stored game; watch as the core grows
-- **Dedup gap (Issue A)** — seed games have no `rawg_id`, so RAWG re-adds overlaps.
-  Becomes more relevant at scale. Decide: name-fallback vs. replace seed data.
+**Status:** ✅ Done.
 
 ---
 
-## ✅ Suggested Build Order
+## 🧩 Supporting Concerns (status)
 
-1. **Variety training core** (mostly reuse — safe first win)
-2. **Resolve dedup gap (Issue A)** — small, clears the path
-3. **Live pagination** (the bigger new piece — design first)
-4. **Wishlist for live games**
-5. **Final verification pass** — confirm recommendations, similar-games, filters
-   all work with the new RAWG data
+- **RAWG rate limits** — acknowledged; our usage (a few calls per page view) is far
+  under the 20k/month free tier. Not an issue in practice. ✅ no action needed
+- **DB / ML performance** — the stored core stays small (~45 games), so `distinct`
+  queries and the ML scoring loop are fast. ✅ fine at current scale
+- **Dedup gap (Issue A)** — ✅ resolved for dev; vanishes at launch (seed games wiped).
+
+---
+
+## ✅ Build Order — all complete
+
+1. ✅ Variety training core
+2. ✅ Dedup gap (Issue A)
+3. ✅ Live pagination + browse pages + Home sections + live detail route
+4. ✅ Wishlist for live games
+5. ✅ Live conversions: search + recommendations
+6. ✅ Polish pass: navbar, back button, icons, hero header, platform/tag cleanup
 
 ---
 
 ## 📌 Definition of Done (for the RAWG/scaling chapter)
 
-- [ ] Variety training core built + model retrained on it
-- [ ] Live pagination working (browse full RAWG catalog)
-- [ ] Wishlist works for both stored and live games
-- [ ] Dedup gap (Issue A) resolved
-- [ ] Card image CSS (Issue B) fixed
-- [ ] Existing features confirmed working with RAWG data at scale
+- [x] Variety training core built + model retrained on it
+- [x] Live pagination working (browse full RAWG catalog)
+- [x] Wishlist works for live games (keyed on `rawg_id`)
+- [x] Dedup gap (Issue A) resolved
+- [x] Card image CSS (Issue B) fixed
+- [x] Search + recommendations converted to live RAWG
+- [x] Existing features confirmed working with RAWG data
+
+**🎉 The RAWG / scaling chapter is complete.** Only the pre-launch seed-game wipe remains
+(see the ⚠️ reminder at the top) — a one-time cleanup done at deployment, not now.

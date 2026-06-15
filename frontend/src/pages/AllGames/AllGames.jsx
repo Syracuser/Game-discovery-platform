@@ -4,6 +4,7 @@ import axios from "axios";
 import API_URL from "../../api/config";
 import FilterSidebar from "../Home/FilterSidebar/FilterSidebar";
 import GameCard from "../../components/GameCard/GameCard";
+import Spinner from "../../components/Spinner/Spinner";
 import useWishlist from "../../hooks/useWishlist";
 import "./AllGames.css";
 
@@ -138,9 +139,7 @@ function AllGames() {
 
       <main className="main-content">
         {loading ? (
-          <div className="home__spinner-container">
-            <div className="home__spinner"></div>
-          </div>
+          <Spinner />
 
         ) : error ? (
           <div className="home">

@@ -3,7 +3,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.8rem 2rem;
+  /* top  right  bottom  left — no left padding so the logo hugs the left edge */
+  padding: 0.8rem 2rem 0.8rem 0;
   background-color: #1a1a2e;
   position: sticky;
   top: 0;
@@ -87,12 +88,22 @@
   pointer-events: none;
 }
 
-/* App name / logo — "Game" in white, "Sense" in accent red (matches the footer) */
+/* App name / logo — compass image + "Game" in white, "Sense" in accent red.
+   Flex row so the image and text sit side by side, vertically centered. */
 .navbar-logo {
+  display: flex;
+  align-items: center;
   font-size: 1.5rem;
   font-weight: bold;
   color: #ffffff;
   text-decoration: none;
+}
+
+/* The logo PNG has empty transparent space around the compass. A negative right
+   margin pulls the text leftward INTO that empty space, closing the visual gap
+   that CSS `gap` alone couldn't remove. Adjust this value to taste. */
+.navbar-logo-img {
+  margin-right: -0.7rem;
 }
 
 .navbar-logo-accent {

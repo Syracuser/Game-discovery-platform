@@ -5,6 +5,7 @@ import API_URL from "../../api/config";
 import GameCard from "../../components/GameCard/GameCard";
 import EmptyState from "./EmptyState/EmptyState";
 import BackButton from "../../components/BackButton/BackButton";
+import Spinner from "../../components/Spinner/Spinner";
 import useWishlist from "../../hooks/useWishlist";
 import "./SearchResults.css";
 
@@ -53,11 +54,7 @@ function SearchResults() {
   // ── Render ───────────────────────────────────
 
   if (loading) {
-    return (
-      <div className="search-results__spinner-container">
-        <div className="search-results__spinner"></div>
-      </div>
-    );
+    return <Spinner />;
   }
 
   if (error) {

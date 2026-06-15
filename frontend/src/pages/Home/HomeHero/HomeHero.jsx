@@ -9,7 +9,8 @@ function HomeHero() {
   return (
     <header className="home-hero">
       <h1 className="home-hero__title">
-        Life's too <span className="home-hero__accent">short</span> for bad games.
+        Life's too for <span className="home-hero__accent">bad</span> games.
+        <br/> Game<span className="home-hero__accent">Sense</span> fixes that.
       </h1>
       <p className="home-hero__subtitle">
         Find the ones actually worth your time. Wishlist what you want to play,

@@ -1,0 +1,11 @@
+/* The logo image — sized to fit the navbar height.
+   width: auto keeps the original aspect ratio so the compass never looks squashed.
+   The PNG has a transparent background, so the navbar's navy shows through and the
+   icon blends in instead of sitting in a box. object-fit: contain makes sure the
+   whole compass fits within the box without being cropped or stretched. */
+.logo {
+  height: 60px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}

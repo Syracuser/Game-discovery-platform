@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { IoGameControllerOutline } from "react-icons/io5";
+import Logo from "../../components/Logo/Logo";
 import "./Footer.css";
 
 function Footer() {
@@ -13,9 +13,7 @@ function Footer() {
 
         {/* Left: logo + brand name + subtitle */}
         <div className="footer__left">
-          <div className="footer__logo-box">
-            <IoGameControllerOutline className="footer__logo-icon" />
-          </div>
+          <Logo className="footer__logo-icon" />
 
           <div className="footer__brand">
             <span className="footer__brand-name">

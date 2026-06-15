@@ -4,6 +4,7 @@ import axios from "axios";
 import API_URL from "../../api/config";
 import GameCard from "../../components/GameCard/GameCard";
 import Pagination from "../../components/Pagination/Pagination";
+import Spinner from "../../components/Spinner/Spinner";
 import useWishlist from "../../hooks/useWishlist";
 import "./Browse.css";
 
@@ -67,11 +68,7 @@ function Browse({ section }) {
   // ── Render ───────────────────────────────────
 
   if (loading) {
-    return (
-      <div className="browse__spinner-container">
-        <div className="browse__spinner"></div>
-      </div>
-    );
+    return <Spinner />;
   }
 
   if (error) {

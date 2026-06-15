@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import API_URL from "../../api/config";
 import PreferencesContainer from "./PreferencesContainer/PreferencesContainer";
+import Spinner from "../../components/Spinner/Spinner";
 import "./Preferences.css";
 
 // How many chips to show before the "View More" button appears.
@@ -108,11 +109,7 @@ function Preferences() {
   // ── Render ─────────────────────────────────────────────
 
   if (loading) {
-    return (
-      <div className="preferences-page preferences-page--loading">
-        <div className="preferences-page__spinner" />
-      </div>
-    );
+    return <Spinner />;
   }
 
   if (fetchError) {

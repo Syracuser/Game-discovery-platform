@@ -1,5 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 import { FaMagnifyingGlass } from "react-icons/fa6";
+import Logo from "../../components/Logo/Logo";
 import "./Navbar.css";
 
 function Navbar({ searchInputValue, setSearchInputValue, onSearchSubmit, isSidebarOpen, onToggleSidebar, showFilterToggle }) {
@@ -23,7 +24,8 @@ function Navbar({ searchInputValue, setSearchInputValue, onSearchSubmit, isSideb
           <span></span>
         </label>
         <Link to="/" className="navbar-logo">
-          Game<span className="navbar-logo-accent">Sense</span>
+          <Logo className="navbar-logo-img" />
+          <span>Game<span className="navbar-logo-accent">Sense</span></span>
         </Link>
       </div>
 

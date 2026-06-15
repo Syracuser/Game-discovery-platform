@@ -7,6 +7,7 @@ import GameSidebar from "./GameSidebar/GameSidebar";
 import GameDescriptionSection from "./GameDescriptionSection/GameDescriptionSection";
 import SystemRequirementsSection from "./SystemRequirementsSection/SystemRequirementsSection";
 import BackButton from "../../components/BackButton/BackButton";
+import Spinner from "../../components/Spinner/Spinner";
 import "./GameDetails.css";
 
 // ─────────────────────────────────────────────
@@ -69,11 +70,7 @@ function GameDetails() {
   // ── Early returns ────────────────────────────
 
   if (loading) {
-    return (
-      <div className="game-details__spinner-container">
-        <div className="game-details__spinner"></div>
-      </div>
-    );
+    return <Spinner />;
   }
 
   if (error || !game) {

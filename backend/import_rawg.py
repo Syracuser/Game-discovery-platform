@@ -115,27 +115,29 @@ def map_rawg_game(raw: dict) -> dict:
     Convert one raw RAWG game (the detail response) into a dict shaped like our
     GameModel. This is where every field transform from our mapping table happens.
 
-    We use .get(..., default) everywhere because RAWG games are inconsistent —
-    many are missing a developer, description, image, etc. Defaulting to safe
-    empty values means a missing field never crashes the import.
+    We use `(raw.get(field) or [])` for every list field because RAWG is
+    inconsistent in TWO ways: a field can be MISSING, or present but explicitly
+    null. `.get(field, [])` only covers the missing case — if the key exists with
+    value None, it returns None and the comprehension below crashes with
+    "'NoneType' object is not iterable". `or []` covers both: missing OR null -> [].
     """
     # genres and tags arrive as lists of objects: [{"name": "Action", ...}, ...]
     # We pull out just the .name from each, turning them into plain string lists.
-    genres = [g["name"] for g in raw.get("genres", [])]
+    genres = [g["name"] for g in (raw.get("genres") or [])]
     # For tags, also drop any that are on the blocklist (junk/technical noise).
-    tags   = [t["name"] for t in raw.get("tags", []) if not _is_blocked(t["name"])]
+    tags   = [t["name"] for t in (raw.get("tags") or []) if not _is_blocked(t["name"])]
 
     # developers / publishers are also lists of objects. We take the FIRST one's
-    # name as our studio / publisher. If the list is empty, fall back to "".
-    developers = raw.get("developers", [])
-    publishers = raw.get("publishers", [])
+    # name as our studio / publisher. If the list is empty/null, fall back to "".
+    developers = raw.get("developers") or []
+    publishers = raw.get("publishers") or []
     studio    = developers[0]["name"] if developers else ""
     publisher = publishers[0]["name"] if publishers else ""
 
     # platforms are nested one level deeper: [{"platform": {"name": "PC"}}, ...]
     # Then normalize RAWG's specific names ("PlayStation 4") into our icon families
     # ("PlayStation"), dropping platforms we have no icon for (mobile, etc.).
-    raw_platform_names = [p["platform"]["name"] for p in raw.get("platforms", [])]
+    raw_platform_names = [p["platform"]["name"] for p in (raw.get("platforms") or [])]
     platforms = _normalize_platforms(raw_platform_names)
 
     # RAWG rating is on a 0–5 scale; our games use 0–10. Multiply by 2 to match.
