@@ -1,0 +1,62 @@
+# Render deployment configuration for the Game Discovery Platform.
+#
+# This file describes the two services Render will run:
+#   1. backend  — the FastAPI API (a "web service")
+#   2. frontend — the React app (a "static site")
+#
+# Secrets (like the MongoDB password and RAWG key) are NOT put here.
+# They are set in the Render dashboard so they never end up in git.
+
+services:
+  # ---------------------------------------------------------------
+  # BACKEND — FastAPI API
+  # ---------------------------------------------------------------
+  - type: web
+    name: game-discovery-backend
+    runtime: python
+    plan: free
+    # The backend's code lives in the backend/ subfolder, so Render
+    # treats that folder as the project root. This makes imports like
+    # "from database.connection import ..." resolve correctly.
+    rootDir: backend
+    # Install dependencies (Render runs this from rootDir = backend/).
+    buildCommand: pip install -r requirements.txt
+    # How to launch the app. $PORT is provided by Render automatically;
+    # 0.0.0.0 means "listen on all network interfaces" (required on Render).
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      # MongoDB connection string — set the VALUE in the Render dashboard
+      # (paste your Atlas string there). sync:false = "don't store it in git".
+      - key: MONGODB_URL
+        sync: false
+      # RAWG API key — also set in the dashboard.
+      - key: RAWG_API_KEY
+        sync: false
+      # The live frontend URL, for CORS. We fill this in after the
+      # frontend is deployed and we know its address.
+      - key: FRONTEND_URL
+        sync: false
+
+  # ---------------------------------------------------------------
+  # FRONTEND — React (built by Vite into static files)
+  # ---------------------------------------------------------------
+  - type: web
+    name: game-discovery-frontend
+    runtime: static
+    # The frontend code lives in the frontend/ subfolder.
+    rootDir: frontend
+    # Build the production version of the React app.
+    buildCommand: npm install && npm run build
+    # Vite outputs the finished site into the "dist" folder.
+    staticPublishPath: dist
+    envVars:
+      # The backend URL the React app should call. Set in the dashboard
+      # once the backend is deployed and we know its address.
+      - key: VITE_API_URL
+        sync: false
+    # Make client-side routing (React Router) work: send all unknown
+    # paths to index.html instead of returning 404.
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

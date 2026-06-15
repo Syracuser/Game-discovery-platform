@@ -1,3 +1,4 @@
+import os
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -25,24 +26,37 @@ async def lifespan(app: FastAPI):
     try:
     
         await database.command("ping")
-        print("✅ Connected to MongoDB successfully!")
+        print("[OK] Connected to MongoDB successfully!")
     except Exception as e:
-        print(f"❌ Failed to connect to MongoDB: {e}")
+        print(f"[ERROR] Failed to connect to MongoDB: {e}")
     #  On shutdown of app, runs the code below
     yield
-    
-    print("👋 Shutting down server...")
+
+    print("[INFO] Shutting down server...")
 
 
 app = FastAPI(lifespan=lifespan)
 
-# Allow the frontend to make requests to this backend
+# Which frontend URLs are allowed to call this backend (the CORS "guest list").
+# Local dev (Vite) is always allowed. In production we add the live frontend URL
+# via the FRONTEND_URL environment variable on Render, so no code change is needed.
+allowed_origins = ["http://localhost:5173"]  # React dev server
+frontend_url = os.getenv("FRONTEND_URL")
+if frontend_url:
+    allowed_origins.append(frontend_url)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # React dev server
+    allow_origins=allowed_origins,
     allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
     allow_headers=["*"],  # Allow all headers
 )
+
+@app.get("/")
+def health_check():
+    """Simple endpoint to confirm the backend is running ('is the shop open?')."""
+    return {"status": "ok", "message": "Game Discovery API is running"}
+
 
 # Connect game routes to the app
 app.include_router(games_router)
