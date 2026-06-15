@@ -31,15 +31,21 @@
 /* ─── Left section ─────────────────────────────────── */
 .footer__left {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  align-items: flex-start;
 }
 
-/* The footer logo image — shown bare (no box), like the navbar. */
+/* The footer logo image — shown bare (no box), like the navbar.
+   The PNG has empty transparent space around the compass, so a negative right
+   margin pulls the brand text leftward into it to close the visual gap —
+   same approach used in the navbar. */
 .footer__logo-icon {
   height: 40px;
   width: auto;
   flex-shrink: 0;
+  margin-right: -0.5rem;
+  /* Nudge the image up so the compass lines up with the "GameSense" text line.
+     Negative top margin pulls it upward without affecting the text's position. */
+  margin-top: -6px;
 }
 
 .footer__brand {
