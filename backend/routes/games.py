@@ -1,3 +1,4 @@
+import os
 from fastapi import APIRouter, HTTPException
 from bson import ObjectId
 from database.connection import games_collection
@@ -55,7 +56,20 @@ async def get_game(game_id: str):
 
 @router.post("/games")
 async def add_game(game: GameModel):
-    """Add a new game to the database."""
+    """Add a new game to the database.
+
+    This is an admin-only action. To protect the public deployment, it is
+    disabled in production: on Render we set ENVIRONMENT=production, so this
+    endpoint refuses the request there. Locally (no ENVIRONMENT set) it works
+    normally, so you can still add games during development.
+    """
+    if os.getenv("ENVIRONMENT") == "production":
+        # 403 Forbidden = "the server understood the request but refuses to do it."
+        raise HTTPException(
+            status_code=403,
+            detail="Adding games is disabled in production.",
+        )
+
     # Check if the genres of the game being added are not in the  ALL_GENRES and ALL_TAGS lists.
     unknown_genres = [g for g in game.genres if g not in ALL_GENRES]
     unknown_tags   = [t for t in game.tags   if t not in ALL_TAGS]
