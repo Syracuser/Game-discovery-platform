@@ -1,274 +1,115 @@
+# 🎮 Game Discovery Platform
 
-# 🎮 Smart Game Discovery Platform
+A full-stack web app for finding video games worth playing. Tell it the genres and
+tags you're into, and a small machine learning model ranks games by how likely you
+are to enjoy them - and tells you why it picked each one. Game data comes from the
+[RAWG](https://rawg.io) database.
 
-# Future name: GameSense / PlayScout
+## What it does
 
+- Browse trending, popular, and newly released games
+- Search for games by name
+- Open a game to see its details, screenshots, and metadata
+- Get recommendations by picking the genres and tags you like, ranked by an ML model
+- Keep a wishlist (saved in your browser - no account needed)
 
-## Table of Contents
-- [Overview](#-overview)
-- [Project Goals](#-project-goals)
-- [Tech Stack](#-tech-stack)
-- [Core Concept](#-core-concept)
-- [Features](#%EF%B8%8F-features)
-- [Machine Learning Logic](#-machine-learning-logic)
-- [Project Structure](#%EF%B8%8F-project-structure)
-- [API Endpoints](#-api-endpoints)
-- [Development Plan](#-development-plan)
-- [Planned Improvements](#-planned-improvements)
-- [Project Summary](#-project-summary)
-- [Final Notes](#-final-notes)
+## Built with
 
----
+- **Frontend:** React + Vite, React Router, Axios
+- **Backend:** Python, FastAPI
+- **Database:** MongoDB
+- **Machine Learning:** scikit-learn (Logistic Regression)
+- **Game Data:** RAWG API
 
-## 📌 Overview
-The **Smart Game Discovery Platform** is a full-stack web application designed to help users discover video games based on their personal preferences, play style, and interests.
+## Running it locally
 
-Unlike a simple game browser, this system includes a **machine learning–based recommendation engine** that predicts which games a user is likely to enjoy, while also explaining *why* each recommendation was made.
+### Prerequisites
 
----
+- Python 3.11+ and Node.js 20.19+ (or 22.12+)
+- MongoDB — either a local [Community Server](https://www.mongodb.com/try/download/community) on the default port (27017), or a free [Atlas](https://www.mongodb.com/atlas) cluster
+- A free [RAWG API key](https://rawg.io/apidocs) (the recommendation feature fetches games from RAWG live)
 
-## 🎯 Project Goals
-- Build a complete full-stack application
-- Implement a real **AI / machine learning** component
-- Create a system that is clear, practical, and easy to explain
-- Deliver a project that is interactive and suitable for presentation
+Make sure MongoDB is running before you start the backend. The backend and frontend
+run as separate processes, so you'll use a couple of terminals.
 
----
+First, clone the repo:
 
-## 🧱 Tech Stack
-
-| Layer | Technology |
-|------|------------|
-| Frontend | React |
-| Backend | Python (FastAPI) |
-| Database | MongoDB |
-| Machine Learning | Scikit-learn (Logistic Regression) |
-
----
-
-## 🧠 Core Concept
-At the heart of the project is a **machine learning recommendation engine** that predicts whether a user will like a game based on patterns learned from data.
-
-Instead of relying on hardcoded rules, the system:
-- Learns from structured data
-- Detects patterns in user preferences
-- Predicts the likelihood of a user enjoying a game
-- Ranks games based on those predictions
-
----
-
-## ⚙️ Features
-
-### 🎮 1. Game Browser
-- Browse a list of games
-- Search games by name
-- View game details
-
-Each game includes:
-- Name
-- Genres
-- Tags (e.g., Multiplayer, Fast-Paced)
-- Rating
-- Studio
-
-### 🧠 2. AI-Powered Recommendation System
-Users can select preferences such as:
-- Genres
-- Play style (fast-paced / slow)
-- Gameplay type (casual / competitive)
-- Singleplayer / multiplayer
-
-The system:
-- Converts user preferences and game attributes into features
-- Uses a **Logistic Regression** model to predict user interest
-- Produces a probability score for each game
-- Ranks games by predicted relevance
-
-### 💬 3. Recommendation Explanation
-Each recommended game includes a short explanation, such as:
-
-> “Recommended because it matches your preference for Action games and Multiplayer gameplay.”
-
-This makes the system more transparent and easier to understand.
-
-### 🔍 4. Find Similar Games
-When viewing a game's details page, users can find similar games based on:
-- Shared genres
-- Shared tags
-
-### 🎛️ 5. Filtering System
-On the home page, users can filter games by:
-- Genre
-- Studio
-
-### ⭐ 6. Wishlist System
-Users can:
-- Add games to a wishlist
-- View saved games
-- Remove games from the wishlist
-
-### 🏠 7. Enhanced Home Page
-The home page includes:
-- Search bar
-- Game list
-- “Popular Now” section
-- “Recently Added” section
-
-### 🎮 8. Game Details Page
-Each game page includes:
-- Full game information
-- Studio, genres and rating
-- Similar games section
-- Add to wishlist option
-
----
-
-## 🧮 Machine Learning Logic
-The recommendation system is based on **supervised learning** using Logistic Regression.
-
-### How it works
-1. The system uses a dataset containing:
-   - User preferences
-   - Game features (genres, tags, etc.)
-   - Outcome: liked / not liked
-
-2. The model is trained to learn patterns such as:
-   - Which features influence user preference
-   - How different attributes combine to affect decisions
-
-3. When a user submits preferences:
-   - The system converts the input into feature vectors
-   - The model predicts the probability of liking each game
-
-4. Games are ranked based on predicted probability
-
-### Key Advantage
-Instead of manually defining rules, the system **learns what matters from data**.
-
----
-
-## 🏗️ Project Structure
-
-### Backend
-```text
-backend/
-├── main.py
-├── database/
-│   └── connection.py
-├── models/
-│   └── game_model.py
-├── routes/
-│   └── games.py
-├── services/
-│   ├── recommender.py
-│   └── similarity.py
-└── ml/
-    └── model.py
+```bash
+git clone https://github.com/Syracuser/Game-discovery-platform.git
+cd Game-discovery-platform
 ```
 
-### Frontend
-```text
-frontend/
-├── pages/
-│   ├── Home.jsx
-│   ├── GameDetails.jsx
-│   ├── Recommendations.jsx
-│   └── Wishlist.jsx
-└── components/
-    ├── GameCard.jsx
-    ├── SearchBar.jsx
-    └── Filters.jsx
+**Backend:**
+
+```bash
+cd backend
+python -m venv .venv
+source .venv/bin/activate      # Windows: .venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+cp .env.example .env           # Windows (cmd): copy .env.example .env
 ```
 
----
+⚠️ Before launching, open `backend/.env` and fill in your values — your
+`MONGODB_URL` and `RAWG_API_KEY` (see [Environment variables](#environment-variables)
+below). Then start the server:
 
-## 🔌 API Endpoints
+```bash
+uvicorn main:app --reload
+```
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/games` | Retrieve all games |
-| GET | `/games/{id}` | Retrieve a single game |
-| POST | `/recommend` | Input user preferences, return AI-based ranked recommendations |
-| GET | `/similar/{id}` | Retrieve similar games |
-| GET | `/wishlist` | Retrieve wishlist items |
-| POST | `/wishlist` | Add a game to wishlist |
-| DELETE | `/wishlist/{id}` | Remove a game from wishlist |
+This serves the API on `http://localhost:8000`, with interactive docs at `/docs`.
 
----
+**Load some games:**
 
-## 🚀 Development Plan
+A fresh database is empty, so there's nothing to browse or recommend yet. With the
+server still running, open a second terminal and seed it. You can use the built-in
+sample games, pull live ones from RAWG, or both:
 
-### Phase 1 — Backend Foundation
-- Set up FastAPI server
-- Connect MongoDB
-- Create basic game endpoints
+```bash
+cd backend
+source .venv/bin/activate      # Windows: .venv\Scripts\Activate.ps1
+python add_games.py            # a curated set of sample games
+python import_rawg.py          # (optional) pull more games from the RAWG API
+```
 
-### Phase 2 — Frontend Basics
-- Build the Home page
-- Display games
-- Implement search
-- Add filtering by genre and studio
+Both scripts skip anything already in the database, so they're safe to re-run.
 
-### Phase 3 — Machine Learning Model
-- Prepare dataset
-- Train the Logistic Regression model
-- Test prediction logic
+**Frontend:**
 
-### Phase 4 — Integration
-- Connect the ML model to the backend
-- Serve predictions through the API
+```bash
+cd frontend
+npm install
+cp .env.example .env           # Windows (cmd): copy .env.example .env
+npm run dev
+```
 
-### Phase 5 — Game Details Page
-- Build the `GameDetails.jsx` page
-- Display full game info: description, genres, and tags
-- Connect the page to the backend end-to-end (E2E)
+The frontend `.env` already points at `http://localhost:8000`, so no edits are needed.
 
-### Phase 6 — Recommendations Page
-- Build the Recommendations page
-- Let the user select preferences (genres, tags, etc.) as input
-- Send the input to the ML model via the API
-- Display a ranked list of recommended games (highest to lowest score)
+Then open `http://localhost:5173` in your browser.
 
-### Phase 7 — Additional + Core Features (Full-Stack) 
-- Similar games section in the 'Game Details' page
-- Wishlist system — backend endpoint + frontend UI
-- Recommendation explanations — "Why you might like this" insights
+## Environment variables
 
-### Phase 8 — UI Improvements
-- Add Home page sections
-- Add icons
-- Improve overall UI visuals
-- Improve layout and usability
+Each side has its own `.env` file, created from the matching `.env.example`.
 
+**`backend/.env`**
 
----
+```env
+# Your MongoDB connection string (local default shown)
+MONGODB_URL=mongodb://localhost:27017/gamediscovery
 
-## 🔮 Planned Improvements
-- Integrate external game APIs such as **RAWG** to expand the dataset
-- Add caching for API responses
-- Explore more advanced recommendation models
-- Add personalized user profiles
+# RAWG API key — get a free one at https://rawg.io/apidocs
+RAWG_API_KEY=your_rawg_api_key_here
+```
 
----
+**`frontend/.env`**
 
-## 🎤 Project Summary
-This project demonstrates:
-- Full-stack development with React and Python
-- Backend system design
-- Implementation of a machine learning model
-- Practical AI usage through prediction and ranking
-- Data-driven decision making instead of hardcoded logic
+```env
+# The URL where the backend is running
+VITE_API_URL=http://localhost:8000
+```
 
----
+## A note on this project
 
-## 📌 Final Notes
-This project is designed to balance:
-- Technical depth
-- Clarity and usability
-- Real-world applicability
-
-The focus is on building a **complete, functional, and understandable AI-powered system** rather than an overly complex or unfinished one.
-
----
-
-**Status:** In Development
+This started as a learning project, so the goal was a complete, understandable
+system over a clever one - especially the recommendation model, which is kept
+deliberately simple.

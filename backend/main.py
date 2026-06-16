@@ -1,4 +1,12 @@
 import os
+from dotenv import load_dotenv
+
+# Load .env into the environment BEFORE anything reads it. This must come before
+# importing database.connection, because that module reads MONGODB_URL at import
+# time — if the .env isn't loaded yet, a custom URL (e.g. Atlas) would be missed
+# and it would silently fall back to the localhost default.
+load_dotenv()
+
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
