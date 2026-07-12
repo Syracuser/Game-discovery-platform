@@ -1,4 +1,4 @@
-# 🎮 Game Discovery Platform
+# 🎮 GameSense - Game Discovery Platform
 
 A full-stack web app for finding video games worth playing. Tell it the genres and
 tags you're into, and a small machine learning model ranks games by how likely you
