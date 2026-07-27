@@ -20,7 +20,10 @@ load_dotenv()  # load backend/.env so we can read both connection strings
 
 LOCAL_URL = os.getenv("MONGODB_URL")          # source: your computer
 ATLAS_URL = os.getenv("MONGODB_ATLAS_URL")    # destination: the cloud
-DATABASE_NAME = "game_discovery"              # must match database/connection.py
+
+# Import the name instead of repeating it, so the two files can never disagree.
+from database.connection import DATABASE_NAME
+
 COLLECTION_NAME = "games"
 
 

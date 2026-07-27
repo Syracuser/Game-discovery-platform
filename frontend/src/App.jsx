@@ -21,8 +21,8 @@ function App() {
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           {/* AllGames (the stored-games filter browser) is RETIRED from user access:
-              it only shows the ML training core, which isn't meant for users. The
-              component is kept (not deleted) but /games now redirects to Home so it's
+              it only shows the ML training core set of games, which isn't meant for users. 
+              The component is kept (not deleted) but /games now redirects to Home so it's
               unreachable. To revive it, swap this back to <AllGames />. */}
           <Route path="/games" element={<Navigate to="/" replace />} />
           <Route path="/wishlist" element={<Wishlist />} />

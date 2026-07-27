@@ -3,7 +3,8 @@ from motor.motor_asyncio import AsyncIOMotorClient
 
 # Read the database address from the environment, fall back to localhost for local development.
 MONGODB_URL = os.getenv("MONGODB_URL", "mongodb://localhost:27017")
-DATABASE_NAME = "game_discovery"
+# Database name is configurable too, with the same fallback so nothing breaks if it's unset.
+DATABASE_NAME = os.getenv("MONGODB_DB_NAME", "game_discovery")
 
 # Connect to MongoDB (like opening a door to the database server)
 client = AsyncIOMotorClient(MONGODB_URL)

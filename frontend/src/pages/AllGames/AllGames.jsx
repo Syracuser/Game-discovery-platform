@@ -10,9 +10,10 @@ import "./AllGames.css";
 
 // ─────────────────────────────────────────────
 // AllGames — the filterable browser for our STORED DB games.
-// (This was previously the Home page. It now lives at /games while the
-//  Home page shows the live RAWG sections. Filtering is client-side, which is
-//  fine for our small stored set — it does NOT work for the full RAWG catalog.)
+// RETIRED: no route currently renders this component (see App.jsx for the
+//  routing decision). Kept for possible revival. Filtering is client-side,
+//  which is fine for our small stored set — it does NOT work for the full
+//  RAWG catalog.
 // ─────────────────────────────────────────────
 
 function AllGames() {

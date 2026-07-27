@@ -50,8 +50,8 @@ cp .env.example .env           # Windows (cmd): copy .env.example .env
 ```
 
 ⚠️ Before launching, open `backend/.env` and fill in your values — your
-`MONGODB_URL` and `RAWG_API_KEY` (see [Environment variables](#environment-variables)
-below). Then start the server:
+`MONGODB_URL`, `MONGODB_DB_NAME`, and `RAWG_API_KEY` (see
+[Environment variables](#environment-variables) below). Then start the server:
 
 ```bash
 uvicorn main:app --reload
@@ -94,8 +94,11 @@ Each side has its own `.env` file, created from the matching `.env.example`.
 **`backend/.env`**
 
 ```env
-# Your MongoDB connection string (local default shown)
-MONGODB_URL=mongodb://localhost:27017/gamediscovery
+# Your MongoDB server address (local default shown)
+MONGODB_URL=mongodb://localhost:27017
+
+# Name of the database inside MongoDB
+MONGODB_DB_NAME=game_discovery
 
 # RAWG API key — get a free one at https://rawg.io/apidocs
 RAWG_API_KEY=your_rawg_api_key_here
